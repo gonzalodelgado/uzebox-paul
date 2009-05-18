@@ -669,9 +669,7 @@ void LoadHighScore(void) {
 
 	if (!isEepromFormatted()) {
 		PacmanFormatEeprom();
-	}
-
-	if (EepromReadBlock(PACMAN_EEPROM_ID, &ebs) == 0) {
+	} else if (EepromReadBlock(PACMAN_EEPROM_ID, &ebs) == 0) {
 		highscore = 0;
 
 		for (u8 i = 0; i < 4; i++) {
