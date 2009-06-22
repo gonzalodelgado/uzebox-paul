@@ -301,6 +301,15 @@
 #define GSTATE_CHASE_INIT			4
 #define GSTATE_CHASE				8
 
+// Screen States
+#define SSTATE_INTRO				1
+#define SSTATE_TITLE				2
+#define SSTATE_DEMO					4
+#define SSTATE_GAME					8
+	// Reset flags
+#define RESET_NONE					0
+#define RESET_ALL					1
+#define RESET_TMRS					2
 
 /****************************************
  *				Utils					*
@@ -456,6 +465,7 @@ u8 gameMap[GAME_MAP_WID * GAME_MAP_HGT];	// Map meta data for collisions/pellets
 u8 level;
 u8 pellets;					// Those dots for which pacman has a penchant
 u8 frameCount;				// Resets every 21 frames to assist with speed calcs (21 due to 105% elroy2 speed)
+u8 scrnState;				// Which screen is displaying
 u16 playerInput;			// snes controller input storage
 gamestate gs;				// Game-level state
 u8 freshCorpse;				// Most recently devoured ghost
@@ -520,8 +530,8 @@ bool CheckGhostCollision(void);
 void CheckPlayerActivity(void);
 void DrawFruitLog(void);
 void AddScore(u16 s);
-u16 DisplayTitleScreen(bool reset);
-u8 DisplayIntroScreen(bool reset);
+u16 DisplayTitleScreen(u8 reset);
+u8 DisplayIntroScreen(u8 reset);
 void PacmanFormatEeprom(void);
 void LoadHighScore(void);
 void SaveHighScore(void);
@@ -2134,11 +2144,13 @@ void LoadGhostAnimations(u8 index, u8 g) {
 
 
 // Intro screen introduces the ghosts and demonstrates their vulnerability
-u8 DisplayIntroScreen(bool reset) {
+u8 DisplayIntroScreen(u8 reset) {
 	static u16 introTmr = 0;
 	u8 scenePlaying = 4, entrance = GHOST_COUNT + 1;
 
-	if (reset) {
+	scrnState = SSTATE_INTRO;
+
+	if (QB(reset, RESET_ALL)) {
 		ClearVram();
 		memcpy_P(gameMap, gameMapPgm, GAME_MAP_WID * GAME_MAP_HGT);
 		memcpy_P(gameMap + (GAME_MAP_WID*16), introMapPatchPgm, GAME_MAP_WID);
@@ -2151,6 +2163,8 @@ u8 DisplayIntroScreen(bool reset) {
 		PacmanPrintByte(SCORE_X + 1, SCORE_Y + 24, credit);
 		SetFruit();
 		DrawFruitLog();
+		introTmr = 11*HZ + 1;
+	} else if (QB(reset, RESET_TMRS)) {
 		introTmr = 11*HZ + 1;
 	}
 	
@@ -2256,10 +2270,12 @@ u8 DisplayIntroScreen(bool reset) {
 
 
 // Displays the simple, authentic title screen
-u16 DisplayTitleScreen(bool reset) {
+u16 DisplayTitleScreen(u8 reset) {
 	static u16 titleTmr = 0;
 
-	if (reset) {
+	scrnState = SSTATE_TITLE;
+
+	if (QB(reset, RESET_ALL)) {
 		CB(pacman.state, PSTATE_MOVING);
 		HideSprite(pacman.sprite, pacman.anim->wid, pacman.anim->hgt);
 		
@@ -2282,7 +2298,11 @@ u16 DisplayTitleScreen(bool reset) {
 		titleTmr = 5*HZ;
 	}
 
-	titleTmr = (!titleTmr) ? titleTmr : titleTmr - 1;
+	if (QB(reset, RESET_TMRS)) {
+		titleTmr = 5*HZ;
+	} else {
+		titleTmr = (!titleTmr) ? titleTmr : titleTmr - 1;
+	}
 	return titleTmr;
 }
 
@@ -2348,6 +2368,9 @@ void InitLevel(bool reset) {
 	// Demo AI varies based on framecount, so don't reset
 	if (!QB(pacman.state, PSTATE_AI)) {
 		frameCount = 0;
+		scrnState = SSTATE_GAME;
+	} else {
+		scrnState = SSTATE_DEMO;
 	}
 
 	// Fright timer/bonus/map reset
@@ -2572,10 +2595,18 @@ void CheckPlayerActivity(void) {
 								
 				CB(gs.general, GSTATE_NORMAL | GSTATE_LVL_COMPLETE | GSTATE_NEW_LEVEL | GSTATE_LVL_COMMENCED);
 				pacman.state = 0;
-				SetTileTable(pacfontTileset);
-				fontOffset = 0;
 				gs.intro = GSTATE_TITLE_SCREEN;
-				DisplayTitleScreen(true);
+
+				if (!QB(scrnState, SSTATE_INTRO | SSTATE_TITLE)) {
+					SetTileTable(pacfontTileset);
+					fontOffset = 0;
+				}
+
+				if (!QB(scrnState, SSTATE_TITLE)) {
+					DisplayTitleScreen(RESET_ALL);
+				}
+
+				DisplayTitleScreen(RESET_TMRS);
 			}
 		} else {
 			coinInserted = false;
@@ -2604,7 +2635,7 @@ void CheckPlayerActivity(void) {
 						SetTileTable(pacfontTileset);
 						fontOffset = 0;						
 						gs.intro = GSTATE_TITLE_SCREEN;
-						DisplayTitleScreen(true);
+						DisplayTitleScreen(RESET_ALL);
 					} else {
 						// Flash insert coin
 						coinTmr = 2*HZ;				
@@ -2725,17 +2756,17 @@ void ApplyGameState(void) {
 			SB(gs.intro, GSTATE_GHOST_INTRO);
 			elroy = 0;
 			pellets = MAX_PELLETS;
-			DisplayIntroScreen(true);
+			DisplayIntroScreen(RESET_ALL);
 		} else if (QB(gs.intro, GSTATE_GHOST_INTRO)) {
-			if (!DisplayIntroScreen(false)) {
+			if (!DisplayIntroScreen(RESET_NONE)) {
 				CB(gs.intro, GSTATE_GHOST_INTRO);
 				CB(pacman.state, PSTATE_MOVING);
 				SB(gs.intro, GSTATE_TITLE_SCREEN);
-				DisplayTitleScreen(true);
+				DisplayTitleScreen(RESET_ALL);
 				return;
 			}
 		} else if (QB(gs.intro, GSTATE_TITLE_SCREEN)) {
-			if (!DisplayTitleScreen(false)) {
+			if (!DisplayTitleScreen(RESET_NONE)) {
 				CB(gs.intro, GSTATE_TITLE_SCREEN);				
 				coinTmr = 0;
 				elroy = 0;				
@@ -3081,6 +3112,7 @@ int main() {
 	// Seed game state
 	SB(gs.intro, GSTATE_INIT);
 	LoadHighScore();
+	scrnState = SSTATE_INTRO;
 
 	// Init sprites
 	pacman.sprite = PACMAN;
