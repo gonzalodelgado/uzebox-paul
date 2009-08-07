@@ -797,7 +797,7 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 								// Unused bgOuter.count in triggers used for firing orientation (not axis)
 								trig = (bgo.count)?-1:1;
 							} else {
-								trig = (bgo.count)?:-1;
+								trig = (bgo.count)?1:-1;
 							}
 
 							trigCb(bgo.index,bgo.type,trig);
