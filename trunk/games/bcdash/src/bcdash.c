@@ -152,7 +152,6 @@
 #define PUP_BOOTS						1
 #define PUP_BUDDHA						2
 #define PUP_COINS						3
-#define PUP_DFLY						3
 
 // Poisons
 
@@ -163,9 +162,11 @@
 
 // Misc
 #define HZ								64	// For pup/poison counters. Better efficient than accurate.
+#define DEMO_HZ							(40*HZ)
 #define GSTATE_INTRO					1
 #define GSTATE_PLAYING					2
 #define GSTATE_PAUSED					4
+#define GSTATE_DEMO						8
 
 /****************************************
  *				Utils					*
@@ -252,9 +253,9 @@ u8 checkpoints;
 u8 mutmap[MUT_BG_COUNT];
 bcTime tCurr,tBest;
 // Power-ups
-u8 pupsel;
+u8 pupsel = PUP_COINS;
 u8 puphud[4];
-u16 puptmrs[4];
+u16 puptmrs[3];
 u8 walkOnWater;
 u8 hrgtmr;
 // Explosion flash
@@ -262,11 +263,11 @@ u8 expltmr;
 rect explRect;
 // Poisons
 u8 prng;
-u16 psntmrs[3];	// Poison/pup timers
+u16 psntmrs[3];	// Poison timers
 // Pogo stick
 u16 pogotmr;
 // High level game state
-u8 gstate = GSTATE_INTRO;
+u8 gstate = GSTATE_DEMO;
 // Sfx
 u8 sfxtmr;
 
@@ -283,10 +284,8 @@ void AquaticMovement(u16 move);
 void AquaticAnimation(char prevDir, u16 move);
 char SetForm(u8 form, char dirX);
 void LoadBobAnimations(char dirX);
-//void BobFormatEeprom(u8 quick);
-//u16 BobLoadGame(void);
-//void BobSaveGame(u8 sp);
 void ResetGame(void);
+void ResetGameTime(void);
 void BCFormatEeprom(void);
 void SaveBestTime(void);
 void LoadBestTime(void);
@@ -448,20 +447,32 @@ u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v) {
 
 void ResetGame(void) {
 	checkpoints = 0;
-	memset(psntmrs,0x00,3);
-	memset(puphud,0x00,4);
+	expltmr = 0;
+	memset(psntmrs,0x00,3*sizeof(psntmrs[0]));
+	memset(puphud,0x00,4*sizeof(puphud[0]));
 
 	// Make sure active power-ups run their clean up code
-	for (u8 i = 0; i < 4; i++)
+	for (u8 i = 0; i < 3; i++)
 		if (puptmrs[i])
 			puptmrs[i] = 1;
 	UpdateTimers();
-	memset(mutmap,0xff,MUT_BG_COUNT);
+	memset(mutmap,0xff,MUT_BG_COUNT*sizeof(mutmap[0]));
 	sfxtmr = 0;
-	TriggerNote(2,SFX_QUIET,60,5);
 	wfall = 0;
 	wfalltmr = 15;
-	TriggerNote(3,SFX_QUIET,60,5);
+
+	if (gstate != GSTATE_INTRO) {
+		TriggerNote(2,SFX_QUIET,60,5);
+		TriggerNote(3,SFX_QUIET,60,5);
+	}
+}
+
+
+void ResetGameTime(void) {
+	tCurr.sec1 = 0;
+	tCurr.sec10 = 0;
+	tCurr.min = 0;
+	fps = 0;
 }
 
 
@@ -570,7 +581,7 @@ void PrintHudPupCount(u8 x, u8 y, u8 count, char indicator) {
 	bcdh = (count>>4)&0x0f;
 	bcdl += (bcdh*6);
 
-	// Rarely runs and never more than thrice with binary input <= 99
+	// Rarely runs and never more than thrice with input <= 99
 	while (bcdl > 9) {
 		bcdl -= 10;
 		++bcdh;
@@ -645,13 +656,9 @@ void UpdateTimers(void) {
 		if (--puptmrs[PUP_EGG] == 0)
 			if (bob.form == FORM_DRAGONFLY)
 				SetForm(FORM_LYNX,bob.pa.vx.dir);
-	} else if (puptmrs[PUP_DFLY]) {
-		if (--puptmrs[PUP_DFLY] == 0) {
-			if (bob.form != FORM_TURTLE)
-				SetForm(FORM_SNAIL,bob.pa.vx.dir);
-		}
-	} else if (bob.form == FORM_DRAGONFLY)
+	} else if (bob.form == FORM_DRAGONFLY) {
 		SetForm(FORM_LYNX,bob.pa.vx.dir);
+	}
 
 	// Walk on water
 	if (puptmrs[PUP_BUDDHA]) {
@@ -692,10 +699,7 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 	switch(index) {
 		case TRIG_CHECK_0:
 			if (checkpoints == 0) {
-				tCurr.sec1 = 0;
-				tCurr.sec10 = 0;
-				tCurr.min = 0;
-				fps = 0;
+				ResetGameTime();
 				PrintHudTime();
 			}	// Fall through
 		case TRIG_CHECK_1:
@@ -1146,6 +1150,9 @@ void AquaticAnimation(char prevDir, u16 move) {
 
 
 int main(void) {
+	u8 demoX = 0, demoY = 0;	// Demo "X" coords
+	u16 titletmr = 0;			// Title and demo instruction screen timers
+	u16 demotmr = 1;			// Seed an initial switch to titletmr
 	u8 besttmr = 0;
 	u16 fmove = MOVE_NONE;		// Final movement instruction after poisons etc
 	u8 collFlag = 0;			// Collision flag
@@ -1180,23 +1187,18 @@ int main(void) {
 	// Local inits
 	bob.sprite = SPRITE_BOB;
 	bob.state = 0;
-	SetForm(FORM_DRAGONFLY,DIR_RIGHT);
-	memset(mutmap,0xff,MUT_BG_COUNT);
+	SetForm(FORM_LYNX,DIR_RIGHT);
+	memset(mutmap,0xff,MUT_BG_COUNT*sizeof(mutmap[0]));
 	
 	// Init platz actor
 	bob.pa.loc = (pt){170,48};
 	bob.pa.bbx = bob.anim.wid<<2;	// Set to half of animation's wid in pixels
 	bob.pa.bby = bob.anim.hgt<<2;	// Set to half of animation's hgt in pixels
-	bob.pa.sprx = 160;				// Just going to default to Platz initializing our viewport for the title screen
 	bob.pa.trLoc = (pt){0,0};		// Trigger loc can start at origin as Lynx is our largest player sprite
 	bob.pa.vx.dir = DIR_RIGHT;
 	bob.pa.vy.dir = DIR_DOWN;
 	PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
 	PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
-
-	// Draw snail on title screen
-	PlatzMapSprite(4,2,2,animSnailRt);
-	MoveSprite(4,48,40,2,2);
 
 	// Init platz scene
 	PlatzSetMovingPlatformTiles(199,177,176);
@@ -1213,9 +1215,9 @@ int main(void) {
 
 			// Sound effects
 			if (besttmr) {
-				if (besttmr == 0) {
+				if (besttmr == 0)
 					TriggerNote(2,SFX_QUIET,60,5);
-				} else if ((besttmr&3) == 0)
+				else if ((besttmr&3) == 0)
 					TRIGGER_NOTE(SFX_COLLECT_COIN,100-besttmr,SFX_VOL_COLLECT_COIN,4);	// Deliberately left macro half in/half out of conditional
 				--besttmr;
 			}
@@ -1234,7 +1236,6 @@ int main(void) {
 
 			// Check for finish line crossing
 			if (checkpoints == 0x0F) {
-				TRIGGER_NOTE(SFX_COLLECT_COIN,60,SFX_VOL_COLLECT_COIN,20);
 				checkpoints = 0;
 				AdjustTime((psntmrs[PSN_SNAIL]+psntmrs[PSN_REV_CTLS]+psntmrs[PSN_FREEZE])>>6);
 				AdjustTime(-puphud[PUP_COINS]);
@@ -1250,12 +1251,114 @@ int main(void) {
 				ResetGame();
 			}
 
+			// Intro - title screen/demo instructions
+			if (gstate == GSTATE_INTRO) {
+				if (titletmr) {
+					if (--titletmr == 0) {
+						PlatzHideSprite(6,2,1);
+						bob.pa.loc = (pt){124,100};
+						PlatzSetViewport(110,120);
+						PlatzMoveToSlice(&bob.pa,58);
+						SetForm(FORM_LYNX,DIR_RIGHT);
+						ResetGame();
+						ResetGameTime();
+						InitHud();
+						demoX = 4;
+						demoY = 1;
+						demotmr = DEMO_HZ-1;
+						gstate = GSTATE_DEMO;
+					}
+				}
+			} else if (gstate == GSTATE_DEMO) {
+				if (demotmr) {
+					if (demoY)
+						SetTile(demoX,demoY,TILE_SKY);
+
+					if ((demotmr&0xff) == 0) {
+						demoY += 4;
+
+						if (demoY > 20) {
+							demoY = 1;
+							demoX = 22;
+						}
+					}					
+
+					if (--demotmr == 0) {
+						SetForm(FORM_DRAGONFLY,DIR_RIGHT);
+						bob.pa.loc = (pt){170,48};
+						PlatzSetViewport(160,0);
+						PlatzMapSprite(4,2,2,animSnailRt);
+						MoveSprite(4,48,40,2,2);
+						PlatzFill(&(rect){0,32,VRAM_TILES_V,31},TILE_SKY);
+						PlatzMoveToSlice(&bob.pa,57);
+						titletmr = 15*HZ;
+						gstate = GSTATE_INTRO;
+					} else {
+						SetTile(demoX,demoY,TILE_PUPSEL);
+
+						if (demotmr == (DEMO_HZ-20*HZ))
+							pogotmr = 2*HZ;
+						else if (demotmr == (DEMO_HZ-21*HZ))
+							move |= MOVE_JUMP;
+						else
+							move &=~ MOVE_JUMP;
+
+						if ((demotmr == (DEMO_HZ-2*HZ)) || (demotmr == (DEMO_HZ-3*HZ)))
+							btnPressed |= BTN_B;
+						else
+							btnPressed &=~ BTN_B;
+
+						if (demotmr < (DEMO_HZ-32*HZ))	// icicles/fire
+							fps+=10;
+
+						switch (demotmr) {
+							case (DEMO_HZ-(HZ>>1)):
+							case (DEMO_HZ-HZ):
+								pupsel = PUP_COINS;
+								TRIGGER_NOTE(SFX_COLLECT_COIN,83,SFX_VOL_COLLECT_COIN,20);
+								puphud[PUP_COINS] += 5;
+								break;
+							case (DEMO_HZ-4*HZ):
+								hrgtmr = 5;
+								break;
+							case (DEMO_HZ-8*HZ):
+								pupsel = PUP_BOOTS;
+								btnPressed |= BTN_B;
+								move |= MOVE_RIGHT;
+								break;
+							case (DEMO_HZ-12*HZ):
+								pupsel = PUP_EGG;
+								btnPressed |= BTN_B;
+								SetForm(FORM_DRAGONFLY,DIR_RIGHT);
+								move ^= (MOVE_RIGHT|MOVE_UP);
+								break;
+							case (DEMO_HZ-15*HZ):
+								move &=~ MOVE_UP;
+								break;
+							case (DEMO_HZ-24*HZ):	// bomb
+								TRIGGER_NOTE(SFX_BOMB,0,SFX_VOL_BOMB,33);
+								explRect = (rect){23,26,3,6};
+								PlatzFillMap(&explRect,0,0,mapExplosion,2);
+								expltmr = HZ>>2;
+								break;
+							case (DEMO_HZ-28*HZ):	// poison
+								psntmrs[PSN_SNAIL] = 4*HZ;
+								SetForm(FORM_SNAIL,DIR_RIGHT);
+								break;
+							case (DEMO_HZ-32*HZ):
+								SetForm(FORM_LYNX,DIR_RIGHT);
+								break;
+						}
+					}
+				}
+			}
+
 			// Begin game and pause/unpause
 			if (btnPressed&BTN_START) {
-				if (gstate == GSTATE_INTRO) {
+				if (gstate&(GSTATE_INTRO|GSTATE_DEMO)) {
 					PlatzHideSprite(4,2,2);
 					bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
-					bob.pa.sprx = (PLATZ_SCRN_WID>>1)-bob.pa.bbx;
+					bob.pa.sprx = (PLATZ_SCRN_WID>>1)-bob.pa.bbx;	// Center sprite on screen
 					PlatzSetViewport(bob.pa.sprx,0);
 					PlatzMoveToSlice(&bob.pa,56);
 					InitHud();
@@ -1299,9 +1402,9 @@ int main(void) {
 				// Activate selected power-up
 				switch (pupsel) {
 					case PUP_EGG:
-						if (puphud[PUP_EGG] && (bob.form == FORM_LYNX)) {
+						if (puphud[PUP_EGG] && (bob.form&(FORM_LYNX|FORM_DRAGONFLY))) {
 							--puphud[PUP_EGG];
-							puptmrs[PUP_EGG] = 4*HZ;
+							puptmrs[PUP_EGG] += 4*HZ;
 
 							if (bob.form == FORM_LYNX)
 								SetForm(FORM_DRAGONFLY,bob.pa.vx.dir);
@@ -1340,6 +1443,7 @@ int main(void) {
 			} else {
 				move &=~ btnReleased;
 				move |= btnPressed|btnHeld;
+
 				fmove = move;
 
 				if (psntmrs[PSN_REV_CTLS]) {
@@ -1351,7 +1455,7 @@ int main(void) {
 				bob.animFlag = 0;			
 				prevDir = bob.pa.vx.dir;
 
-				if (gstate == GSTATE_PLAYING)
+				if (gstate&(GSTATE_PLAYING|GSTATE_DEMO))
 					bob.moveFunc(fmove);
 			}
 
@@ -1374,11 +1478,11 @@ int main(void) {
 			if (bob.animFlag&2) PlatzMapSprite(bob.sprite,bob.anim.wid,bob.anim.hgt,bob.anim.frames+bob.anim.currFrame*bob.anim.size);
 			MoveSprite(bob.sprite,bob.pa.sprx-bob.pa.bbx,bob.pa.loc.y-bob.pa.bby+1,bob.anim.wid,bob.anim.hgt);
 			
-			if (gstate == GSTATE_PLAYING) {
+			if (gstate&(GSTATE_PLAYING|GSTATE_DEMO)) {
 				UpdateTimers();
 				UpdateHudPups();
 
-				if (checkpoints) {
+				if ((gstate == GSTATE_DEMO) || checkpoints) {
 					if (++fps >= 60) {	// Can be incremented elsewhere by environmental triggers
 						fps = 0;
 

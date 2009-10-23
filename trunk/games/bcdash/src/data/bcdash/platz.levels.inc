@@ -1,4 +1,4 @@
-// !SLICE_COUNT! 58
+// !SLICE_COUNT! 59
 
 // !PLATZ_OBJECTS!
 const object pgmObjects[] PROGMEM = {
@@ -197,7 +197,11 @@ const object pgmObjects[] PROGMEM = {
 	{{27,0},mapStar},
 	{{27,4},mapMoon},
 	{{27,17},mapStar},
-	{{28,8},mapStar}			// Slice B.C. Dash
+	{{28,8},mapStar},			// Slice B.C. Dash
+	{{10,1},mapStar},
+	{{15,9},mapStar},
+	{{26,16},mapFlower},
+	{{28,11},mapStar}			// Slice demo instructions
 };
 
 const char* pgmMaps[] PROGMEM = {
@@ -300,7 +304,8 @@ const bgAnimIndex pgmAnimDir[] PROGMEM = {
 	{1,0},						// Slice 45_ext
 	{2,0},						// Slice 46_ext
 	{0,0},{6,0},{11,0},{13,0},
-	{19,0}						// Slice B.C. Dash
+	{19,0},						// Slice B.C. Dash
+	{0,0},{2,0},{11,0}			// Slice demo instructions
 };
 
 const platformDirectory pgmPlatformDir[] PROGMEM = {
@@ -981,8 +986,23 @@ const bgInner pgmBgsInner[] PROGMEM = {
 	{BGP,47,{16,20,15,21}},
 	{BGP,18,{19,20,14,15}},
 	{BGP,48,{22,26,15,21}},					// dash
-	{BGA,6,{14,17,22,24}},
-	{BGP,52,{26,28,23,24}}
+	{BGA,6,{14,17,22,24}},					// snes
+	{BGP,52,{26,28,23,24}},					// Slice B.C. Dash
+	{BGA,5,{0,10,18,19}},
+	{0,TILE_WATER,{0,10,19,25}},
+	{0,TILE_GRASS_LT,{10,11,18,19}},
+	{BGP,1,{11,32,18,19}},
+	{BGP,3,{10,32,19,25}},
+	{BGA,4,{5,7,0,2}},
+	{BGP,23,{5,7,4,6}},
+	{BGP,26,{5,7,9,10}},
+	{0,TILE_EGG,{5,6,13,14}},
+	{BGP,24,{5,7,16,18}},
+	{BGP,18,{23,24,0,2}},
+	{BGP,8,{23,25,4,6}},
+	{BGP,32,{23,25,8,10}},
+	{0,TILE_ICICLE,{23,25,13,14}},
+	{BGA,3,{23,25,16,18}}					// Slice demo instructions
 };
 
 // !PLATZ_OUTER_BGS!
@@ -1378,7 +1398,21 @@ const bgOuter pgmBgsOuter[] PROGMEM = {
 	{BGC,1,0x0271,{19,20,14,15}},
 	{BGC,1,0x0272,{22,26,15,21}},							// dash
 	{0,1,0x0273,{14,17,22,24}},								// snes ctler
-	{0,1,0x0274,{26,28,23,24}}								// initials
+	{0,1,0x0274,{26,28,23,24}},								// Slice B.C. Dash
+	{0,2,0x0275,{0,10,18,25}},
+	{BGC,3,0x0277,{10,32,18,25}},
+	{0,1,0x027a,{5,7,0,2}},
+	{0,1,0x027b,{5,7,4,6}},
+	{0,1,0x027c,{5,7,9,10}},
+	{0,1,0x027d,{5,6,13,14}},
+	{0,1,0x027e,{5,7,16,18}},
+	{0,1,0x027f,{23,24,0,2}},
+	{0,1,0x0280,{23,25,4,6}},
+	{0,1,0x0281,{23,25,8,10}},
+	{0,1,0x0282,{23,25,13,14}},
+	{0,1,0x0283,{23,25,16,18}},
+	{BGC|BGI,1,0x0284,{11,13,16,18}},
+	{BGC|BGI,1,0x0285,{17,19,16,18}}						// Slice demo instructions
 };
 
 // You can save a lot of flash by making maps of regularly used combinations. These can now be one Inner BG instead of many.
@@ -1441,5 +1475,6 @@ const bgDirectory pgmBgDir[] PROGMEM = {
 	{0x0097,0x05,0x0165,0x01,1,1,0,0,0x4c,PF_ZERO},			// Slice 50_ext
 	{0x009c,0x0e,0x0166,0x07,1,1,6,0,0x4c,PF_ZERO},			// Slice finish
 	{0x00aa,0x0f,0x016d,0x06,1,1,5,0,0x4c,PF_ZERO},			// Slice go
-	{0x00b9,0x0b,0x0173,0x15,0,0,0,5,0x4c,PF_ZERO}			// B.C. Dash
+	{0x00b9,0x0b,0x0173,0x15,0,0,0,5,0x4c,PF_ZERO},			// B.C. Dash
+	{0x00c4,0x04,0x0188,0x0e,0,0,0,3,0x51,PF_ZERO}			// demo instructions
 };
