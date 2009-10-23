@@ -47,6 +47,7 @@
 #define SPD_MAX_SNAIL_Y					12
 #define LOC_BOB_X						120
 #define LOC_BOB_Y						40
+#define EMPTY_SLICE						53
 	// States
 #define BS_MOVING						1
 #define BS_SWING						2
@@ -176,11 +177,11 @@
 #define MAX(_x,_y)  ((_x)>(_y) ? (_x) : (_y))
 #define ABS(_x)		(((_x) > 0) ? (_x) : -(_x))
 
-#ifdef LOW_FLASH
-	#define TRIGGER_NOTE(patch,note,vol,len)	TriggerNote(SFX_CHAN,(patch),(note),(vol));	\
-												sfxtmr = (len);
+#ifdef IM_TIRED //LOW_FLASH
+	#define TRIGGER_NOTE(chan,patch,note,vol,len)	TriggerNote((chan),(patch),(note),(vol));	\
+													sfxtmr = (len);
 #else
-	#define TRIGGER_NOTE(patch,note,vol,len)	TriggerFx(patch,vol,true);
+	#define TRIGGER_NOTE(chan,patch,note,vol,len)	TriggerFx((patch),(vol),true);
 #endif
 
 /****************************************
@@ -269,7 +270,7 @@ u16 pogotmr;
 // High level game state
 u8 gstate = GSTATE_DEMO;
 // Sfx
-u8 sfxtmr;
+//u8 sfxtmr;
 
 /****************************************
  *			Function prototypes			*
@@ -328,11 +329,11 @@ u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v) {
 
 			switch (bgiInfo->tile) {
 				case MUT_COIN:
-					TRIGGER_NOTE(SFX_COLLECT_COIN,83,SFX_VOL_COLLECT_COIN,20);
+					TRIGGER_NOTE(SFX_CHAN,SFX_COLLECT_COIN,83,SFX_VOL_COLLECT_COIN,20);
 					++puphud[PUP_COINS];
 					break;
 				case MUT_POISON:
-					TRIGGER_NOTE(SFX_COLLECT_PSN,50,SFX_VOL_COLLECT_PSN,10);
+					TRIGGER_NOTE(SFX_CHAN,SFX_COLLECT_PSN,50,SFX_VOL_COLLECT_PSN,10);
 
 					if ((const char*)pgm_read_word(&(pgmMaps[bgiSrc->tile])) == mapPsn)
 						clr = TILE_SKY;
@@ -359,7 +360,7 @@ u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v) {
 					prng = (prng>>1) | (((((prng^(prng>>2))^(prng>>3))^(prng>>4)))<<7);
 					break;
 				case MUT_BOMB:
-					TRIGGER_NOTE(SFX_BOMB,0,SFX_VOL_BOMB,33);
+					TRIGGER_NOTE(SFX_CHAN,SFX_BOMB,0,SFX_VOL_BOMB,33);
 					mutmap[mapIndex+((mutIndex+1)>>3)] &=~ (1<<((mutIndex+1)&7));	// Destroy target bg
 										
 					if (expltmr)
@@ -431,7 +432,7 @@ u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v) {
 				case MUT_POGO:
 				case MUT_EGG:
 				case MUT_HOURGLASS:
-					TRIGGER_NOTE(SFX_COLLECT_PUP,60,SFX_VOL_COLLECT_PUP,10);
+					TRIGGER_NOTE(SFX_CHAN,SFX_COLLECT_PUP,60,SFX_VOL_COLLECT_PUP,10);
 					break;
 			}
 			
@@ -447,24 +448,23 @@ u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v) {
 
 void ResetGame(void) {
 	checkpoints = 0;
+	move = 0;
 	expltmr = 0;
+	hrgtmr = 0;
+	walkOnWater = 0;
+	wfall = 0;
 	memset(psntmrs,0x00,3*sizeof(psntmrs[0]));
 	memset(puphud,0x00,4*sizeof(puphud[0]));
 
 	// Make sure active power-ups run their clean up code
+	if (pogotmr)
+		pogotmr = 1;
+
 	for (u8 i = 0; i < 3; i++)
 		if (puptmrs[i])
 			puptmrs[i] = 1;
 	UpdateTimers();
 	memset(mutmap,0xff,MUT_BG_COUNT*sizeof(mutmap[0]));
-	sfxtmr = 0;
-	wfall = 0;
-	wfalltmr = 15;
-
-	if (gstate != GSTATE_INTRO) {
-		TriggerNote(2,SFX_QUIET,60,5);
-		TriggerNote(3,SFX_QUIET,60,5);
-	}
 }
 
 
@@ -729,7 +729,7 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 				// Turn off and reset timer
 				wfall = 0;
 				wfalltmr = 15;
-				TriggerNote(3,SFX_QUIET,60,5);
+				//TriggerNote(3,SFX_QUIET,60,5);
 			} else {
 				if (wfall == 0) {
 					wfall = 1;
@@ -1187,14 +1187,13 @@ int main(void) {
 	// Local inits
 	bob.sprite = SPRITE_BOB;
 	bob.state = 0;
-	SetForm(FORM_LYNX,DIR_RIGHT);
+	SetForm(FORM_DRAGONFLY,DIR_RIGHT);
 	memset(mutmap,0xff,MUT_BG_COUNT*sizeof(mutmap[0]));
 	
 	// Init platz actor
-	bob.pa.loc = (pt){170,48};
 	bob.pa.bbx = bob.anim.wid<<2;	// Set to half of animation's wid in pixels
 	bob.pa.bby = bob.anim.hgt<<2;	// Set to half of animation's hgt in pixels
-	bob.pa.trLoc = (pt){0,0};		// Trigger loc can start at origin as Lynx is our largest player sprite
+	bob.pa.trLoc = (pt){4,0};		// Trigger loc offset due to dragonfly's smaller size (than lynx). Should be 0,0 for largest sprite.
 	bob.pa.vx.dir = DIR_RIGHT;
 	bob.pa.vy.dir = DIR_DOWN;
 	PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
@@ -1202,43 +1201,37 @@ int main(void) {
 
 	// Init platz scene
 	PlatzSetMovingPlatformTiles(199,177,176);
-	PlatzInit(&bob.pa,57);
-	PlatzMoveToSlice(&bob.pa,57);
+	PlatzInit(&bob.pa,51);
+	PlatzMoveToSlice(&bob.pa,51);
 	
 	while(1) {
 		if (GetVsyncFlag()) {
 			ClearVsyncFlag();
 			btnHeld = ReadJoypad(0);
+
+			if (gstate != GSTATE_PLAYING)
+				btnHeld &= (BTN_START|BTN_SELECT);
         	btnPressed = btnHeld&(btnHeld^btnPrev);
         	btnReleased = btnPrev&(btnHeld^btnPrev);
 			btnPrev = btnHeld;
 
 			// Sound effects
 			if (besttmr) {
-				if (besttmr == 0)
-					TriggerNote(2,SFX_QUIET,60,5);
-				else if ((besttmr&3) == 0)
-					TRIGGER_NOTE(SFX_COLLECT_COIN,100-besttmr,SFX_VOL_COLLECT_COIN,4);	// Deliberately left macro half in/half out of conditional
+				if ((besttmr&3) == 0)
+					TRIGGER_NOTE(SFX_CHAN,SFX_COLLECT_COIN,100-besttmr,SFX_VOL_COLLECT_COIN,4);	// Deliberately left macro half in/half out of conditional
 				--besttmr;
 			}
 
 			if (wfall) {
 				if (--wfalltmr == 0) {
 					wfalltmr = 15;
-					TriggerNote(3,SFX_WATERFALL,85,SFX_VOL_WATERFALL);
+					TRIGGER_NOTE(3,SFX_WATERFALL,85,SFX_VOL_WATERFALL,15);
 				}
-			}
-
-			if (sfxtmr) {
-				if (--sfxtmr == 0)
-					TriggerNote(2,SFX_QUIET,60,5);
 			}
 
 			// Check for finish line crossing
 			if (checkpoints == 0x0F) {
-				checkpoints = 0;
-				AdjustTime((psntmrs[PSN_SNAIL]+psntmrs[PSN_REV_CTLS]+psntmrs[PSN_FREEZE])>>6);
-				AdjustTime(-puphud[PUP_COINS]);
+				AdjustTime(((psntmrs[PSN_SNAIL]+psntmrs[PSN_REV_CTLS]+psntmrs[PSN_FREEZE])>>6)-puphud[PUP_COINS]);
 				PrintHudTime();
 
 				if ((tCurr.min < tBest.min) || ((tCurr.min == tBest.min) && (tCurr.sec10 < tBest.sec10)) || 
@@ -1256,10 +1249,9 @@ int main(void) {
 				if (titletmr) {
 					if (--titletmr == 0) {
 						PlatzHideSprite(6,2,1);
-						bob.pa.loc = (pt){124,100};
-						PlatzSetViewport(110,120);
-						PlatzMoveToSlice(&bob.pa,58);
-						SetForm(FORM_LYNX,DIR_RIGHT);
+						bob.pa.loc = (pt){126,100};
+						PlatzSetViewport(112,120);
+						PlatzMoveToSlice(&bob.pa,52);
 						ResetGame();
 						ResetGameTime();
 						InitHud();
@@ -1285,12 +1277,12 @@ int main(void) {
 
 					if (--demotmr == 0) {
 						SetForm(FORM_DRAGONFLY,DIR_RIGHT);
-						bob.pa.loc = (pt){170,48};
-						PlatzSetViewport(160,0);
+						bob.pa.loc = (pt){168,48};
+						PlatzSetViewport(156,120);
 						PlatzMapSprite(4,2,2,animSnailRt);
-						MoveSprite(4,48,40,2,2);
+						MoveSprite(4,44,40,2,2);
 						PlatzFill(&(rect){0,32,VRAM_TILES_V,31},TILE_SKY);
-						PlatzMoveToSlice(&bob.pa,57);
+						PlatzMoveToSlice(&bob.pa,51);
 						titletmr = 15*HZ;
 						gstate = GSTATE_INTRO;
 					} else {
@@ -1315,7 +1307,7 @@ int main(void) {
 							case (DEMO_HZ-(HZ>>1)):
 							case (DEMO_HZ-HZ):
 								pupsel = PUP_COINS;
-								TRIGGER_NOTE(SFX_COLLECT_COIN,83,SFX_VOL_COLLECT_COIN,20);
+								TRIGGER_NOTE(SFX_CHAN,SFX_COLLECT_COIN,83,SFX_VOL_COLLECT_COIN,20);
 								puphud[PUP_COINS] += 5;
 								break;
 							case (DEMO_HZ-4*HZ):
@@ -1323,8 +1315,7 @@ int main(void) {
 								break;
 							case (DEMO_HZ-8*HZ):
 								pupsel = PUP_BOOTS;
-								btnPressed |= BTN_B;
-								move |= MOVE_RIGHT;
+								btnPressed |= BTN_B|MOVE_RIGHT;
 								break;
 							case (DEMO_HZ-12*HZ):
 								pupsel = PUP_EGG;
@@ -1335,8 +1326,21 @@ int main(void) {
 							case (DEMO_HZ-15*HZ):
 								move &=~ MOVE_UP;
 								break;
+							case (DEMO_HZ-16*HZ):
+								pupsel = PUP_BUDDHA;
+								btnPressed |= BTN_B|MOVE_LEFT;
+								break;
+							case (DEMO_HZ-17*HZ):
+								move &=~ MOVE_LEFT;
+								break;
+							case (DEMO_HZ-18*HZ):
+								move |= MOVE_RIGHT;
+								break;
+							case (DEMO_HZ-19*HZ):
+								move &=~ MOVE_RIGHT;
+								break;
 							case (DEMO_HZ-24*HZ):	// bomb
-								TRIGGER_NOTE(SFX_BOMB,0,SFX_VOL_BOMB,33);
+								TRIGGER_NOTE(SFX_CHAN,SFX_BOMB,0,SFX_VOL_BOMB,33);
 								explRect = (rect){23,26,3,6};
 								PlatzFillMap(&explRect,0,0,mapExplosion,2);
 								expltmr = HZ>>2;
@@ -1357,11 +1361,14 @@ int main(void) {
 			if (btnPressed&BTN_START) {
 				if (gstate&(GSTATE_INTRO|GSTATE_DEMO)) {
 					PlatzHideSprite(4,2,2);
+					SetForm(FORM_LYNX,DIR_RIGHT);
 					bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
 					bob.pa.sprx = (PLATZ_SCRN_WID>>1)-bob.pa.bbx;	// Center sprite on screen
 					PlatzSetViewport(bob.pa.sprx,0);
-					PlatzMoveToSlice(&bob.pa,56);
+					PlatzMoveToSlice(&bob.pa,50);
 					InitHud();
+					ResetGame();
+					ResetGameTime();
 					PrintHudTime();
 					prng = MAX(prng,1);		// Don't seed lfsr with zero
 					StartSong(crazy_caroms_song);
@@ -1376,13 +1383,16 @@ int main(void) {
 			// Reset and move to start
 			if (btnPressed&BTN_SELECT) {
 				if (gstate != GSTATE_INTRO) {
-					ResetGame();
 					bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
-					PlatzMoveToSlice(&bob.pa,56);
-					SetForm(FORM_LYNX,DIR_RIGHT);
+					PlatzMoveToSlice(&bob.pa,EMPTY_SLICE);	// Ensure SetForms succeed
 					PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
-					bob.pa.vx.dir = 1;
-					gstate = GSTATE_PLAYING;
+					PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
+					bob.pa.vx.dir = DIR_RIGHT;
+					ResetGame();
+					StopSong();
+					demotmr = 1;
+					gstate = GSTATE_DEMO;
+					continue;
 				}
 			}
 
@@ -1411,7 +1421,7 @@ int main(void) {
 						}
 						break;
 					case PUP_BOOTS:
-						if (puphud[PUP_BOOTS]) {
+						if ((puphud[PUP_BOOTS]) && (bob.form != FORM_TURTLE)) {
 							--puphud[PUP_BOOTS];
 							if (puptmrs[PUP_BOOTS] == 0)
 								bob.ax.max <<= 1;
@@ -1443,7 +1453,6 @@ int main(void) {
 			} else {
 				move &=~ btnReleased;
 				move |= btnPressed|btnHeld;
-
 				fmove = move;
 
 				if (psntmrs[PSN_REV_CTLS]) {
