@@ -23,4 +23,5 @@ const animation bgAnimations[] PROGMEM = {
 	{4,2,2,2,0,0,8,0,animFire},
 	{4,2,2,4,0,0,10,0,animCoins},
 	{1,1,1,4,0,0,16,0,animWave},	// Not synchronized
+	{6,3,2,2,0,0,32,0,animSnes}
 };

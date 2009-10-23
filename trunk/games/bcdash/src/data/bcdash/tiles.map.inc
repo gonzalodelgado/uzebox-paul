@@ -548,6 +548,14 @@ const char mapBFront[2 * 12 + 2] PROGMEM=
    17, 14
 };
 
+#define mapSig_Width   (2)
+#define mapSig_Height  (1)
+
+const char mapSig[2 * 1 + 2] PROGMEM=
+{mapSig_Width,mapSig_Height,
+  174,175
+};
+
 #define animCoins_Width   (2)
 #define animCoins_Height  (8)
 
@@ -617,4 +625,15 @@ const char animWave[1 * 4 + 2] PROGMEM=
   165,
   166,
   165
+};
+
+#define animSnes_Width   (3)
+#define animSnes_Height  (4)
+
+const char animSnes[3 * 4 + 2] PROGMEM=
+{3,2,
+  167,168,169,
+  170,171,172,
+  167,168,169,
+  170,173,172
 };
