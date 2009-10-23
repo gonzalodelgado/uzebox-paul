@@ -243,6 +243,7 @@ typedef struct player {
  ****************************************/
 
 player bob;
+u16 move = MOVE_NONE; 		// Bob's current movement instruction
 u8 hangtime = 10;
 u8 wfall;
 u8 wfalltmr = 15;
@@ -628,7 +629,7 @@ void UpdateTimers(void) {
 	} else if (psntmrs[PSN_REV_CTLS]) {	// Wonky controls
 		--psntmrs[PSN_REV_CTLS];
 	} else if (psntmrs[PSN_SNAIL]) {
-			if (bob.form == FORM_LYNX)
+			if ((bob.form == FORM_LYNX) && (bob.ay.state == TM_YSTATE_IDLE))
 				SetForm(FORM_SNAIL,bob.pa.vx.dir);
 			if (bob.form == FORM_SNAIL) {
 				if (psntmrs[PSN_SNAIL])
@@ -696,7 +697,7 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 				tCurr.min = 0;
 				fps = 0;
 				PrintHudTime();
-			}
+			}	// Fall through
 		case TRIG_CHECK_1:
 		case TRIG_CHECK_2:
 		case TRIG_CHECK_3:
@@ -707,16 +708,14 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 		case TRIG_WATER:				
 			if (trig > 0) {
 				if (bob.form == FORM_TURTLE) {
-					if (puptmrs[PUP_EGG] == 0) {
-						if ((psntmrs[PSN_SNAIL]>>6) < (100-3))
-							psntmrs[PSN_SNAIL] += 3*HZ;
-						AdjustTime(5);
-						puptmrs[PUP_DFLY] = 2*HZ;
-					}
-					SetForm(FORM_DRAGONFLY,bob.pa.vx.dir);
+					SetForm(FORM_LYNX,bob.pa.vx.dir);
+					bob.ay.state = TM_YSTATE_TAKEOFF;
+
+					if (move&MOVE_JUMP)
+						pogotmr = HZ>>2;
 				}
 			} else {
-				if ((bob.form != FORM_TURTLE) && (walkOnWater == 0)) {
+				if ((bob.form != FORM_TURTLE) && ((bob.ay.state&(TM_YSTATE_TAKEOFF|TM_YSTATE_RISING|TM_YSTATE_PEAK)) == 0) && (walkOnWater == 0)) {
 					SetForm(FORM_TURTLE,bob.pa.vx.dir);
 				}					
 			}
@@ -752,6 +751,8 @@ char SetForm(u8 form, char dirX) {
 	
 	// Don't call PlatzSetBoundingBoxDimensions before bob has been initialised
 	if (!prevForm || PlatzSetBoundingBoxDimensions(&bob.pa,bob.anim.wid<<3,bob.anim.hgt<<3)) {
+		bob.ay.state = TM_YSTATE_IDLE;
+
 		switch (form) {		
 			case FORM_DRAGONFLY:
 				PlatzSetVelocity(&bob.pa.vy,MIN(bob.pa.vy.vel,SPD_MAX_DRAGONFLY_Y),&bob.pa.trLoc.y);
@@ -816,7 +817,6 @@ char SetForm(u8 form, char dirX) {
 				bob.ay.acc.limit = 2;
 				bob.ay.dec.limit = 2;
 				bob.ay.max = SPD_MAX_LYNX_GND_Y;
-				bob.ay.state = TM_YSTATE_IDLE;
 				break;
 		}
 
@@ -1147,7 +1147,6 @@ void AquaticAnimation(char prevDir, u16 move) {
 
 int main(void) {
 	u8 besttmr = 0;
-	u16 move = MOVE_NONE; 		// Bob's current movement instruction
 	u16 fmove = MOVE_NONE;		// Final movement instruction after poisons etc
 	u8 collFlag = 0;			// Collision flag
 	char prevDir = 0;
@@ -1160,8 +1159,6 @@ int main(void) {
 	LoadBestTime();
 	InitMusicPlayer(patches);
 	SetMasterVolume(0xb0);
-	StartSong(crazy_caroms_song);
-	//StartSong(song_korobeiniki);
 	SetTileTable(tileset);
 	SetSpritesTileTable(spriteset);
 	SetSpriteVisibility(true);
@@ -1202,7 +1199,7 @@ int main(void) {
 	MoveSprite(4,48,40,2,2);
 
 	// Init platz scene
-	PlatzSetMovingPlatformTiles(190,168,167);
+	PlatzSetMovingPlatformTiles(199,177,176);
 	PlatzInit(&bob.pa,57);
 	PlatzMoveToSlice(&bob.pa,57);
 	
@@ -1264,6 +1261,7 @@ int main(void) {
 					InitHud();
 					PrintHudTime();
 					prng = MAX(prng,1);		// Don't seed lfsr with zero
+					StartSong(crazy_caroms_song);
 					gstate = GSTATE_PLAYING;
 				} else if (gstate == GSTATE_PAUSED) {
 					gstate = GSTATE_PLAYING;
@@ -1301,7 +1299,7 @@ int main(void) {
 				// Activate selected power-up
 				switch (pupsel) {
 					case PUP_EGG:
-						if (puphud[PUP_EGG] && (bob.form != FORM_SNAIL)) {
+						if (puphud[PUP_EGG] && (bob.form == FORM_LYNX)) {
 							--puphud[PUP_EGG];
 							puptmrs[PUP_EGG] = 4*HZ;
 
