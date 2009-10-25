@@ -1,4 +1,20 @@
 
+#define mapEgg_Width   (1)
+#define mapEgg_Height  (1)
+
+const char mapEgg[1 * 1 + 2] PROGMEM =
+{mapEgg_Width,mapEgg_Height,
+    28
+};
+
+#define mapIcicle_Width   (1)
+#define mapIcicle_Height  (1)
+
+const char mapIcicle[1 * 1 + 2] PROGMEM =
+{mapIcicle_Width,mapIcicle_Height,
+    21
+};
+
 #define mapStar_Width   (1)
 #define mapStar_Height  (1)
 
@@ -530,9 +546,9 @@ const char mapDashH[4 * 6 + 2] PROGMEM=
 };
 
 #define mapBFront_Width   (2)
-#define mapBFront_Height  (12)
+#define mapBFront_Height  (11)
 
-const char mapBFront[2 * 12 + 2] PROGMEM=
+const char mapBFront[2 * 11 + 2] PROGMEM=
 {mapBFront_Width,mapBFront_Height,
    13,  0,
     7, 13,
@@ -543,17 +559,96 @@ const char mapBFront[2 * 12 + 2] PROGMEM=
    13,  0,
     7, 13,
     9, 10,
-    7,  8,
     9, 20,
-   17, 14
+   18, 14
 };
 
-#define mapSig_Width   (2)
-#define mapSig_Height  (1)
+#define mapDucats_Width   (6)
+#define mapDucats_Height  (1)
 
-const char mapSig[2 * 1 + 2] PROGMEM=
-{mapSig_Width,mapSig_Height,
-  174,175
+const char mapDucats[6 * 1 + 2] PROGMEM=
+{mapDucats_Width,mapDucats_Height,
+  170,187,169,167,186,185
+};
+
+#define mapStitchInTime_Width   (11)
+#define mapStitchInTime_Height  (1)
+
+const char mapStitchInTime[11 * 1 + 2] PROGMEM=
+{mapStitchInTime_Width,mapStitchInTime_Height,
+  185,186,175,186,169,174,  0,175,180,  0,  3
+};
+
+#define mapSpeedy_Width   (6)
+#define mapSpeedy_Height  (1)
+
+const char mapSpeedy[6 * 1 + 2] PROGMEM=
+{mapSpeedy_Width,mapSpeedy_Height,
+  185,182,171,171,170,191
+};
+
+#define mapDfly_Width   (9)
+#define mapDfly_Height  (1)
+
+const char mapDfly[9 * 1 + 2] PROGMEM=
+{mapDfly_Width,mapDfly_Height,
+  170,184,167,173,181,180,172,178,191
+};
+
+#define mapFloat_Width   (5)
+#define mapFloat_Height  (1)
+
+const char mapFloat[5 * 1 + 2] PROGMEM=
+{mapFloat_Width,mapFloat_Height,
+  172,178,181,167,186
+};
+
+#define mapLeap_Width   (4)
+#define mapLeap_Height  (1)
+
+const char mapLeap[4 * 1 + 2] PROGMEM=
+{mapLeap_Width,mapLeap_Height,
+  178,171,167,182
+};
+
+#define mapKaboom_Width   (6)
+#define mapKaboom_Height  (1)
+
+const char mapKaboom[6 * 1 + 2] PROGMEM=
+{mapKaboom_Width,mapKaboom_Height,
+  177,167,168,181,181,179
+};
+
+#define mapPoison_Width   (6)
+#define mapPoison_Height  (1)
+
+const char mapPoison[6 * 1 + 2] PROGMEM=
+{mapPoison_Width,mapPoison_Height,
+  182,181,175,185,181,180
+};
+
+#define mapTimeFlies_Width   (7)
+#define mapTimeFlies_Height  (1)
+
+const char mapTimeFlies[7 * 1 + 2] PROGMEM=
+{mapTimeFlies_Width,mapTimeFlies_Height,
+    3,  0,172,178,175,171,185
+};
+
+#define mapMovingPlatformStepped_Width   (1)
+#define mapMovingPlatformStepped_Height  (1)
+
+const char mapMovingPlatformStepped[1 * 1 + 2] PROGMEM=
+{mapMovingPlatformStepped_Width,mapMovingPlatformStepped_Height,
+  193
+};
+
+#define mapMovingPlatform_Width   (1)
+#define mapMovingPlatform_Height  (1)
+
+const char mapMovingPlatform[1 * 1 + 2] PROGMEM=
+{mapMovingPlatform_Width,mapMovingPlatform_Height,
+  194
 };
 
 #define animCoins_Width   (2)
@@ -627,13 +722,13 @@ const char animWave[1 * 4 + 2] PROGMEM=
   165
 };
 
-#define animSnes_Width   (3)
-#define animSnes_Height  (4)
+#define animPressStart_Width   (14)
+#define animPressStart_Height  (3)
 
-const char animSnes[3 * 4 + 2] PROGMEM=
-{3,2,
-  167,168,169,
-  170,171,172,
-  167,168,169,
-  170,173,172
+const char animPressStart[14 * 3 + 2] PROGMEM=
+{14,1,
+  168,191,  0,182,167,187,178,  0,179,169,182,174,171,171,
+    0,  0,  0,  0,187,192,171,168,181,190,  0,  0,  0,  0,
+    0,182,184,171,185,185,  0,  0,185,186,167,184,186,  0
 };
+

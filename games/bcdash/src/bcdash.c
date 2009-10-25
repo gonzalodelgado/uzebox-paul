@@ -47,7 +47,7 @@
 #define SPD_MAX_SNAIL_Y					12
 #define LOC_BOB_X						120
 #define LOC_BOB_Y						40
-#define EMPTY_SLICE						53
+#define EMPTY_SLICE						56
 	// States
 #define BS_MOVING						1
 #define BS_SWING						2
@@ -163,11 +163,15 @@
 
 // Misc
 #define HZ								64	// For pup/poison counters. Better efficient than accurate.
+#define TITLE_HZ						(12*HZ)
 #define DEMO_HZ							(40*HZ)
+#define HISCORE_HZ						(12*HZ)
 #define GSTATE_INTRO					1
 #define GSTATE_PLAYING					2
 #define GSTATE_PAUSED					4
 #define GSTATE_DEMO						8
+#define GSTATE_HISCORE					16
+#define GSTATE_INITIALS					32
 
 /****************************************
  *				Utils					*
@@ -252,7 +256,8 @@ u8 wfalltmr = 15;
 u8 fps;
 u8 checkpoints;
 u8 mutmap[MUT_BG_COUNT];
-bcTime tCurr,tBest;
+bcTime tCurr,tBest[7] = {{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9}};
+char initsCurr[4] = "UZE",inits[28];
 // Power-ups
 u8 pupsel = PUP_COINS;
 u8 puphud[4];
@@ -272,6 +277,10 @@ u8 gstate = GSTATE_DEMO;
 // Sfx
 //u8 sfxtmr;
 
+// Fonts
+u8 fontNumerals[11] = {82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92};
+u8 fontAlpha[26] = {167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192};
+
 /****************************************
  *			Function prototypes			*
  ****************************************/
@@ -289,7 +298,8 @@ void ResetGame(void);
 void ResetGameTime(void);
 void BCFormatEeprom(void);
 void SaveBestTime(void);
-void LoadBestTime(void);
+int LoadBestTime(void);
+void PrintHiScores(void);
 void InitHud(void);
 void AdjustTime(char sec);
 void PrintHudTime(void);
@@ -492,31 +502,57 @@ void BCFormatEeprom(void) {
 void SaveBestTime(void) {
 	struct EepromBlockStruct ebs;
 
-	if (!isEepromFormatted()) {
-		BCFormatEeprom();
-	}
-	
+	// Save hi scores
 	ebs.id = BCDASH_EEPROM_ID;
-	ebs.data[0] = tBest.min;
-	ebs.data[1] = tBest.sec10;
-	ebs.data[2] = tBest.sec1;
+	memcpy(ebs.data,tBest,7*(sizeof(tBest[0])));
+	EepromWriteBlock(&ebs);
+	ebs.id = BCDASH_EEPROM_ID+1;
+	memcpy(ebs.data,inits,28*sizeof(inits[0]));
 	EepromWriteBlock(&ebs);
 }
 
 
-void LoadBestTime(void) {
+int LoadBestTime(void) {
 	struct EepromBlockStruct ebs;
+	int retval = 0;
 
 	ebs.id = BCDASH_EEPROM_ID;
+	retval = EepromReadBlock(ebs.id, &ebs);
 
-	if (EepromReadBlock(BCDASH_EEPROM_ID, &ebs) == 0) {
-		tBest.min = ebs.data[0];
-		tBest.sec10 = ebs.data[1];
-		tBest.sec1 = ebs.data[2];
-	} else {
-		tBest.min = 9;
-		tBest.sec10 = 9;
-		tBest.sec1 = 9;
+	if (retval == 0) {
+		memcpy(tBest,ebs.data,7*sizeof(tBest[0]));
+		ebs.id = BCDASH_EEPROM_ID+1;
+		retval = EepromReadBlock(ebs.id, &ebs);
+		memcpy(inits,ebs.data,28*sizeof(inits[0]));
+	}
+
+	return retval;
+}
+
+
+void PrintHiScores(void) {
+	u8 x = 11,y = 1,prevX = x;
+
+	for (u8 i = 0; i < 7; i++) {
+		SetTile(x++,y,fontAlpha[inits[4*i]-'A']);
+		SetTile(x++,y,fontAlpha[inits[4*i+1]-'A']);
+		SetTile(x++,y,fontAlpha[inits[4*i+2]-'A']);
+		SetTile(x++,y,TILE_SKY);
+		SetTile(x++,y,fontNumerals[(int)tBest[i].min]);
+		SetTile(x++,y,fontNumerals[':'-'0']);
+		SetTile(x++,y,fontNumerals[(int)tBest[i].sec10]);
+		SetTile(x,y,fontNumerals[(int)tBest[i].sec1]);
+		y += 2;
+
+		if (i == 0) {
+			x = prevX = 5;
+			y = 4;
+		} else if (i == 3) {
+			x = prevX = 17;
+			y = 4;	
+		} else {
+			x = prevX;
+		}
 	}
 }
 
@@ -526,9 +562,9 @@ void InitHud(void) {
 	SetTile(HUD_BEST_TIME_X,HUD_BEST_TIME_Y,TILE_TIME_BEST);
 	SetTile(HUD_CURR_TIME_X+3,HUD_CURR_TIME_Y,TILE_FONT_START+10);
 	SetTile(HUD_BEST_TIME_X+3,HUD_BEST_TIME_Y,TILE_FONT_START+10);
-	SetTile(HUD_BEST_TIME_X+2,HUD_BEST_TIME_Y,TILE_FONT_START+tBest.min);
-	SetTile(HUD_BEST_TIME_X+4,HUD_BEST_TIME_Y,TILE_FONT_START+tBest.sec10);
-	SetTile(HUD_BEST_TIME_X+5,HUD_BEST_TIME_Y,TILE_FONT_START+tBest.sec1);
+	SetTile(HUD_BEST_TIME_X+2,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].min);
+	SetTile(HUD_BEST_TIME_X+4,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec10);
+	SetTile(HUD_BEST_TIME_X+5,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec1);
 	// Powerups
 	DrawMap2(HUD_PUPS_X+1,HUD_PUPS_Y,mapPsn);
 	SetTile(HUD_PUPS_X+6,HUD_PUPS_Y,TILE_EGG);
@@ -567,9 +603,9 @@ void PrintHudTime(void) {
 
 
 void PrintHudBestTime(void) {
-	SetTile(HUD_BEST_TIME_X+2,HUD_BEST_TIME_Y,TILE_FONT_START+tBest.min);
-	SetTile(HUD_BEST_TIME_X+4,HUD_BEST_TIME_Y,TILE_FONT_START+tBest.sec10);
-	SetTile(HUD_BEST_TIME_X+5,HUD_BEST_TIME_Y,TILE_FONT_START+tBest.sec1);
+	SetTile(HUD_BEST_TIME_X+2,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].min);
+	SetTile(HUD_BEST_TIME_X+4,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec10);
+	SetTile(HUD_BEST_TIME_X+5,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec1);
 }
 
 
@@ -630,10 +666,14 @@ void UpdateTimers(void) {
 		}
 	}
 
-	// Boots - let player retain high speed until making an error (i.e. don't wind back current speed)
+	// Boots
 	if (puptmrs[PUP_BOOTS])
-		if (--puptmrs[PUP_BOOTS] == 0)
+		if (--puptmrs[PUP_BOOTS] == 0) {
 			bob.ax.max >>= 1;
+
+			if (bob.pa.vx.vel > bob.ax.max)
+				PlatzSetVelocity(&bob.pa.vx,bob.ax.max,&bob.pa.trLoc.x);
+		}
 
 	if (psntmrs[PSN_FREEZE]) {	// Freeze poison
 		--psntmrs[PSN_FREEZE];
@@ -1148,10 +1188,22 @@ void AquaticAnimation(char prevDir, u16 move) {
 	}
 }
 
+extern trigCallback trigCb;					// Triggerable bg callback function (client-defined logic)
+extern mutCallback mutCb;					// Mutable bg callback function (client-defined logic)
+extern const animation *animBgTbl;			// Animated bgs' location in flash
+extern const bgAnimIndex *bgAnimDir;		// Animated BG directory in flash
+extern const char **bgMaps;					// Background maps in flash (BGMAP flag)
+extern const object *objTbl;				// Objects' tile maps in flash
+extern const bgInner *bgiTbl;				// Non-collidable decorative bgs in flash
+extern const bgOuter *bgoTbl;				// Collidable bg containers in flash
+extern const bgDirectory *bgDir;			// Bg directory in flash
+extern const platformDirectory *platDir;	// Moving platform headers
+extern const platform *platTbl;				// Moving platforms' attributes
+
 
 int main(void) {
+	u8 cursor = 0;				// For entering initials
 	u8 demoX = 0, demoY = 0;	// Demo "X" coords
-	u16 titletmr = 0;			// Title and demo instruction screen timers
 	u16 demotmr = 1;			// Seed an initial switch to titletmr
 	u8 besttmr = 0;
 	u16 fmove = MOVE_NONE;		// Final movement instruction after poisons etc
@@ -1162,8 +1214,17 @@ int main(void) {
 	u16 btnPressed = 0;  		// Buttons that were pressed this frame
 	u16 btnReleased = 0;		// Buttons that were released this frame
 
+	if (!isEepromFormatted()) {
+		BCFormatEeprom();
+	}
+
+	for (u8 i = 0; i < 7; i++)
+		strcpy((inits+4*i),"UZE");
+
+	if (LoadBestTime())
+		SaveBestTime();	// Initialise best times in eeprom
+
 	// Init kernel
-	LoadBestTime();
 	InitMusicPlayer(patches);
 	SetMasterVolume(0xb0);
 	SetTileTable(tileset);
@@ -1172,6 +1233,19 @@ int main(void) {
 	Screen.overlayHeight = OVERLAY_LINES;
 
 	// Init platz pointers
+	trigCb = ActivateTrigger;
+	mutCb = BgMutator;
+	platTbl = pgmPlatforms;
+	platDir = pgmPlatformDir;
+	bgMaps = pgmMaps;
+	animBgTbl = bgAnimations;
+	bgAnimDir = pgmAnimDir;
+	objTbl = pgmObjects;
+	bgiTbl = pgmBgsInner;
+	bgoTbl = pgmBgsOuter;
+	bgDir = pgmBgDir;
+
+/*
 	PlatzSetTriggerCallback(ActivateTrigger);
 	PlatzSetMutCallback(BgMutator);
 	PlatzSetMovingPlatformTable(pgmPlatforms);
@@ -1183,7 +1257,7 @@ int main(void) {
 	PlatzSetInnerBgTable(pgmBgsInner);
 	PlatzSetOuterBgTable(pgmBgsOuter);
 	PlatzSetBgDirectory(pgmBgDir);
-
+*/
 	// Local inits
 	bob.sprite = SPRITE_BOB;
 	bob.state = 0;
@@ -1196,20 +1270,20 @@ int main(void) {
 	bob.pa.trLoc = (pt){4,0};		// Trigger loc offset due to dragonfly's smaller size (than lynx). Should be 0,0 for largest sprite.
 	bob.pa.vx.dir = DIR_RIGHT;
 	bob.pa.vy.dir = DIR_DOWN;
-	PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
-	PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
+	//PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
+	//PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
 
 	// Init platz scene
-	PlatzSetMovingPlatformTiles(199,177,176);
-	PlatzInit(&bob.pa,51);
-	PlatzMoveToSlice(&bob.pa,51);
-	
+	PlatzSetMovingPlatformTiles(0,194,194,193);
+	PlatzInit(&bob.pa,53);
+	PlatzMoveToSlice(&bob.pa,53);
+
 	while(1) {
 		if (GetVsyncFlag()) {
 			ClearVsyncFlag();
 			btnHeld = ReadJoypad(0);
 
-			if (gstate != GSTATE_PLAYING)
+			if ((gstate&(GSTATE_PLAYING|GSTATE_INITIALS)) == 0)
 				btnHeld &= (BTN_START|BTN_SELECT);
         	btnPressed = btnHeld&(btnHeld^btnPrev);
         	btnReleased = btnPrev&(btnHeld^btnPrev);
@@ -1234,59 +1308,88 @@ int main(void) {
 				AdjustTime(((psntmrs[PSN_SNAIL]+psntmrs[PSN_REV_CTLS]+psntmrs[PSN_FREEZE])>>6)-puphud[PUP_COINS]);
 				PrintHudTime();
 
-				if ((tCurr.min < tBest.min) || ((tCurr.min == tBest.min) && (tCurr.sec10 < tBest.sec10)) || 
-						((tCurr.min == tBest.min) && (tCurr.sec10 == tBest.sec10) && (tCurr.sec1 < tBest.sec1))) {
-					besttmr = 40;
-					tBest = tCurr;
-					PrintHudBestTime();
-					SaveBestTime();
+				for (u8 i = 0; i < 7; i++) {
+					if ((tCurr.min < tBest[i].min) || ((tCurr.min == tBest[i].min) && (tCurr.sec10 < tBest[i].sec10)) || 
+							((tCurr.min == tBest[i].min) && (tCurr.sec10 == tBest[i].sec10) && (tCurr.sec1 < tBest[i].sec1))) {
+						for (u8 j = 6; j > i; j--) {
+							tBest[j] = tBest[j-1];
+							strcpy(inits+(4*j),inits+(4*(j-1)));
+						}
+						// These cost too much as they're not used elsewhere
+						//memmove(tBest+i+1,tBest+i,(6-i)*sizeof(tBest[0]));
+						//memmove(inits+4*(i+1),tBest+4*i,4*(6-i)*sizeof(inits[0]));
+						tBest[i] = tCurr;
+						strcpy(inits+(4*i),initsCurr);
+						PrintHudBestTime();
+						SaveBestTime();
+						besttmr = 40;
+						break;
+					}
 				}
 				ResetGame();
 			}
 
 			// Intro - title screen/demo instructions
 			if (gstate == GSTATE_INTRO) {
-				if (titletmr) {
-					if (--titletmr == 0) {
-						PlatzHideSprite(6,2,1);
-						bob.pa.loc = (pt){126,100};
-						PlatzSetViewport(112,120);
-						PlatzMoveToSlice(&bob.pa,52);
-						ResetGame();
-						ResetGameTime();
-						InitHud();
-						demoX = 4;
-						demoY = 1;
-						demotmr = DEMO_HZ-1;
-						gstate = GSTATE_DEMO;
+				++prng;
+
+				if (demotmr) {
+					if (--demotmr == 0) {
+						PlatzHideSprite(4,1,1);
+						PlatzMoveToSlice(&bob.pa,55);
+						bob.pa.loc = (pt){64,8};
+						bob.pa.sprx = 64;
+						wfalltmr = 15;
+						wfall = 1;
+						demotmr = HISCORE_HZ;
+						gstate = GSTATE_HISCORE;
 					}
 				}
+			} else if (gstate == GSTATE_INITIALS) {
+				demoX = 13;
+				demoY = 5;
+
+				for (u8 i = 0; i < 3; i++)
+					SetTile(demoX+i,demoY,fontAlpha[(int)(initsCurr[i]-'A')]);
+				
+				if (btnPressed&BTN_UP)
+					initsCurr[cursor]++;
+				else if (btnPressed&BTN_DOWN)
+					initsCurr[cursor]--;
+				if (initsCurr[cursor] < 'A')
+					initsCurr[cursor] = 'Z';
+				else if (initsCurr[cursor] > 'Z')
+					initsCurr[cursor] = 'A';
+				if (btnPressed&BTN_LEFT)
+					cursor = (cursor)?cursor-1:2;
+				else if (btnPressed&BTN_RIGHT)
+					cursor = (cursor < 2)?cursor+1:0;
 			} else if (gstate == GSTATE_DEMO) {
 				if (demotmr) {
-					if (demoY)
-						SetTile(demoX,demoY,TILE_SKY);
+					SetTile(demoX,demoY,TILE_SKY);
 
 					if ((demotmr&0xff) == 0) {
 						demoY += 4;
 
 						if (demoY > 20) {
-							demoY = 1;
-							demoX = 22;
+							demoY = 2;
+							demoX = 19;
 						}
 					}					
 
 					if (--demotmr == 0) {
 						SetForm(FORM_DRAGONFLY,DIR_RIGHT);
-						bob.pa.loc = (pt){168,48};
+						bob.pa.loc = (pt){168,32};
 						PlatzSetViewport(156,120);
-						PlatzMapSprite(4,2,2,animSnailRt);
-						MoveSprite(4,44,40,2,2);
+						PlatzMapSprite(4,1,1,animSnailRt);
+						MoveSprite(4,44,32,1,1);
 						PlatzFill(&(rect){0,32,VRAM_TILES_V,31},TILE_SKY);
-						PlatzMoveToSlice(&bob.pa,51);
-						titletmr = 15*HZ;
+						PlatzMoveToSlice(&bob.pa,53);
+						demotmr = TITLE_HZ;
 						gstate = GSTATE_INTRO;
 					} else {
-						SetTile(demoX,demoY,TILE_PUPSEL);
+						if (demotmr&0x20)
+							SetTile(demoX,demoY,TILE_PUPSEL);	// Flash 'x'
 
 						if (demotmr == (DEMO_HZ-20*HZ))
 							pogotmr = 2*HZ;
@@ -1341,7 +1444,7 @@ int main(void) {
 								break;
 							case (DEMO_HZ-24*HZ):	// bomb
 								TRIGGER_NOTE(SFX_CHAN,SFX_BOMB,0,SFX_VOL_BOMB,33);
-								explRect = (rect){23,26,3,6};
+								explRect = (rect){20,23,4,7};
 								PlatzFillMap(&explRect,0,0,mapExplosion,2);
 								expltmr = HZ>>2;
 								break;
@@ -1355,17 +1458,38 @@ int main(void) {
 						}
 					}
 				}
+			} else if (gstate == GSTATE_HISCORE) {
+				if (demotmr) {
+					if (--demotmr == 0) {
+						bob.pa.loc = (pt){126,100};
+						PlatzSetViewport(112,120);
+						PlatzMoveToSlice(&bob.pa,54);
+						ResetGame();
+						ResetGameTime();
+						InitHud();
+						demoX = 2;
+						demoY = 2;
+						demotmr = DEMO_HZ-1;
+						gstate = GSTATE_DEMO;
+					} else if (demotmr == (HISCORE_HZ-1)) {
+						PrintHiScores();
+					}
+				}
 			}
 
 			// Begin game and pause/unpause
 			if (btnPressed&BTN_START) {
-				if (gstate&(GSTATE_INTRO|GSTATE_DEMO)) {
+				if (gstate&(GSTATE_INTRO|GSTATE_DEMO|GSTATE_HISCORE)) {
 					PlatzHideSprite(4,2,2);
 					SetForm(FORM_LYNX,DIR_RIGHT);
 					bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
 					bob.pa.sprx = (PLATZ_SCRN_WID>>1)-bob.pa.bbx;	// Center sprite on screen
 					PlatzSetViewport(bob.pa.sprx,0);
-					PlatzMoveToSlice(&bob.pa,50);
+					PlatzMoveToSlice(&bob.pa,52);
+					btnPrev &= BTN_START;
+					btnPressed = 0;
+					PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
+					PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
 					InitHud();
 					ResetGame();
 					ResetGameTime();
@@ -1373,6 +1497,11 @@ int main(void) {
 					prng = MAX(prng,1);		// Don't seed lfsr with zero
 					StartSong(crazy_caroms_song);
 					gstate = GSTATE_PLAYING;
+					continue;
+				} else if (gstate == GSTATE_INITIALS) {
+					PlatzFill(&(rect){13,16,5,6},TILE_SKY);
+					gstate = GSTATE_INTRO;
+					continue;
 				} else if (gstate == GSTATE_PAUSED) {
 					gstate = GSTATE_PLAYING;
 				} else if (gstate == GSTATE_PLAYING) {
@@ -1382,23 +1511,25 @@ int main(void) {
 
 			// Reset and move to start
 			if (btnPressed&BTN_SELECT) {
-				if (gstate != GSTATE_INTRO) {
-					bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
-					PlatzMoveToSlice(&bob.pa,EMPTY_SLICE);	// Ensure SetForms succeed
-					PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
-					PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
-					bob.pa.vx.dir = DIR_RIGHT;
-					ResetGame();
-					StopSong();
-					demotmr = 1;
-					gstate = GSTATE_DEMO;
+				if (gstate == GSTATE_INITIALS) {
+					continue;
+				} else if (gstate == GSTATE_INTRO) {
+					gstate = GSTATE_INITIALS;
 					continue;
 				}
+				bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
+				PlatzMoveToSlice(&bob.pa,EMPTY_SLICE);	// Ensure SetForms succeed
+				PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
+				PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
+				bob.pa.vx.dir = DIR_RIGHT;
+				ResetGame();
+				StopSong();
+				demotmr = 1;
+				gstate = GSTATE_DEMO;
+				continue;
 			}
 
-			if (gstate == GSTATE_INTRO)
-				++prng;
-			else if (gstate == GSTATE_PAUSED)
+			if (gstate == GSTATE_PAUSED)
 				continue;
 
 			// Scroll through pups

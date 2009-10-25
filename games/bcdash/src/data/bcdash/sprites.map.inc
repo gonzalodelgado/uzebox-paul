@@ -60,7 +60,7 @@ const char animDFlyLt[2 * 6] PROGMEM=
    62, 63,
    64, 65,
    66, 66,
-   67, 68
+   60, 67
 };
 
 #define animDFlyRt_Width   (2)
@@ -68,12 +68,12 @@ const char animDFlyLt[2 * 6] PROGMEM=
 
 const char animDFlyRt[2 * 6] PROGMEM=
 {
-   69, 70,
-   71, 72,
-   73, 74,
-   75, 76,
+   68, 69,
+   70, 71,
+   72, 73,
+   74, 75,
    66, 66,
-   77, 78
+   76, 71
 };
 
 #define animTurtleLt_Width   (2)
@@ -81,9 +81,9 @@ const char animDFlyRt[2 * 6] PROGMEM=
 
 const char animTurtleLt[2 * 3] PROGMEM=
 {
+   77, 78,
    79, 80,
-   81, 82,
-   83, 84
+   81, 82
 };
 
 #define animTurtleRt_Width   (2)
@@ -91,25 +91,23 @@ const char animTurtleLt[2 * 3] PROGMEM=
 
 const char animTurtleRt[2 * 3] PROGMEM=
 {
+   83, 84,
    85, 86,
-   87, 88,
-   89, 90
+   87, 88
 };
 
-#define animSnailLt_Width   (2)
-#define animSnailLt_Height  (2)
+#define animSnailLt_Width   (1)
+#define animSnailLt_Height  (1)
 
-const char animSnailLt[2 * 2] PROGMEM=
+const char animSnailLt[1 * 1] PROGMEM=
 {
-   91, 92,
-   93, 94
+   89
 };
 
-#define animSnailRt_Width   (2)
-#define animSnailRt_Height  (2)
+#define animSnailRt_Width   (1)
+#define animSnailRt_Height  (1)
 
-const char animSnailRt[2 * 2] PROGMEM=
+const char animSnailRt[1 * 1] PROGMEM=
 {
-   95, 96,
-   97, 98
+   90
 };

@@ -250,7 +250,7 @@ void PlatzSetVelocity(velocity *v, char val, u8 *trPos);
 void PlatzTick(void);
 
 #if MAX_MOVING_PLATFORMS
-	void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 sTilesIndex);
+	void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 shTilesIndex, u8 svTilesIndex);
 #endif
 
 // Platz initialization
@@ -277,4 +277,5 @@ u8 PlatzRectsIntersect(const rect *r1, const rect *r2);
 u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2);
 
 #endif
+
 
