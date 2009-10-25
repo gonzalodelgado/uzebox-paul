@@ -61,7 +61,8 @@ typedef struct platforms {
 typedef struct platformsCommon {
 	u8 vtiles;					// Offset to vertical platform tiles
 	u8 htiles;					// Offset to horizontal platform tiles
-	u8 stepped;					// Offset to stepped platform tile (only paints square)
+	u8 vstepped;				// Offset to vertical stepped platform tile (only paints square)
+	u8 hstepped;				// Offset to horizontal stepped platform tile (only paints square)
 } platformsCommon;
 
 typedef struct animatedBgs {
@@ -253,10 +254,11 @@ void PlatzInit(platzActor *a, u8 sliceCount) {
 
 #if MAX_MOVING_PLATFORMS
 // Initialises global moving platforms structure
-void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 sTilesIndex) {
+void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 shTilesIndex, u8 svTilesIndex) {
 	cp.htiles = hTilesIndex;
 	cp.vtiles = vTilesIndex;
-	cp.stepped = sTilesIndex;
+	cp.hstepped = shTilesIndex;
+	cp.vstepped = svTilesIndex;
 }
 #endif
 
@@ -591,9 +593,9 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 				mpBtm = mp.p[i][j].r.btm>>3;
 
 				if (mp.p[i][j].axis == AXIS_X) {
-					mpTile = cp.htiles;
+					mpTile = cp.hstepped;
 				} else {
-					mpTile = cp.vtiles;
+					mpTile = cp.vstepped;
 
 					// Negative vel can draw one tile off if not multiple of tile height
 					if ((mp.v[i][j].dir < 0) && (mp.p[i][j].r.top&7)) {
@@ -1306,8 +1308,9 @@ void PlatzDrawMovingPlatforms(u8 axis) {
 				tiles = cp.vtiles;
 			}
 
-			if (mp.p[i][j].clrTile&MP_STEPPED)
-				tiles = cp.stepped;
+			if (mp.p[i][j].clrTile&MP_STEPPED) {
+				tiles = (mp.p[i][j].axis == AXIS_X)?cp.hstepped:cp.vstepped;
+			}
 
 			hgt = (*far)-(*near);
 			*far = (*near)+1;
@@ -1687,5 +1690,6 @@ void PlatzMoveProjectiles(void) {
 	}
 }
 #endif
+
 
 

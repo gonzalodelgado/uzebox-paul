@@ -12,8 +12,8 @@ const animation bobAnimations[] PROGMEM = {
 	{2,2,1,3,0,0,8,0,animTurtleLt},
 	{2,2,1,3,0,0,8,0,animTurtleRt},
 	/* Snail form */
-	{4,2,2,1,0,0,128,0,animSnailLt},
-	{4,2,2,1,0,0,128,0,animSnailRt}
+	{1,1,1,1,0,0,128,0,animSnailLt},
+	{1,1,1,1,0,0,128,0,animSnailRt}
 };
 
 const animation bgAnimations[] PROGMEM = {
@@ -23,5 +23,5 @@ const animation bgAnimations[] PROGMEM = {
 	{4,2,2,2,0,0,8,0,animFire},
 	{4,2,2,4,0,0,10,0,animCoins},
 	{1,1,1,4,0,0,16,0,animWave},	// Not synchronized
-	{6,3,2,2,0,0,32,0,animSnes}
+	{14,14,1,3,0,0,128,0,animPressStart}
 };

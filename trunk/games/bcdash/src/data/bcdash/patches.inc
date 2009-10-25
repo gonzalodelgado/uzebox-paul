@@ -1,9 +1,4 @@
 
-const char quiet[] PROGMEM = {
-0,PC_NOTE_CUT,0,
-0,PATCH_END
-};
-
 const char waterfall[] PROGMEM = { 
 0,PC_WAVE,11,
 0,PC_PITCH,85,
@@ -68,6 +63,7 @@ const char pupCollect[] PROGMEM = {
 
 const char coinCollect[] PROGMEM = {
 0,PC_WAVE,2,
+0,PC_PITCH,83,
 0,PC_ENV_VOL,0xff,
 0,PC_TREMOLO_LEVEL,0x90,     
 0,PC_TREMOLO_RATE,60, 
@@ -347,6 +343,5 @@ const struct PatchStruct patches[] PROGMEM = {
 {0,NULL,bomb,0,0},
 {0,NULL,pupCollect,0,0},
 {0,NULL,coinCollect,0,0},
-{0,NULL,psnCollect,0,0},
-{0,NULL,quiet,0,0}
+{0,NULL,psnCollect,0,0}
 };
