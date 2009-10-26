@@ -523,7 +523,9 @@ int LoadBestTime(void) {
 		memcpy(tBest,ebs.data,7*sizeof(tBest[0]));
 		ebs.id = BCDASH_EEPROM_ID+1;
 		retval = EepromReadBlock(ebs.id, &ebs);
-		memcpy(inits,ebs.data,28*sizeof(inits[0]));
+
+		if (retval == 0)
+			memcpy(inits,ebs.data,28*sizeof(inits[0]));
 	}
 
 	return retval;
@@ -574,6 +576,8 @@ void InitHud(void) {
 }
 
 
+// Seconds overflow at 9:99 to 9:00 in order to save flash. Unlikely that anyone
+// is vying for best times in that ballpark.
 void AdjustTime(char sec) {
 	tCurr.sec1 += sec;
 	sec = (sec > 0)?1:-1;	// Normalize and re-use
