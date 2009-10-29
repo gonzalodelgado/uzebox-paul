@@ -1,113 +1,58 @@
-#define animLynxIdleLt_Width   (3)
-#define animLynxIdleLt_Height  (2)
+#define animLynxIdle_Width   (3)
+#define animLynxIdle_Height  (2)
 
-const char animLynxIdleLt[3 * 2] PROGMEM=
+const char animLynxIdle[3 * 2] PROGMEM=
 {
     0,  1,  2,
     3,  4,  5
 };
 
-#define animLynxIdleRt_Width   (3)
-#define animLynxIdleRt_Height  (2)
+#define animLynxRun_Width   (3)
+#define animLynxRun_Height  (12)
 
-const char animLynxIdleRt[3 * 2] PROGMEM=
+const char animLynxRun[3 * 12] PROGMEM=
 {
-    6,  7,  8,
-    9, 10, 11
+    0,  1,  6,
+    7,  8,  9,
+    0,  1,  6,
+   10, 11, 12,
+   13,  1, 14,
+   15, 16, 17,
+   18, 19,  2,
+   20, 21, 22,
+   23, 24,  2,
+   25, 26, 27,
+   28,  1,  2,
+   29, 30, 31
 };
 
-#define animLynxRunLt_Width   (3)
-#define animLynxRunLt_Height  (10)
+#define animDFly_Width   (2)
+#define animDFly_Height  (6)
 
-const char animLynxRunLt[3 * 10] PROGMEM=
+const char animDFly[2 * 6] PROGMEM=
 {
-   12,  1,  2,
-   13, 14, 15,
-   16,  1, 17,
-   18, 19, 20,
-    0, 21, 22,
-   23, 24, 25,
-    0, 26, 27,
-   28, 29, 30,
-    0,  1, 31,
-   32, 33, 34
+   32, 33,
+   34, 35,
+   36, 37,
+   38, 39,
+   40, 40,
+   41, 35
 };
 
-#define animLynxRunRt_Width   (3)
-#define animLynxRunRt_Height  (10)
+#define animTurtle_Width   (2)
+#define animTurtle_Height  (3)
 
-const char animLynxRunRt[3 * 10] PROGMEM=
+const char animTurtle[2 * 3] PROGMEM=
 {
-    6,  7, 35,
-   36, 37, 38,
-   39,  7, 40,
-   41, 42, 43,
-   44, 45,  8,
-   46, 47, 48,
-   49, 50,  8,
-   51, 52, 53,
-   54,  7,  8,
-   55, 56, 57
+   42, 43,
+   44, 45,
+   46, 47
 };
 
-#define animDFlyLt_Width   (2)
-#define animDFlyLt_Height  (6)
+#define animSnail_Width   (1)
+#define animSnail_Height  (1)
 
-const char animDFlyLt[2 * 6] PROGMEM=
+const char animSnail[1 * 1] PROGMEM=
 {
-   58, 59,
-   60, 61,
-   62, 63,
-   64, 65,
-   66, 66,
-   60, 67
-};
-
-#define animDFlyRt_Width   (2)
-#define animDFlyRt_Height  (6)
-
-const char animDFlyRt[2 * 6] PROGMEM=
-{
-   68, 69,
-   70, 71,
-   72, 73,
-   74, 75,
-   66, 66,
-   76, 71
-};
-
-#define animTurtleLt_Width   (2)
-#define animTurtleLt_Height  (3)
-
-const char animTurtleLt[2 * 3] PROGMEM=
-{
-   77, 78,
-   79, 80,
-   81, 82
-};
-
-#define animTurtleRt_Width   (2)
-#define animTurtleRt_Height  (3)
-
-const char animTurtleRt[2 * 3] PROGMEM=
-{
-   83, 84,
-   85, 86,
-   87, 88
-};
-
-#define animSnailLt_Width   (1)
-#define animSnailLt_Height  (1)
-
-const char animSnailLt[1 * 1] PROGMEM=
-{
-   89
-};
-
-#define animSnailRt_Width   (1)
-#define animSnailRt_Height  (1)
-
-const char animSnailRt[1 * 1] PROGMEM=
-{
-   90
+   48
 };

@@ -1,19 +1,14 @@
 
 const animation bobAnimations[] PROGMEM = {
 	/* Lynx form */
-	{6,3,2,1,0,0,0,0,animLynxIdleLt},
-	{6,3,2,1,0,0,0,0,animLynxIdleRt},
-	{6,3,2,5,0,0,4,0,animLynxRunLt},
-	{6,3,2,5,0,0,4,0,animLynxRunRt},
+	{6,3,2,1,0,0,0,0,animLynxIdle},
+	{6,3,2,6,0,0,4,0,animLynxRun},
 	/* Dragonfly form */
-	{4,2,2,3,0,0,4,0,animDFlyLt},
-	{4,2,2,3,0,0,4,0,animDFlyRt},
+	{4,2,2,3,0,0,4,0,animDFly},
 	/* Turtle form */
-	{2,2,1,3,0,0,8,0,animTurtleLt},
-	{2,2,1,3,0,0,8,0,animTurtleRt},
+	{2,2,1,3,0,0,8,0,animTurtle},
 	/* Snail form */
-	{1,1,1,1,0,0,128,0,animSnailLt},
-	{1,1,1,1,0,0,128,0,animSnailRt}
+	{1,1,1,1,0,0,128,0,animSnail}
 };
 
 const animation bgAnimations[] PROGMEM = {
@@ -23,5 +18,5 @@ const animation bgAnimations[] PROGMEM = {
 	{4,2,2,2,0,0,8,0,animFire},
 	{4,2,2,4,0,0,10,0,animCoins},
 	{1,1,1,4,0,0,16,0,animWave},	// Not synchronized
-	{14,14,1,3,0,0,128,0,animPressStart}
+	{14,14,1,4,0,0,128,0,animPressStart}
 };

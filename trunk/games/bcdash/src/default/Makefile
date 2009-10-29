@@ -18,7 +18,7 @@ KERNEL_OPTIONS  += -DMIXER_WAVES=\"$(realpath ../data/bcdash/sounds.inc)\"
 ## Platz settings
 	## MAX_MOVING_PLATFORMS and MAX_ANIMATED_BGS are per slice. Set to 0 to disable.
 	## VIEWPORT_SLACK should be small enough so as to not allow your player to wander offscreen.
-PLATZ_OPTIONS = -DVIEWPORT_SLACK=0 -DMAX_MOVING_PLATFORMS=3 -DMAX_ANIMATED_BGS=5 -DMUTABLE_BGS -DMP_HACK
+PLATZ_OPTIONS = -DVIEWPORT_SLACK=0 -DMAX_MOVING_PLATFORMS=3 -DMAX_ANIMATED_BGS=5 -DMUTABLE_BGS -DMP_HACK -DBCDASH
 
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)

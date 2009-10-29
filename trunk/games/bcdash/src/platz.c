@@ -102,9 +102,10 @@ projectile projs[MAX_PROJECTILES];
  ****************************************/
 trigCallback trigCb;				// Triggerable bg callback function (client-defined logic)
 mutCallback mutCb;					// Mutable bg callback function (client-defined logic)
+queryCallback queryCb;				// Queryable bg callback function (client-defined logic)
 const animation *animBgTbl;			// Animated bgs' location in flash
 const bgAnimIndex *bgAnimDir;		// Animated BG directory in flash
-const char **bgMaps;				// Background maps in flash (BGMAP flag)
+const char **bgMaps;				// Background maps in flash (BGP flag)
 const object *objTbl;				// Objects' tile maps in flash
 const bgInner *bgiTbl;				// Non-collidable decorative bgs in flash
 const bgOuter *bgoTbl;				// Collidable bg containers in flash
@@ -171,6 +172,11 @@ void PlatzSetTriggerCallback(trigCallback tcb) {
 // Mutator callback is a user-defined function to handle mutable background events
 void PlatzSetMutCallback(mutCallback mcb) {
 	mutCb = mcb;
+}
+
+// Query callback is a user-defined function to handle queryable background collisions
+void PlatzSetQueryCallback(queryCallback qb) {
+	queryCb = qb;
 }
 
 #if MAX_MOVING_PLATFORMS
@@ -309,9 +315,6 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 	// Draw sky
 	ClearVram();
 
-	//if (OVERLAY_LINES)
-	//	PlatzFill(&(rect){0,SCREEN_TILES_H,VRAM_TILES_V-OVERLAY_LINES-1,VRAM_TILES_V-1},208);
-
 	for (i = 0; i < MAX_VIS_SLICES; i++) {
 		memcpy_P(&bgd,bgDir+sp,sizeof(bgDirectory));
 
@@ -430,12 +433,23 @@ u8 PlatzSetBoundingBoxDimensions(platzActor *a, u8 wid, u8 hgt) {
 }
 
 // Similar to kernel's MapSprite, but no wid/hgt header to read from flash
-void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map) {
-	u8 x,y;
+void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags) {
+	u8 x,y,xStart,xEnd,xStep;
+
+	if (spriteFlags&SPRITE_FLIP_X) {
+		xStart = wid-1;
+		xEnd = 255;
+		xStep = -1;
+	} else {
+		xStart = 0;
+		xEnd = wid;
+		xStep = 1;
+	}
 
 	for (y = 0; y < hgt; y++) {
-		for (x = 0; x < wid; x++) {
-			sprites[index++].tileIndex = pgm_read_byte(&(map[(y*wid)+x]));
+		for (x = xStart; x < xEnd; x += xStep,index++) {
+			sprites[index].tileIndex = pgm_read_byte(&(map[(y*wid)+x]));
+			sprites[index].flags = spriteFlags;
 		}
 	}
 }
@@ -486,7 +500,7 @@ void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int da
 	u8 x,y,wid = r->right-r->left,hgt = r->btm-r->top,mapWid = pgm_read_byte(&(map[0])),mapHgt = pgm_read_byte(&(map[1]));
 	u8 xMap, yMap;
 
-	// Don't burden non-repeating maps with possible mod overhead. Also allows for non 2^n objects
+	// Don't burden non-repeating maps with possible mod overhead. Also allows for non 2^n maps
 	// while still having SLOW_BG_PATTERNS undefined
 	if ((xOffset > mapWid) || (yOffset > mapHgt)) {
 		#ifndef SLOW_BG_PATTERNS
@@ -635,20 +649,31 @@ u8 PlatzLinesIntersect(const line16 *l1, const line16 *l2) {
 
 // Determines if two rect16's overlap
 inline u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2) {
+	if ((r1->btm < r2->top) || (r1->right < r2->left) || (r1->left > r2->right) || (r1->top > r2->btm))
+		return 0;
+	return 1;
+/*
 	if (r1->btm < r2->top) return 0;
 	if (r1->right < r2->left) return 0;
 	if (r1->left > r2->right) return 0;
 	if (r1->top > r2->btm) return 0;
 	return 1;
+*/
 }
 
 // Determines if two rect's overlap (8-bit)
 inline u8 PlatzRectsIntersect(const rect *r1, const rect *r2) {
+	if ((r1->btm < r2->top) || (r1->right < r2->left) || (r1->left > r2->right) || (r1->top > r2->btm))
+		return 0;
+	return 1;
+
+/*
 	if (r1->btm < r2->top) return 0;
 	if (r1->right < r2->left) return 0;
 	if (r1->left > r2->right) return 0;
 	if (r1->top > r2->btm) return 0;
 	return 1;
+*/
 }
 
 #if MAX_MOVING_PLATFORMS
@@ -660,6 +685,18 @@ u8 PlatzDetectMovingPlatformCollisions(platzActor *a, char *xDelta) {
 	char xVel = GET_VEL(a->vx);
 	char yVel = GET_VEL(a->vy);
 	rect r = {a->loc.x-a->bbx+xVel,a->loc.x+a->bbx+xVel,a->loc.y-a->bby+yVel,a->loc.y+a->bby+yVel};
+
+#ifdef BCDASH
+	if (queryCb) {
+		retVal = 1;
+		queryCb(0,&retVal);
+
+		if (retVal)
+			retVal = 0;
+		else
+			return retVal;
+	}
+#endif
 
 	for (i = 0; i < MAX_VIS_SLICES; i++) {
 		if (mp.slice[i] != csp) {
@@ -996,6 +1033,15 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 							}
 						}
 					}
+
+					// Query collision callback
+					if (queryCb && (bgo.type&BGQ))
+						queryCb(&bgo,&colVal);
+
+#ifdef BCDASH
+					if (queryCb && (mode == DBGC_MODE_PLATS))
+						queryCb(0,&colVal);
+#endif
 
 					if (colVal&V_INTERSECT) {
 						xVel -= NORMALIZE(xVel)+NORMALIZE(xVel)*(rColl.right-rColl.left);
