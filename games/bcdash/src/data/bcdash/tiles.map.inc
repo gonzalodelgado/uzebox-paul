@@ -723,11 +723,12 @@ const char animWave[1 * 4 + 2] PROGMEM=
 };
 
 #define animPressStart_Width   (14)
-#define animPressStart_Height  (3)
+#define animPressStart_Height  (4)
 
-const char animPressStart[14 * 3 + 2] PROGMEM=
+const char animPressStart[14 * 4 + 2] PROGMEM=
 {14,1,
   168,191,  0,182,167,187,178,  0,179,169,182,174,171,171,
+  179,187,185,175,169,  0,168,191,  0,173,184,167,167,  0,
     0,  0,  0,  0,187,192,171,168,181,190,  0,  0,  0,  0,
     0,182,184,171,185,185,  0,  0,185,186,167,184,186,  0
 };

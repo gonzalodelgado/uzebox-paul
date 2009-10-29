@@ -18,6 +18,15 @@
 */
 
 /****************************************
+ *			Future Work					*
+ ****************************************/
+/*
+	- Ignore collisions from below platform ledges while in panther to make getting out of water
+	  less frustrating
+
+*/
+
+/****************************************
  *			Library Dependencies		*
  ****************************************/
 #include <avr/pgmspace.h>
@@ -30,7 +39,7 @@
  *				Constants				*
  ****************************************/
 
-#define LOW_FLASH
+//#define LOW_FLASH
 
 // Player
 #define BCDASH_EEPROM_ID				14
@@ -136,7 +145,6 @@
 #define MUT_SECRET_WATER				12
 #define MUT_FIRE						13
 #define MUT_BOMB_TARGET_SWITCH			14
-
 #define MUT_BG_COUNT					32	// 32x8 bits for 256 bgs total
 
 // HUD
@@ -163,7 +171,7 @@
 
 // Misc
 #define HZ								64	// For pup/poison counters. Better efficient than accurate.
-#define TITLE_HZ						(12*HZ)
+#define TITLE_HZ						(8*HZ)
 #define DEMO_HZ							(40*HZ)
 #define HISCORE_HZ						(12*HZ)
 #define GSTATE_INTRO					1
@@ -181,7 +189,7 @@
 #define MAX(_x,_y)  ((_x)>(_y) ? (_x) : (_y))
 #define ABS(_x)		(((_x) > 0) ? (_x) : -(_x))
 
-#ifdef IM_TIRED //LOW_FLASH
+#ifdef USE_TRIGGER_NOTE
 	#define TRIGGER_NOTE(chan,patch,note,vol,len)	TriggerNote((chan),(patch),(note),(vol));	\
 													sfxtmr = (len);
 #else
@@ -257,13 +265,14 @@ u8 fps;
 u8 checkpoints;
 u8 mutmap[MUT_BG_COUNT];
 bcTime tCurr,tBest[7] = {{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9}};
-char initsCurr[4] = "UZE",inits[28];
+char initsCurr[4],inits[28];
 // Power-ups
 u8 pupsel = PUP_COINS;
 u8 puphud[4];
 u16 puptmrs[3];
 u8 walkOnWater;
 u8 hrgtmr;
+u8 superjumptmr;
 // Explosion flash
 u8 expltmr;
 rect explRect;
@@ -285,6 +294,7 @@ u8 fontAlpha[26] = {167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,
  *			Function prototypes			*
  ****************************************/
 void ActivateTrigger(u16 index, u8 type, char trig);	// Platz event callback target
+void QueryPlatformCollision(bgOuter* bgo, u8 *colVal);
 u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v);	// Platz mutable bg event callback target
 void AerialMovement(u16 move);
 void AerialAnimation(char dir, char prevDir);
@@ -292,8 +302,8 @@ void TerrestrialMovement(u16 move);
 void TerrestrialAnimation(char prevDir, u16 move, u8 collMask);
 void AquaticMovement(u16 move);
 void AquaticAnimation(char prevDir, u16 move);
-char SetForm(u8 form, char dirX);
-void LoadBobAnimations(char dirX);
+char SetForm(u8 form);
+void LoadBobAnimations(void);
 void ResetGame(void);
 void ResetGameTime(void);
 void BCFormatEeprom(void);
@@ -311,6 +321,11 @@ void UpdateTimers(void);
 /****************************************
  *			Function definitions		*
  ****************************************/
+
+void QueryPlatformCollision(bgOuter* bgo, u8 *colVal) {
+	if (superjumptmr)
+		*colVal = 0;
+}
 
 u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v) {
 	u8 mapIndex = (bgiInfo->type)>>3,mutIndex = (bgiInfo->type)&7,mutVal,clr;
@@ -467,6 +482,8 @@ void ResetGame(void) {
 	memset(puphud,0x00,4*sizeof(puphud[0]));
 
 	// Make sure active power-ups run their clean up code
+	if (superjumptmr)
+		superjumptmr = 1;
 	if (pogotmr)
 		pogotmr = 1;
 
@@ -591,10 +608,17 @@ void AdjustTime(char sec) {
 		tCurr.sec10 -= 6*sec;
 		tCurr.min += sec;
 
-		if (tCurr.min > 9)
+		if (tCurr.min > 9) {
 			tCurr.min = 9;
-		else if (tCurr.min < 0)
+			tCurr.sec10 = 5;
+			tCurr.sec1 = 9;
+			break;
+		} else if (tCurr.min < 0) {
 			tCurr.min = 0;
+			tCurr.sec10 = 0;
+			tCurr.sec1 = 0;
+			break;
+		}
 	}
 }
 
@@ -658,6 +682,17 @@ void UpdateTimers(void) {
 		if (--expltmr == 0)
 			PlatzFill(&explRect,TILE_SKY);
 
+	if (superjumptmr) {
+		if (--superjumptmr == 0) {
+			if (bob.form == FORM_LYNX)
+				bob.ay.dec.ds = 16;
+			hangtime = 10;
+		} else if (bob.form == FORM_LYNX) {
+			bob.ay.dec.ds = 32;
+			hangtime = 16;
+		}
+	}
+
 	// Pogo stick
 	if (pogotmr) {
 		if (--pogotmr == 0) {
@@ -685,13 +720,13 @@ void UpdateTimers(void) {
 		--psntmrs[PSN_REV_CTLS];
 	} else if (psntmrs[PSN_SNAIL]) {
 			if ((bob.form == FORM_LYNX) && (bob.ay.state == TM_YSTATE_IDLE))
-				SetForm(FORM_SNAIL,bob.pa.vx.dir);
+				SetForm(FORM_SNAIL);
 			if (bob.form == FORM_SNAIL) {
 				if (psntmrs[PSN_SNAIL])
 					--psntmrs[PSN_SNAIL];
 			}
 	} else if (bob.form == FORM_SNAIL) {
-		if (SetForm(FORM_LYNX,bob.pa.vx.dir))
+		if (SetForm(FORM_LYNX))
 			psntmrs[PSN_SNAIL] = HZ>>2;	// Failed - try again later
 	}
 
@@ -699,9 +734,9 @@ void UpdateTimers(void) {
 	if (puptmrs[PUP_EGG]) {
 		if (--puptmrs[PUP_EGG] == 0)
 			if (bob.form == FORM_DRAGONFLY)
-				SetForm(FORM_LYNX,bob.pa.vx.dir);
+				SetForm(FORM_LYNX);
 	} else if (bob.form == FORM_DRAGONFLY) {
-		SetForm(FORM_LYNX,bob.pa.vx.dir);
+		SetForm(FORM_LYNX);
 	}
 
 	// Walk on water
@@ -712,30 +747,28 @@ void UpdateTimers(void) {
 }
 
 
-void LoadBobAnimations(char dirX) {
+void LoadBobAnimations(void) {
 	u8 index = 0;
-
-	if (dirX > 0) index += 1;
 
 	switch (bob.form) {
 		case FORM_LYNX:
 			if ((bob.state&BS_MOVING) || bob.pa.vx.vel) {
 				// Move past lynx idle animation
-				index += 2;
+				index = 1;
 			}
 			break;
 		case FORM_DRAGONFLY:
-			index += 4;
+			index = 2;
 			break;
 		case FORM_TURTLE:
-			index += 6;
+			index = 3;
 			break;
 		case FORM_SNAIL:
-			index += 8;
+			index = 4;
 			break;
 	}
 		
-	memcpy_P(&bob.anim,bobAnimations+index,sizeof(animation));
+	memcpy_P(&bob.anim,bobAnimations+index,sizeof(animation));		
 }
 
 
@@ -743,6 +776,7 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 	switch(index) {
 		case TRIG_CHECK_0:
 			if (checkpoints == 0) {
+				ResetGame();
 				ResetGameTime();
 				PrintHudTime();
 			}	// Fall through
@@ -756,15 +790,15 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 		case TRIG_WATER:				
 			if (trig > 0) {
 				if (bob.form == FORM_TURTLE) {
-					SetForm(FORM_LYNX,bob.pa.vx.dir);
+					SetForm(FORM_LYNX);
 					bob.ay.state = TM_YSTATE_TAKEOFF;
 
 					if (move&MOVE_JUMP)
-						pogotmr = HZ>>2;
+						superjumptmr = HZ;
 				}
 			} else {
 				if ((bob.form != FORM_TURTLE) && ((bob.ay.state&(TM_YSTATE_TAKEOFF|TM_YSTATE_RISING|TM_YSTATE_PEAK)) == 0) && (walkOnWater == 0)) {
-					SetForm(FORM_TURTLE,bob.pa.vx.dir);
+					SetForm(FORM_TURTLE);
 				}					
 			}
 			break;
@@ -785,7 +819,7 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 }
 
 
-char SetForm(u8 form, char dirX) {
+char SetForm(u8 form) {
 	u8 snailTurtleVelY, retVal = 0;
 
 	if (bob.form == form) {
@@ -795,7 +829,7 @@ char SetForm(u8 form, char dirX) {
 	u8 prevForm = bob.form;
 	PlatzHideSprite(bob.sprite,bob.anim.wid,bob.anim.hgt);
 	bob.form = form;
-	LoadBobAnimations(dirX);
+	LoadBobAnimations();
 	
 	// Don't call PlatzSetBoundingBoxDimensions before bob has been initialised
 	if (!prevForm || PlatzSetBoundingBoxDimensions(&bob.pa,bob.anim.wid<<3,bob.anim.hgt<<3)) {
@@ -865,6 +899,7 @@ char SetForm(u8 form, char dirX) {
 				bob.ay.acc.limit = 2;
 				bob.ay.dec.limit = 2;
 				bob.ay.max = SPD_MAX_LYNX_GND_Y;
+				hangtime = 10;
 				break;
 		}
 
@@ -875,8 +910,8 @@ char SetForm(u8 form, char dirX) {
 		retVal = 1;
 	}
 
-	LoadBobAnimations(dirX);
-	PlatzMapSprite(bob.sprite, bob.anim.wid, bob.anim.hgt, bob.anim.frames+bob.anim.currFrame*bob.anim.size);
+	LoadBobAnimations();
+	PlatzMapSprite(bob.sprite, bob.anim.wid, bob.anim.hgt, bob.anim.frames+bob.anim.currFrame*bob.anim.size,(bob.pa.vx.dir != 1)?SPRITE_FLIP_X:0);
 	return retVal;
 }
 
@@ -932,9 +967,8 @@ void AerialMovement(u16 move) {
 
 void AerialAnimation(char dir, char prevDir) {
 	// Check for direction change
-	if (dir != prevDir) {
-		bob.animFlag |= 3;
-	}
+    if (bob.pa.vx.dir != prevDir)
+    	bob.animFlag |= 2;
 
 	if (++bob.anim.disp >= bob.anim.dpf) {
 		// Bob has moved far enough to warrant a new frame
@@ -1020,7 +1054,7 @@ void TerrestrialMovement(u16 move) {
 #ifdef LOW_FLASH
 				bob.anim.currFrame = 2;
 #else
-				bob.anim.currFrame = 3
+				bob.anim.currFrame = 3;
 #endif
 				bob.animFlag |= 0x02;
 				bob.ay.state = TM_YSTATE_FALLING;
@@ -1028,6 +1062,12 @@ void TerrestrialMovement(u16 move) {
 			break;
 		case TM_YSTATE_FALLING:	// Ground collision finalises the jump
 		case TM_YSTATE_IDLE:
+			superjumptmr = 0;
+
+			if (bob.form == FORM_LYNX)
+				bob.ay.dec.ds = 16;
+			hangtime = 10;
+			break;
 		default:
 			// Do nothing
 			break;
@@ -1048,10 +1088,9 @@ void TerrestrialAnimation(char prevDir, u16 move, u8 collMask) {
 	char yVel = GET_VEL(bob.pa.vy);
 
 	// Check for direction change
-	if (bob.pa.vx.dir != prevDir) {
-		bob.animFlag |= 3;
-	}
-	
+    if (bob.pa.vx.dir != prevDir)
+    	bob.animFlag |= 2;
+
 	if (collMask&4) {
 		// Y-Axis collision detected
 		if ((bob.pa.vx.vel == 0) && (bob.ay.state != TM_YSTATE_IDLE)) {
@@ -1158,9 +1197,8 @@ void AquaticMovement(u16 move) {
 
 void AquaticAnimation(char prevDir, u16 move) {
 	// Check for direction change
-	if (bob.pa.vx.dir != prevDir) {
-		bob.animFlag |= 3;
-	}
+    if (bob.pa.vx.dir != prevDir)
+    	bob.animFlag |= 2;
 
 	if (bob.form == FORM_TURTLE) {
 		if (bob.pa.vx.vel == 0) {
@@ -1194,9 +1232,10 @@ void AquaticAnimation(char prevDir, u16 move) {
 
 extern trigCallback trigCb;					// Triggerable bg callback function (client-defined logic)
 extern mutCallback mutCb;					// Mutable bg callback function (client-defined logic)
+extern queryCallback queryCb;				// Queryable bg callback function (client-defined logic)
 extern const animation *animBgTbl;			// Animated bgs' location in flash
 extern const bgAnimIndex *bgAnimDir;		// Animated BG directory in flash
-extern const char **bgMaps;					// Background maps in flash (BGMAP flag)
+extern const char **bgMaps;					// Background maps in flash (BGM flag)
 extern const object *objTbl;				// Objects' tile maps in flash
 extern const bgInner *bgiTbl;				// Non-collidable decorative bgs in flash
 extern const bgOuter *bgoTbl;				// Collidable bg containers in flash
@@ -1227,6 +1266,9 @@ int main(void) {
 
 	if (LoadBestTime())
 		SaveBestTime();	// Initialise best times in eeprom
+	
+	// Set initials to those of the record holder
+	strcpy(initsCurr,inits);
 
 	// Init kernel
 	InitMusicPlayer(patches);
@@ -1239,6 +1281,7 @@ int main(void) {
 	// Init platz pointers
 	trigCb = ActivateTrigger;
 	mutCb = BgMutator;
+	queryCb = QueryPlatformCollision;
 	platTbl = pgmPlatforms;
 	platDir = pgmPlatformDir;
 	bgMaps = pgmMaps;
@@ -1252,6 +1295,7 @@ int main(void) {
 /*
 	PlatzSetTriggerCallback(ActivateTrigger);
 	PlatzSetMutCallback(BgMutator);
+	PlatzSetQueryCallback(QueryPlatformCollision)
 	PlatzSetMovingPlatformTable(pgmPlatforms);
 	PlatzSetMovingPlatformDirectory(pgmPlatformDir);
 	PlatzSetMapsTable(pgmMaps);
@@ -1265,7 +1309,7 @@ int main(void) {
 	// Local inits
 	bob.sprite = SPRITE_BOB;
 	bob.state = 0;
-	SetForm(FORM_DRAGONFLY,DIR_RIGHT);
+	SetForm(FORM_DRAGONFLY);
 	memset(mutmap,0xff,MUT_BG_COUNT*sizeof(mutmap[0]));
 	
 	// Init platz actor
@@ -1278,7 +1322,7 @@ int main(void) {
 	//PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
 
 	// Init platz scene
-	PlatzSetMovingPlatformTiles(0,194,194,193);
+	PlatzSetMovingPlatformTiles(216,194,216,193);
 	PlatzInit(&bob.pa,53);
 	PlatzMoveToSlice(&bob.pa,53);
 
@@ -1382,10 +1426,10 @@ int main(void) {
 					}					
 
 					if (--demotmr == 0) {
-						SetForm(FORM_DRAGONFLY,DIR_RIGHT);
+						SetForm(FORM_DRAGONFLY);
 						bob.pa.loc = (pt){168,32};
 						PlatzSetViewport(156,120);
-						PlatzMapSprite(4,1,1,animSnailRt);
+						PlatzMapSprite(4,1,1,animSnail,0);
 						MoveSprite(4,44,32,1,1);
 						PlatzFill(&(rect){0,32,VRAM_TILES_V,31},TILE_SKY);
 						PlatzMoveToSlice(&bob.pa,53);
@@ -1427,7 +1471,7 @@ int main(void) {
 							case (DEMO_HZ-12*HZ):
 								pupsel = PUP_EGG;
 								btnPressed |= BTN_B;
-								SetForm(FORM_DRAGONFLY,DIR_RIGHT);
+								SetForm(FORM_DRAGONFLY);
 								move ^= (MOVE_RIGHT|MOVE_UP);
 								break;
 							case (DEMO_HZ-15*HZ):
@@ -1454,10 +1498,10 @@ int main(void) {
 								break;
 							case (DEMO_HZ-28*HZ):	// poison
 								psntmrs[PSN_SNAIL] = 4*HZ;
-								SetForm(FORM_SNAIL,DIR_RIGHT);
+								SetForm(FORM_SNAIL);
 								break;
 							case (DEMO_HZ-32*HZ):
-								SetForm(FORM_LYNX,DIR_RIGHT);
+								SetForm(FORM_LYNX);
 								break;
 						}
 					}
@@ -1485,7 +1529,7 @@ int main(void) {
 			if (btnPressed&BTN_START) {
 				if (gstate&(GSTATE_INTRO|GSTATE_DEMO|GSTATE_HISCORE)) {
 					PlatzHideSprite(4,2,2);
-					SetForm(FORM_LYNX,DIR_RIGHT);
+					SetForm(FORM_LYNX);
 					bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
 					bob.pa.sprx = (PLATZ_SCRN_WID>>1)-bob.pa.bbx;	// Center sprite on screen
 					PlatzSetViewport(bob.pa.sprx,0);
@@ -1552,7 +1596,7 @@ int main(void) {
 							puptmrs[PUP_EGG] += 4*HZ;
 
 							if (bob.form == FORM_LYNX)
-								SetForm(FORM_DRAGONFLY,bob.pa.vx.dir);
+								SetForm(FORM_DRAGONFLY);
 						}
 						break;
 					case PUP_BOOTS:
@@ -1618,8 +1662,9 @@ int main(void) {
 			}
 			
 			
-			if (bob.animFlag&1) LoadBobAnimations(bob.pa.vx.dir);
-			if (bob.animFlag&2) PlatzMapSprite(bob.sprite,bob.anim.wid,bob.anim.hgt,bob.anim.frames+bob.anim.currFrame*bob.anim.size);
+			if (bob.animFlag&1) LoadBobAnimations();
+			if (bob.animFlag&2) PlatzMapSprite(bob.sprite,bob.anim.wid,bob.anim.hgt,
+					bob.anim.frames+bob.anim.currFrame*bob.anim.size,(bob.pa.vx.dir != 1)?SPRITE_FLIP_X:0);
 			MoveSprite(bob.sprite,bob.pa.sprx-bob.pa.bbx,bob.pa.loc.y-bob.pa.bby+1,bob.anim.wid,bob.anim.hgt);
 			
 			if (gstate&(GSTATE_PLAYING|GSTATE_DEMO)) {

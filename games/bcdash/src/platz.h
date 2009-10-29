@@ -103,13 +103,23 @@
 #define PLATZ_MUT_EV_COLLISION	4
 
 // Level slice bit-flags
+	// Outer
 #define BGC		0x01	// Collidable
-#define BGP		0x02	// Patterned
-#define BGA		0x04	// Animated (automatically repeats like a pattern)
-#define BGT		0x08	// Triggerable
-#define BGI		0x10	// Invisible
-#define BGPRJ	0x20	// Projectile Barrier
-#define BGM		0x40	// Mutable
+#define BGT		0x02	// Triggerable
+#define BGI		0x04	// Invisible
+#define BGPRJ	0x08	// Projectile Barrier
+#define BGQ		0x10	// Queryable
+
+	// Inner
+#define BGP		0x01	// Patterned
+#define BGA		0x02	// Animated (automatically repeats like a pattern)
+
+	// Common
+#define BGM		0x80	// Mutable
+
+
+
+
 
 /****************************************
  *			Type declarations			*
@@ -152,7 +162,7 @@ typedef struct velocity {		// Single axis velocity
 	char 	vel;				// Base velocity - implemented as mod, modDisp and disp
 	char	dir;				// Direction of travel - useful for when spd == 0
 	u8		frames;				// Counts the game frames for use by mod
-	u8 		mod;				// Fractional speed adjustment (n-1)
+	u8 		mod;				// Fractional speed adjustment (2^n-1)
 	char	modDisp;			// Special case displacement when frames&mod == 0
 	char	disp;				// Typical displacement
 } velocity;
@@ -232,6 +242,7 @@ typedef struct platzActor {
 
 typedef void (*trigCallback)(u16,u8,char);
 typedef u8 (*mutCallback)(u8,bgInner*,bgInner*,void*);
+typedef void (*queryCallback)(bgOuter*,u8*);
 
 /****************************************
  *			Function prototypes			*
@@ -256,6 +267,7 @@ void PlatzTick(void);
 // Platz initialization
 void PlatzSetTriggerCallback(trigCallback tcb);
 void PlatzSetMutCallback(mutCallback mcb);
+void PlatzSetQueryCallback(queryCallback qb);
 void PlatzSetMovingPlatformTable(const platform *p);
 void PlatzSetMovingPlatformDirectory(const platformDirectory *pd);
 void PlatzSetMapsTable(const char **m);
@@ -272,7 +284,7 @@ void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int da
 char PlatzCcw(const pt16 *p0, const pt16 *p1, const pt16 *p2);
 void PlatzHideSprite(u8 spriteIndex, u8 wid, u8 hgt);
 u8 PlatzLinesIntersect(const line16 *l1, const line16 *l2);
-void PlatzMapSprite(u8 offset, u8 wid, u8 hgt, const char *map);
+void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags);
 u8 PlatzRectsIntersect(const rect *r1, const rect *r2);
 u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2);
 

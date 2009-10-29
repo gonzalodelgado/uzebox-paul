@@ -42,44 +42,82 @@
 	#define MAX_VIS_SLICES 2
 #endif
 
+#ifndef SLICE_SEQ_LEN
+	#define SLICE_SEQ_LEN 0
+#endif
+
 #define GET_VEL(v)	(((v).frames&(v).mod)?(v).disp:(v).modDisp)		// Takes a velocity struct v
 
+
+#define inline_set_tile(x,y,tileId) 	\
+	asm (								\
+		"mov r24,%2" "\n\t"				\
+		"ldi r25,%4" "\n\t"				\
+		"ldi %A3,lo8(vram)" "\n\t"		\
+		"ldi %B3,hi8(vram)" "\n\t"		\
+		"mul %1,r25" "\n\t"				\
+		"clr r25" "\n\t"				\
+		"add r0,%0" "\n\t"				\
+		"adc r1,r25" "\n\t"				\
+		"add %A3,r0" "\n\t"				\
+		"adc %B3,r1" "\n\t"				\
+		"subi r24,%5" "\n\t"			\
+		"st %a3,r24" "\n\t"				\
+		"clr r1"						\
+		: /* no outputs */				\
+		: "r" (x),						\
+		  "r" (y),						\
+		  "r" (tileId),					\
+		  "e" (vram),					\
+		  "M" (VRAM_TILES_H),			\
+		  "M" (255-(RAM_TILES_COUNT-1))	\
+		: "r24",						\
+		  "r25"							\
+	)
+
 // Constants
-#define L_INTERSECT		1
-#define R_INTERSECT		2
-#define V_INTERSECT		(L_INTERSECT|R_INTERSECT)
-#define T_INTERSECT		4
-#define B_INTERSECT		8
-#define H_INTERSECT		(T_INTERSECT|B_INTERSECT)
-#define AXIS_X			1		// Platform axes
-#define AXIS_Y			2		//
-#define ORI_LRUD		0		// Trigger orientations - Left/Right Up/Down
-#define ORI_RLDU		1		// Right/Left Down/Up
-#define PF_ZERO			0xff	// Invalid platform directory index - no platforms exist in this slice
-#define MAX_SLICES		0xfe	// 0xff left for invalid flag
-#define DIR_RIGHT 		1
-#define DIR_LEFT		-1
-#define DIR_DOWN		1
-#define DIR_UP			-1
-#define DIR_NONE		0
-#define PLATZ_SCRN_WID	240
-#define PLATZ_SCRN_HGT	224
+#define L_INTERSECT				1
+#define R_INTERSECT				2
+#define V_INTERSECT				(L_INTERSECT|R_INTERSECT)
+#define T_INTERSECT				4
+#define B_INTERSECT				8
+#define H_INTERSECT				(T_INTERSECT|B_INTERSECT)
+#define AXIS_X					1		// Platform axes
+#define AXIS_Y					2		//
+#define ORI_LRUD				0		// Trigger orientations - Left/Right Up/Down
+#define ORI_RLDU				1		// Right/Left Down/Up
+#define PF_ZERO					0xff	// Invalid platform directory index - no platforms exist in this slice
+#define MAX_SLICES				0xfe	// 0xff left for invalid flag
+#define DIR_RIGHT 				1
+#define DIR_LEFT				-1
+#define DIR_DOWN				1
+#define DIR_UP					-1
+#define DIR_NONE				0
+#define PLATZ_SCRN_WID			240
+#define PLATZ_SCRN_HGT			224
+#define MP_SMOOTH				0x40
+#define MP_STEPPED 				0x80
+	// Mutatable bg event codes
+#define PLATZ_MUT_EV_DRAW		1
+#define PLATZ_MUT_EV_ANIM		2
+#define PLATZ_MUT_EV_COLLISION	4
 
 // Level slice bit-flags
 #define BGC		0x01	// Collidable
 #define BGP		0x02	// Patterned
 #define BGA		0x04	// Animated (automatically repeats like a pattern)
-#define BGTH	0x08	// Triggerable - horizontal
-#define BGTV	0x10	// Triggerable - vertical
-#define BGI		0x20	// Invisible
+#define BGT		0x08	// Triggerable
+#define BGI		0x10	// Invisible
+#define BGPRJ	0x20	// Projectile Barrier
+#define BGM		0x40	// Mutable
 
 /****************************************
  *			Type declarations			*
  ****************************************/
 
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
+//typedef uint8_t u8;
+//typedef uint16_t u16;
+//typedef uint32_t u32;
 
 typedef struct pt {
 	u8	x;
@@ -114,7 +152,7 @@ typedef struct velocity {		// Single axis velocity
 	char 	vel;				// Base velocity - implemented as mod, modDisp and disp
 	char	dir;				// Direction of travel - useful for when spd == 0
 	u8		frames;				// Counts the game frames for use by mod
-	u8 		mod;				// Fractional speed adjustment (n-1)
+	u8 		mod;				// Fractional speed adjustment (2^n-1)
 	char	modDisp;			// Special case displacement when frames&mod == 0
 	char	disp;				// Typical displacement
 } velocity;
@@ -127,26 +165,25 @@ typedef struct animation {
 	u8 			currFrame;		// The frame that is currently displayed
 	u8			disp;			// Displacement counter
 	u8			dpf;			// Displacement per frame (scales frame rate to movement speed)
+	u8			synch;			// Flag to indicate animation should be synchronized with others of similar type
 	const char	*frames;		// Stored in flash
 } animation;
 
-typedef struct patternDirectory {
-	u8 wid;
-	u8 hgt;
-	u8 index;					// Position in patTbl at which this pattern begins
-} patternDirectory;
+typedef struct bgAnimIndex {
+	u8 iOuter;					// Outer bg index of bg animation
+	u8 iInner;					// Inner bg index of bg animation
+} bgAnimIndex;
 
 typedef struct bgInner {
-	u8 type;					// 0|BGA|BGP
+	u8 type;					// 0|BGA|BGP|BGM
 	u8 tile;
 	rect r;
 } bgInner;
 
 typedef struct bgOuter {
-	u8 type;					// 0|BGC|BGT*|BGI
+	u8 type;					// 0|BGC|BGT*|BGI|BGM
 	u8 count;					// # of inner bgs in this outer bg
 	u16 index;					// The position in bgiTbl at which the inner bgs begin
-	u8 animCount;				// The # of animated background elements in the bgOuter (always the first elements for easy loading)	
 	rect r;
 } bgOuter;
 
@@ -161,13 +198,16 @@ typedef struct bgDirectory {
 	u16 bgoIndex;				// Index into pgmBgs flash array
 	u8 bgoCount;				// The # of background elements in the slice
 	u8 bgoBeginCount;			// The # of left-to-right seam collision bgs
-	u8 bgoEndIndex;				// Points to right-to-left seam collision bgs
-	u8 bgoEndCount;				// The # of right-to-left seam collision bgs
+	u8 bgoCommonCount;			// The # of right-to-left seam collision bgs common to begin/end
+	u8 bgoEndIndex;				// Points to right-to-left seam collision bgs specific to end. Combined with bgoCommonIndex, prevents repeating bgs.
 	u8 animCount;				// The # of animated background elements in the slice (always the first elements in the slice for easy loading)	
+	u8 animIndex;				// Index into pgmAnimDir
 	u8 pdIndex;					// Index into platforms directory (PF_ZERO if none)
 } bgDirectory;
 
 typedef struct platform {
+	u8		clrTile;			// How to paint vacated tiles (2 MSB reserved for mode due to compiler adding 1.2k below)
+	//u8		mode;				// Smooth or stepped movement (adds 1.2k???)
 	u8		min;				// Highest/Leftmost position of platform movement
 	u8		max;				// Lowest/Rightmost position of platform movement
 	u8		axis;				// Horizontally or vertically moving
@@ -190,7 +230,8 @@ typedef struct platzActor {
 	velocity	vy;				// Y-axis velocity
 } platzActor;
 
-typedef void (*trigCallback)(u8, u8, char);
+typedef void (*trigCallback)(u16,u8,char);
+typedef u8 (*mutCallback)(u8,bgInner*,bgInner*,void*);
 
 /****************************************
  *			Function prototypes			*
@@ -199,6 +240,8 @@ typedef void (*trigCallback)(u8, u8, char);
 // Platz main interface
 u8 PlatzGetCollisionPointer(void);
 u8 PlatzGetWorldSlicePointer(void);
+void PlatzSetViewport(u8 anchor, u8 slack);
+void PlatzSetAnchor(u8 anchor);
 void PlatzInit(platzActor *a, u8 sliceCount);
 u8 PlatzMove(platzActor *a);
 void PlatzMoveToSlice(platzActor *a, u8 sp);
@@ -207,22 +250,25 @@ void PlatzSetVelocity(velocity *v, char val, u8 *trPos);
 void PlatzTick(void);
 
 #if MAX_MOVING_PLATFORMS
-	void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 clrTile);
+	void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 shTilesIndex, u8 svTilesIndex);
 #endif
 
 // Platz initialization
 void PlatzSetTriggerCallback(trigCallback tcb);
+void PlatzSetMutCallback(mutCallback mcb);
 void PlatzSetMovingPlatformTable(const platform *p);
 void PlatzSetMovingPlatformDirectory(const platformDirectory *pd);
+void PlatzSetMapsTable(const char **m);
 void PlatzSetAnimatedBgTable(const animation *a);
-void PlatzSetPatternTable(const char *p);
-void PlatzSetPatternDirectory(const patternDirectory *tp);
+void PlatzSetAnimatedBgDirectory(const bgAnimIndex *bgad);
 void PlatzSetObjectTable(const object *obj);
 void PlatzSetInnerBgTable(const bgInner *bgi);
 void PlatzSetOuterBgTable(const bgOuter *bgo);
 void PlatzSetBgDirectory(const bgDirectory *bgd);
 
 // Platz utilities
+void PlatzFill(const rect *r, u8 tileId);
+void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int dataOffset);
 char PlatzCcw(const pt16 *p0, const pt16 *p1, const pt16 *p2);
 void PlatzHideSprite(u8 spriteIndex, u8 wid, u8 hgt);
 u8 PlatzLinesIntersect(const line16 *l1, const line16 *l2);
@@ -231,4 +277,5 @@ u8 PlatzRectsIntersect(const rect *r1, const rect *r2);
 u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2);
 
 #endif
+
 
