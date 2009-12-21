@@ -9,11 +9,18 @@ TARGET = bcdash.elf
 CC = avr-gcc
 ## CC Flags: -fverbose-asm -S -fno-inline-small-functions
 
+## Escape spaces in mixer path (due to custom sounds.inc)
+EMPTY:=
+SPACE:= $(EMPTY) $(EMPTY)
+SPACE_ESC:= \\$(SPACE)
+MIX_PATH:= $(realpath ../data/bcdash/sounds.inc)
+MIX_PATH_ESC:= $(subst $(SPACE),$(SPACE_ESC),$(MIX_PATH))
+
 ## Kernel settings
 KERNEL_DIR = ../kernel
 KERNEL_OPTIONS  = -DVIDEO_MODE=3 -DINTRO_LOGO=0 -DSOUND_CHANNEL_4_ENABLE=1 -DSOUND_CHANNEL_2_ENABLE=1 -DSOUND_CHANNEL_3_ENABLE=1 -DCENTER_ADJUSTMENT=0
 KERNEL_OPTIONS += -DMAX_SPRITES=8 -DRAM_TILES_COUNT=16 -DSCREEN_SECTIONS_COUNT=1 -DSCROLLING=1 -DOVERLAY_LINES=3 -DSCREEN_TILES_V=28 -DVRAM_TILES_V=28 -DFIRST_RENDER_LINE=23
-KERNEL_OPTIONS  += -DMIXER_WAVES=\"$(realpath ../data/bcdash/sounds.inc)\"
+KERNEL_OPTIONS  += -DMIXER_WAVES=\"$(MIX_PATH_ESC)\"
 
 ## Platz settings
 	## MAX_MOVING_PLATFORMS and MAX_ANIMATED_BGS are per slice. Set to 0 to disable.
