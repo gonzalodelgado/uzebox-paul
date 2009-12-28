@@ -32,6 +32,8 @@ Platz 1.0.0
   Alternatively, queries regarding steps to make your pre-1.0 program 1.0 compatible can be posted
   to the official Uzebox forums: http://uzebox.org/forums/viewtopic.php?f=6&t=527
 - PlatzMapSprite now takes an extra argument for sprite flipping
+- Objects now index into the same maps table used by Patterned Inner Bgs. The object data structure is
+  25% smaller due to not having to store the map's address internally.
 
 Platz 0.3.1
 - Fixed LRUD Right/Bottom half trigger to pass correct trig parameter to trigger callback.
