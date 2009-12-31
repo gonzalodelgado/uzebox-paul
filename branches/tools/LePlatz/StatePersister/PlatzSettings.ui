@@ -139,67 +139,20 @@
                    <number>0</number>
                   </property>
                   <widget class="QWidget" name="page_3">
-                   <layout class="QHBoxLayout" name="horizontalLayout_10">
+                   <layout class="QHBoxLayout" name="horizontalLayout_2">
                     <item>
-                     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_8">
-                        <property name="bottomMargin">
-                         <number>0</number>
-                        </property>
-                        <item>
-                         <widget class="QLabel" name="lblProjectSliceWidth">
-                          <property name="text">
-                           <string>Slice Width: </string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="lePsSliceWidth">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="maximumSize">
-                           <size>
-                            <width>75</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </item>
-                      <item>
-                       <layout class="QHBoxLayout" name="horizontalLayout_9">
-                        <item>
-                         <widget class="QLabel" name="lblProjectSliceHeight">
-                          <property name="text">
-                           <string>Slice Height:</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QLineEdit" name="lePsSliceHeight">
-                          <property name="sizePolicy">
-                           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                            <horstretch>0</horstretch>
-                            <verstretch>0</verstretch>
-                           </sizepolicy>
-                          </property>
-                          <property name="maximumSize">
-                           <size>
-                            <width>75</width>
-                            <height>16777215</height>
-                           </size>
-                          </property>
-                         </widget>
-                        </item>
-                       </layout>
-                      </item>
-                     </layout>
+                     <widget class="QLabel" name="lblOverlayLines">
+                      <property name="text">
+                       <string>Overlay Lines:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="spbOverlayLines">
+                      <property name="maximum">
+                       <number>28</number>
+                      </property>
+                     </widget>
                     </item>
                     <item>
                      <spacer name="horizontalSpacer">
@@ -208,7 +161,7 @@
                       </property>
                       <property name="sizeHint" stdset="0">
                        <size>
-                        <width>204</width>
+                        <width>193</width>
                         <height>20</height>
                        </size>
                       </property>
@@ -216,6 +169,7 @@
                     </item>
                    </layout>
                   </widget>
+                  <widget class="QWidget" name="page"/>
                   <widget class="QWidget" name="page_4">
                    <layout class="QHBoxLayout" name="horizontalLayout_13">
                     <item>

@@ -192,7 +192,11 @@ void PlatzReader::readSettings()
         if (isStartElement()) {
             s = name().toString();
 
-            if (s == "SliceSize") {
+            if (s == "VideoMode") {
+                int vmode = attributes().value("mode").toString().toInt(&ok, 10);
+                settings->setVideoMode(vmode);
+                readElementText();
+            } else if (s == "SliceSize") {
                 int width = attributes().value("width").toString().toInt(&ok, 10);
                 int height = attributes().value("height").toString().toInt(&ok, 10);
                 settings->setSliceSize(width, height);

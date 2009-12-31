@@ -36,13 +36,10 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
     ui->lblLogoImg->setPixmap(QPixmap(":/misc/LePlatzLogo.png"));
     ui->lblContextualHelp->setText("");
 
-    if (!settings->sliceSize().isEmpty() && settings->sliceSize().isValid()) {
-        ui->leSliceWidth->setText(QString::number(settings->sliceSize().width()));
-        ui->leSliceHeight->setText(QString::number(settings->sliceSize().height()));
-    } else {
-        ui->leSliceWidth->setText("256");
-        ui->leSliceHeight->setText("224");
-    }
+    ui->cboVideoMode->addItem("Mode 2 (192x208)", QVariant(QSize(192, 208)));
+    ui->cboVideoMode->addItem("Mode 3 (256x224)", QVariant(QSize(256, 224)));
+    connect(ui->cboVideoMode, SIGNAL(currentIndexChanged(int)), this, SLOT(setOverlayRange(int)));
+    ui->cboVideoMode->setCurrentIndex(1);
 
     if (!settings->spriteSize().isEmpty() && settings->spriteSize().isValid()) {
         ui->leSpriteWidth->setText(QString::number(settings->spriteSize().width()));
@@ -52,10 +49,8 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
         ui->leSpriteHeight->setText("24");
     }
 
-    ui->leSliceWidth->setValidator(new QIntValidator(0, 256, ui->leSliceWidth));
-    ui->leSliceHeight->setValidator(new QIntValidator(0, 256, ui->leSliceHeight));
-    ui->leSpriteWidth->setValidator(new QIntValidator(0, 256, ui->leSpriteWidth));
-    ui->leSpriteHeight->setValidator(new QIntValidator(0, 256, ui->leSpriteHeight));
+    ui->leSpriteWidth->setValidator(new QIntValidator(0, 128, ui->leSpriteWidth));
+    ui->leSpriteHeight->setValidator(new QIntValidator(0, 128, ui->leSpriteHeight));
     ui->cboImageFormat->addItems(Platz::SUPPORTED_IMAGE_FORMATS_EXTS);
     ui->cboImageFormat->setCurrentIndex(ui->cboImageFormat->count()-1);
     displayDefaultHelp();
@@ -74,16 +69,38 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
     connect(ui->leArtFolder, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
     connect(ui->leSrcFolder, SIGNAL(receivedFocus()), this, SLOT(displaySrcFolderHelp()));
     connect(ui->leSrcFolder, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
-    connect(ui->leSliceWidth, SIGNAL(receivedFocus()), this, SLOT(displaySliceWidthHelp()));
-    connect(ui->leSliceWidth, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
-    connect(ui->leSliceHeight, SIGNAL(receivedFocus()), this, SLOT(displaySliceHeightHelp()));
-    connect(ui->leSliceHeight, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
+    connect(ui->cboVideoMode, SIGNAL(receivedFocus()), this, SLOT(displayVideoModeHelp()));
+    connect(ui->cboVideoMode, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
+    connect(ui->spbOverlayLines, SIGNAL(valueChanged(int)), this, SLOT(setVideoModeRes(int)));
+    connect(ui->spbOverlayLines, SIGNAL(receivedFocus()), this, SLOT(displayOverlayLinesHelp()));
+    connect(ui->spbOverlayLines, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
     connect(ui->leSpriteWidth, SIGNAL(receivedFocus()), this, SLOT(displaySpriteWidthHelp()));
     connect(ui->leSpriteWidth, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
     connect(ui->leSpriteHeight, SIGNAL(receivedFocus()), this, SLOT(displaySpriteHeightHelp()));
     connect(ui->leSpriteHeight, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
-
     ui->leProjectName->setFocus();
+}
+
+void NewProject::setVideoModeRes(int overlayLines)
+{
+    Q_ASSERT(ui->cboVideoMode->count() > 1);
+    int hgt0 = ui->cboVideoMode->itemData(0, Qt::UserRole).toSize().height();
+    int hgt1 = ui->cboVideoMode->itemData(1, Qt::UserRole).toSize().height();
+    ui->cboVideoMode->setItemText(0, QString("Mode 2 (192x%1)").arg(qMax(0, hgt0-8*overlayLines)));
+    ui->cboVideoMode->setItemText(1, QString("Mode 3 (256x%1)").arg(hgt1-8*overlayLines));
+}
+
+void NewProject::setOverlayRange(int index)
+{
+    if (ui->cboVideoMode->count() > index) {
+        if (index == 0) {
+            ui->spbOverlayLines->setValue(qMin(ui->spbOverlayLines->value(), settings->VMODE2_SCREEN_TILES_V));
+            ui->spbOverlayLines->setMaximum(settings->VMODE2_SCREEN_TILES_V);
+        } else {
+            ui->spbOverlayLines->setValue(qMin(ui->spbOverlayLines->value(), settings->VMODE3_SCREEN_TILES_V));
+            ui->spbOverlayLines->setMaximum(settings->VMODE3_SCREEN_TILES_V);
+        }
+    }
 }
 
 void NewProject::displayDefaultHelp()
@@ -127,16 +144,16 @@ void NewProject::displaySrcFolderHelp()
 #endif
 }
 
-void NewProject::displaySliceWidthHelp()
+void NewProject::displayVideoModeHelp()
 {
-    ui->lblContextualHelp->setText("The width (in pixels) of each slice. Slices provided to LePlatz for display "
-                                   "as a background canvas should have widths a multiple of this value");
+    ui->lblContextualHelp->setText("Resolution represents vram array horizontally, and screen tiles vertically (both converted to pixels). "
+                                   "This is because only horizontal scrolling is currently supported.");
 }
 
-void NewProject::displaySliceHeightHelp()
+void NewProject::displayOverlayLinesHelp()
 {
-    ui->lblContextualHelp->setText("The height (in pixels) of each slice. Slices provided to LePlatz for display "
-                                   "as a background canvas should have heights of this value.");
+    ui->lblContextualHelp->setText("Overlay lines are static horizontal sections of the screen used to display status information. "
+                                   "Increasing this value will reduce the height of your slices.");
 }
 
 void NewProject::displaySpriteWidthHelp()
@@ -242,11 +259,17 @@ void NewProject::createNewProject()
             return;
     }
 
+    settings->setVideoMode(ui->cboVideoMode->currentIndex()+2);
+
+    QSize sliceSize = ui->cboVideoMode->itemData(ui->cboVideoMode->currentIndex(), Qt::UserRole).toSize();
+
+    sliceSize.setHeight(sliceSize.height() - 8*ui->spbOverlayLines->value());
+
     settings->setProjectPath(ui->leProjectFolder->text() + "/" + projectName);
     settings->setImageFormat(ui->cboImageFormat->currentText());
     settings->setArtFolder(ui->leArtFolder->text());
     settings->setRelativeSrcFolder(ui->leSrcFolder->text());
-    settings->setSliceSize(ui->leSliceWidth->text().toInt(), ui->leSliceHeight->text().toInt());
+    settings->setSliceSize(sliceSize);
     settings->setSpriteSize(ui->leSpriteWidth->text().toInt(), ui->leSpriteHeight->text().toInt());
     accept();
 }

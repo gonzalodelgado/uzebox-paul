@@ -204,34 +204,6 @@ void WorldCompiler::compileBgDirectory(QTextStream &ts)
             ts << ",\n";
     }
     ts << "\n};\n";
-
-/*
-    int sliceIndex = 0, animCount = 0, animIndex = 0, bgDirPlatIndex = 0;
-
-    ts << "const bgDirectory pgmBgDir[] PROGMEM = {\n";
-
-    foreach (BgDirectory *dir, bgDir) {
-        animCount = (animDir.contains(sliceIndex)?animDir[sliceIndex]->count():0);
-
-        ts << "\t{" << dir->objOffset << ","
-                << dir->objCount << ","
-                << dir->bgoIndex << ","
-                << dir->bgoCount << ","
-                << dir->bgoBeginCount << ","
-                << dir->bgoCommonCount << ","
-                << dir->bgoEndIndex << ","
-                << animCount << ","
-                << animIndex << ",";
-        if (platformDir.contains(sliceIndex))
-            ts << bgDirPlatIndex++ << "}";
-        else
-            ts << "PF_ZERO" << "}";
-        if (++sliceIndex != bgDir.count())
-            ts << ",\n";
-        animIndex += animCount;
-    }
-    ts << "\n};\n";
-*/
 }
 
 void WorldCompiler::compileAnimations(QTextStream &ts)

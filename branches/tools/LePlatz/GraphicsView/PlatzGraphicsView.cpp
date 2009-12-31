@@ -32,11 +32,12 @@
 #include "PlatzGraphicsView.h"
 
 PlatzGraphicsView::PlatzGraphicsView(QWidget *parent)
-    : QGraphicsView(parent), bgpix(0), dataModel(0), mSliceSize(QSize(256,224)), mousePos(0,0),
+    : QGraphicsView(parent), bgpix(0), dataModel(0), tileWidth(8), mousePos(0,0),
         zoom(false), imode(Platz::IM_SELECT)
 {
     platzScene = new PlatzGraphicsScene(this);
     setScene(platzScene);
+    setSliceSize(QSize(256,224));   // After scene creation so we also set scene's slice size
     setAcceptDrops(true);
     setCacheMode(CacheBackground);
     setViewportUpdateMode(BoundingRectViewportUpdate);
@@ -59,6 +60,14 @@ PlatzGraphicsView::PlatzGraphicsView(QWidget *parent)
     setCacheMode(CacheBackground);
     connect(platzScene, SIGNAL(itemDrawn(WorldItem*)), this, SLOT(itemDrawn(WorldItem*)));
     setMouseTracking(true);
+}
+
+void PlatzGraphicsView::setSliceSize(const QSize &size)
+{
+    mSliceSize = size;
+
+    if (platzScene)
+        platzScene->setSliceSize(size);
 }
 
 void PlatzGraphicsView::frameItem(const QModelIndex &index)
@@ -384,7 +393,7 @@ void PlatzGraphicsView::mousePressEvent(QMouseEvent *event)
             WorldItem *slice = model()->selectedItem();
 
             if (slice && (slice->type() == WorldItem::Slice)) {
-                int index = ((int)mapToScene(mousePos).x()>>8);
+                int index = ((int)mapToScene(mousePos).x() / mSliceSize.width());
 
                 if (index < sliceCount() && (index <= slice->row() || (event->button()&Qt::LeftButton))) {
                     Slice *replica = static_cast<Slice*>(model()->root()->child(index));
@@ -426,9 +435,9 @@ void PlatzGraphicsView::mousePressEvent(QMouseEvent *event)
 
 void PlatzGraphicsView::updateSliceIndex()
 {
-    mSliceIndex = ((int)mapToScene(mousePos).x()>>8);
+    mSliceIndex = ((int)mapToScene(mousePos).x() / mSliceSize.width());
 
-    int index = qMax(mSliceIndex, 0), count = qMax(sliceCount()-1, 0);
+    int index = qMin(qMax(mSliceIndex, 0), sliceCount()-1), count = qMax(sliceCount()-1, 0);
     emit sliceIndexChanged(QString::number(index) + " / " + QString::number(count));
 }
 
@@ -447,6 +456,23 @@ void PlatzGraphicsView::mouseMoveEvent(QMouseEvent *event)
     mx = qMax(mx, 0);
     my = qMax(my, 0);
 
+    int xmod = mx%tileWidth;
+
+    if ((xmod) != x) {
+        x = (mx%mSliceSize.width())-xmod;
+        signal = true;
+    }
+    if ((my&7) != y) {
+        y = my - (my&7);
+        signal = true;
+    }
+    if (signal) {
+        updateSliceIndex();
+        emit mouseCoordsChanged(QString::number(x) + ", " + QString::number(y));
+    }
+
+
+    /*
     if ((mx&7) != x) {
         x = (mx&(mSliceSize.width()-1))-(mx&7);
         signal = true;
@@ -459,6 +485,7 @@ void PlatzGraphicsView::mouseMoveEvent(QMouseEvent *event)
         updateSliceIndex();
         emit mouseCoordsChanged(QString::number(x) + ", " + QString::number(y));
     }
+    */
 /*
     // If this is too jerky, can simply calculate and signal on each event (but it runs cycles relatively high)
     if (!((mx&7) || (my&7))) {

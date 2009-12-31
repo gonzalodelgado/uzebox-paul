@@ -27,11 +27,14 @@
 #include "SettingsDialog.h"
 #include "Settings.h"
 
+const int Settings::VMODE2_SCREEN_TILES_V = 26;
+const int Settings::VMODE3_SCREEN_TILES_V = 28;
+
 static const QString UNSET = "";
 
 Settings::Settings(int maxRecentProjects)
-    : mMaxRecentProjects(maxRecentProjects), mSliceSize(QSize(0,0)),
-        mSpriteSize(QSize(0,0))
+    : mMaxRecentProjects(maxRecentProjects), mVideoMode(3),
+        mSliceSize(QSize(0,0)), mSpriteSize(QSize(0,0))
 {
 }
 
@@ -78,10 +81,23 @@ QString Settings::projectName()
     return name;
 }
 
+int Settings::overlayLines()
+{
+    int maxHgt = (mVideoMode == 2)?VMODE2_SCREEN_TILES_V<<3:VMODE3_SCREEN_TILES_V<<3;
+    return (maxHgt-mSliceSize.height())>>3;
+}
+
 void Settings::setProjectPath(const QString &path) {
     mProjectPath = path;
     emit projectPathChanged(path);
     emit projectNameChanged(projectName());
+}
+
+void Settings::setVideoMode(int mode)
+{
+    mVideoMode = mode;
+    emit videoModeChanged(mVideoMode);
+    emit tileWidthChanged((mVideoMode == 2)?6:8);
 }
 
 void Settings::setSliceSize(const QSize &size) {

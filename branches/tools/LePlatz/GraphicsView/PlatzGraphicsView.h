@@ -65,7 +65,8 @@ public slots:
     void appendSlice();
     void insertSlice(QPoint pos, int beforeOrAfter);
     void insertSlice(int index, int beforeOrAfter, bool draw = true);
-    void setSliceSize(const QSize &size) { mSliceSize = size; }
+    void setSliceSize(const QSize &size);
+    void setTileWidth(int width) { tileWidth = width; }
     void updateSliceIndex();
     void deleteSelected();
     void synchronizeModelView();
@@ -90,6 +91,7 @@ private:
     PlatzDataModel *dataModel;
     QSize mSliceSize;
     int mSliceIndex;
+    int tileWidth;
     QList<QCursor*> cursors;
     const QCursor *cursorCurrent;
     QPoint mousePos;

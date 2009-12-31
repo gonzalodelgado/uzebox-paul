@@ -1,6 +1,10 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 SOURCES += LePlatzSpinBox.cpp \
-    LePlatzLineEdit.cpp
+    FocusLineEdit.cpp \
+    FocusComboBox.cpp \
+    FocusSpinBox.cpp
 HEADERS += LePlatzSpinBox.h \
-    LePlatzLineEdit.h
+    FocusLineEdit.h \
+    FocusComboBox.h \
+    FocusSpinBox.h

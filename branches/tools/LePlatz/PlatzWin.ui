@@ -165,14 +165,15 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <widget class="QMenu" name="menuSnap_to">
+    <widget class="QMenu" name="menuSnapToX">
      <property name="title">
-      <string>Snap to...</string>
+      <string>Snap to X...</string>
      </property>
-     <addaction name="actionSnapTo1"/>
-     <addaction name="actionSnapTo2"/>
-     <addaction name="actionSnapTo4"/>
-     <addaction name="actionSnapTo8"/>
+    </widget>
+    <widget class="QMenu" name="menuSnapToY">
+     <property name="title">
+      <string>Snap to Y...</string>
+     </property>
     </widget>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
@@ -183,7 +184,8 @@
     <addaction name="actionDelete"/>
     <addaction name="actionSelectAll"/>
     <addaction name="separator"/>
-    <addaction name="menuSnap_to"/>
+    <addaction name="menuSnapToX"/>
+    <addaction name="menuSnapToY"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1869,41 +1871,6 @@
    </property>
    <property name="toolTip">
     <string>Lock/Unlock BG Ordering for selected slice</string>
-   </property>
-  </action>
-  <action name="actionSnapTo1">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>1</string>
-   </property>
-  </action>
-  <action name="actionSnapTo2">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>2</string>
-   </property>
-  </action>
-  <action name="actionSnapTo4">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>4</string>
-   </property>
-  </action>
-  <action name="actionSnapTo8">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>8</string>
    </property>
   </action>
  </widget>

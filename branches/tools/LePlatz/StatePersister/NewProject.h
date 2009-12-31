@@ -40,10 +40,12 @@ public slots:
     void displayProjectFolderHelp();
     void displayArtFolderHelp();
     void displaySrcFolderHelp();
-    void displaySliceWidthHelp();
-    void displaySliceHeightHelp();
+    void displayVideoModeHelp();
+    void displayOverlayLinesHelp();
     void displaySpriteWidthHelp();
     void displaySpriteHeightHelp();
+    void setOverlayRange(int index);
+    void setVideoModeRes(int overlayLines);
 protected:
     QString folderFileDialog(const QString &initPath, const QString &title);
 private slots:

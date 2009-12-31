@@ -33,6 +33,10 @@ class Settings : public QObject
     Q_OBJECT
 
     public:
+
+        static const int VMODE2_SCREEN_TILES_V;
+        static const int VMODE3_SCREEN_TILES_V;
+
         Settings(int maxRecentProjects = Platz::MAX_RECENT_PROJECTS);
 
         /*
@@ -55,6 +59,8 @@ class Settings : public QObject
         const QString& makefilePath() { return mMakefilePath; }
         const QString& hexfilePath() { return mHexfilePath; }
         const QString& platzfilePath() { return mPlatzfilePath; }
+        int videoMode() { return mVideoMode; }
+        int overlayLines();
         QSize sliceSize() { return mSliceSize; }
         QSize spriteSize() { return mSpriteSize; }
         // Project - set
@@ -70,6 +76,7 @@ class Settings : public QObject
         void setMakefilePath(const QString &path);
         void setHexfilePath(const QString &path);
         void setPlatzfilePath(const QString &path);
+        void setVideoMode(int mode);
         void setSliceSize(const QSize &size);
         void setSliceSize(int wid, int hgt);
         void setSpriteSize(const QSize &size);
@@ -97,11 +104,13 @@ class Settings : public QObject
         void makefilePathChanged(const QString &path);
         void hexfilePathChanged(const QString &path);
         void platzfilePathChanged(const QString &path);
+        void videoModeChanged(int mode);
         void sliceSizeChanged(const QSize &size);
         void spriteSizeChanged(const QSize &size);
         void makeExePathChanged(const QString &path);
         void emuExePathChanged(const QString &path);
         void recentProjectsChanged(const QStringList &recentProjects);
+        void tileWidthChanged(int width);
     public slots:
         void resetProjectSettings();
         bool loadSettings(const QString &path);
@@ -127,6 +136,7 @@ class Settings : public QObject
         QString mMakefilePath;
         QString mHexfilePath;
         QString mPlatzfilePath;
+        int mVideoMode;
         QSize mSliceSize;
         QSize mSpriteSize;
         // LePlatz
@@ -135,158 +145,4 @@ class Settings : public QObject
         QStringList mRecentProjects;
 };
 
-
-
-
-
-
-
-
-
-
-
-#if 0
-
-// Add support for QSettings to save/restore gui layout
-class Settings : public QObject
-{
-    Q_OBJECT
-
-    class WorldSettings {
-    public:
-        enum WorldSettingsXmlOrder {
-            Version,
-            Settings,
-            SliceSize,
-            LargestSprite,
-            WorldPath,
-            SlicePath,
-            TilePath,
-            MapPath,
-            AnimPath,
-            PlatzPath,
-            SourcePath,
-            MakefilePath,
-            HexfilePath
-        };
-
-        WorldSettings();
-
-        bool saveWorldSettings(const QString &filename);
-        bool loadWorldSettings(const QString &filename);
-
-        QSize sliceSize;
-        QSize largestSprite;    // So LePlatz can determine slice seam collision bgs
-        QString worldPath;
-        QString slicePath;
-        QString tilePath;
-        QString mapPath;
-        QString animPath;
-        QString platzPath;
-        QString srcPath;        // Have some javadoc-esque tag for mutable/trigger defines in source files
-        QString makefilePath;
-        QString hexfilePath;
-    private:
-        QXmlStreamWriter writer;
-        QXmlStreamReader reader;
-    };
-
-    class LePlatzSettings {
-    public:
-        enum LePlatzSettingsXmlOrder {
-            Version,
-            Settings,
-            SliceSize,
-            LargestSprite,
-            MakeExePath,
-            EmuExePath,
-            RecentProjects,
-            Project
-        };
-
-        LePlatzSettings();
-
-        bool saveLePlatzSettings();
-        bool loadLePlatzSettings();
-
-        QSize sliceSize;
-        QSize largestSprite;    // So LePlatz can determine slice seam collision bgs
-        QString makeExePath;
-        QString emuExePath;
-        QStringList recentProjects;
-    private:
-        QXmlStreamWriter writer;
-        QXmlStreamReader reader;
-    };
-
-public:
-    Settings();
-    virtual ~Settings();
-
-    enum SettingsType {
-        Auto,       // Have class choose most likely candidate
-        LePlatz,
-        World
-    };
-
-    void setSliceSizeWorld(const QSize &size) { ws.sliceSize = size; emit (largestSpriteChanged(largestSprite())); }
-    void setLargestSpriteLePlatz(const QSize &size) { lps.largestSprite = size; }
-    void setLargestSpriteWorld(const QSize &size) { ws.largestSprite = size; }
-    void setMakeExePath(const QString &path) { lps.makeExePath = path; emit (makeExePathChanged(makeExePath())); }
-    void setEmuExePath(const QString &path) { lps.emuExePath = path; emit (emuExePathChanged(emuExePath())); }
-
-    void setArtPath(const QString &path) {}
-    void setSourcePath(const QString &path) {}
-
-    void setWorldPath(const QString &path) { ws.worldPath = path; emit (worldPathChanged(worldPath())); }
-    void setPlatzPath(const QString &path) { ws.platzPath = path; emit (platzPathChanged(platzPath())); }
-    void setSourcePath(const QString &path) { ws.srcPath = path; emit (sourcePathChanged(srcPath())); }
-    void setMakefilePath(const QString &path) { ws.makefilePath = path; emit (makefilePathChanged(makefilePath())); }
-    void setHexfilePath(const QString &path) { ws.hexfilePath = path; emit (hexfilePathChanged(hexfilePath())); }
-    void setSlicePath(const QString &path) { ws.slicePath = path; emit (slicePathChanged(slicePath())); }
-    void setTilePath(const QString &path) { ws.tilePath = path; emit (tilePathChanged(tilePath())); }
-    void setMapPath(const QString &path) { ws.mapPath = path; emit (mapPathChanged(mapPath())); }
-    void setAnimPath(const QString &path) { ws.animPath = path; emit (animPathChanged(animPath())); }
-    const QString& worldPath() const { return ws.worldPath; }
-    const QString& platzPath() const { return ws.platzPath; }
-    const QString& srcPath() const { return ws.srcPath; }
-    const QString& makefilePath() const { return ws.makefilePath; }
-    const QString& hexfilePath() const { return ws.hexfilePath; }
-    const QString& makeExePath() const { return lps.makeExePath; }
-    const QString& emuExePath() const { return lps.emuExePath; }
-    const QString& slicePath() const { return ws.slicePath; }
-    const QString& tilePath() const { return ws.tilePath; }
-    const QString& mapPath() const { return ws.mapPath; }
-    const QString& animPath() const { return ws.animPath; }
-    void addRecentProject(const QString &path);
-    const QSize& sliceSize(const SettingsType &type = Auto) const;
-    const QSize& largestSprite(const SettingsType &type = Auto) const;
-    QString applicationPath() const;
-signals:
-    void sliceSizeChanged(const QSize &size);
-    void largestSpriteChanged(const QSize &size);
-    void makeExePathChanged(const QString &path);
-    void emuExePathChanged(const QString &path);
-    void worldPathChanged(const QString &path);
-    void platzPathChanged(const QString &path);
-    void sourcePathChanged(const QString &path);
-    void makefilePathChanged(const QString &path);
-    void hexfilePathChanged(const QString &path);
-    void slicePathChanged(const QString &path);
-    void tilePathChanged(const QString &path);
-    void mapPathChanged(const QString &path);
-    void animPathChanged(const QString &path);
-public slots:
-    void show(QWidget *parent);
-    void uiFinished(int result);
-    bool loadSettings(QString worldSettingsPath);
-    bool saveSettings(QString worldSettingsPath);
-    void cleanup();
-private:
-    SettingsDialog *ui;
-    LePlatzSettings lps;
-    WorldSettings ws;
-};
 #endif
-
-#endif // SETTINGS_H

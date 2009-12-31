@@ -86,6 +86,7 @@ public slots:
     void setSrcFolder(const QString &folder) { srcFolder = folder; }
     void setMakeExePath(const QString &path) { makeExePath = path; }
     void setEmuExePath(const QString &path) { emuExePath = path; }
+    void setVideoMode(int vmode);
     void setSliceSize(const QSize &size) { sliceSize = size; }
     void setSpriteSize(const QSize &size) { spriteSize = size; }
     void clearBgoCheckBoxes();
@@ -106,7 +107,8 @@ public slots:
     void flagUnsavedChanges() { unsavedChanges = true; }
     void replicateSlice();
     void toggleSelectedSliceLock();
-    void setSnapToResolution(QAction* action);
+    void setSnapToResolutionX(QAction* action);
+    void setSnapToResolutionY(QAction* action);
 signals:
     void zoomIn(int delta = 120);
     void zoomOut(int delta = -120);
@@ -143,12 +145,15 @@ private:
     QString platzfilePath;
     QString makeExePath;
     QString emuExePath;
+    int videoMode;
     QSize sliceSize;
     QSize spriteSize;
     bool activeProject;
     QMenu *recProjMenu;
     QActionGroup *recProjActionGrp;
-    QActionGroup *snapToGrp;
+    QActionGroup *snapToYGrp;
+    QActionGroup *snapToXGrpVMode2;
+    QActionGroup *snapToXGrpVMode3;
     bool bgoTrigger;
     bool unsavedChanges;
 };

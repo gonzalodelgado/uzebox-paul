@@ -22,6 +22,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QPointer>
+#include <QActionGroup>
 #ifdef LEPLATZ_DEBUG
     #include <modeltest.h>
 #endif
@@ -113,21 +114,51 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     recProjMenu = new QMenu("Recent Projects", ui->menuFile);
     // Note: takeAt(2) because don't know how else to reference the separator
     ui->menuFile->insertMenu(ui->menuFile->actions().takeAt(2), recProjMenu);
-    snapToGrp = new QActionGroup(this);
-    snapToGrp->addAction(ui->actionSnapTo1);
-    snapToGrp->addAction(ui->actionSnapTo2);
-    snapToGrp->addAction(ui->actionSnapTo4);
-    snapToGrp->addAction(ui->actionSnapTo8);
-    ui->actionSnapTo8->setChecked(true);
-    snapToGrp->setExclusive(true);
-    connect(snapToGrp, SIGNAL(triggered(QAction*)), this, SLOT(setSnapToResolution(QAction*)));
-
     recProjActionGrp = new QActionGroup(this);
 
     for (int i = 0; i < settings->maxRecentProjects(); i++)
         recProjActionGrp->addAction("");
     connect(settings, SIGNAL(recentProjectsChanged(QStringList)), this, SLOT(updateRecentProjects(QStringList)));
     connect(recProjActionGrp, SIGNAL(triggered(QAction*)), this, SLOT(loadProject(QAction*)));
+
+    snapToYGrp = new QActionGroup(this);
+    snapToYGrp->setExclusive(true);
+    snapToYGrp->addAction(new QAction("1", snapToYGrp));
+    snapToYGrp->addAction(new QAction("2", snapToYGrp));
+    snapToYGrp->addAction(new QAction("4", snapToYGrp));
+    snapToYGrp->addAction(new QAction("8", snapToYGrp));
+
+    foreach(QAction *action, snapToYGrp->actions())
+        action->setCheckable(true);
+    snapToYGrp->actions().takeLast()->setChecked(true);
+    connect(snapToYGrp, SIGNAL(triggered(QAction*)), this, SLOT(setSnapToResolutionY(QAction*)));
+
+    snapToXGrpVMode2 = new QActionGroup(this);
+    snapToXGrpVMode2->setExclusive(true);
+    snapToXGrpVMode2->addAction(new QAction("1", snapToXGrpVMode2));
+    snapToXGrpVMode2->addAction(new QAction("2", snapToXGrpVMode2));
+    snapToXGrpVMode2->addAction(new QAction("3", snapToXGrpVMode2));
+    snapToXGrpVMode2->addAction(new QAction("6", snapToXGrpVMode2));
+
+    foreach(QAction *action, snapToXGrpVMode2->actions())
+        action->setCheckable(true);
+    snapToXGrpVMode2->actions().takeLast()->setChecked(true);
+    connect(snapToXGrpVMode2, SIGNAL(triggered(QAction*)), this, SLOT(setSnapToResolutionX(QAction*)));
+
+    snapToXGrpVMode3 = new QActionGroup(this);
+    snapToXGrpVMode3->setExclusive(true);
+    snapToXGrpVMode3->addAction(new QAction("1", snapToXGrpVMode3));
+    snapToXGrpVMode3->addAction(new QAction("2", snapToXGrpVMode3));
+    snapToXGrpVMode3->addAction(new QAction("4", snapToXGrpVMode3));
+    snapToXGrpVMode3->addAction(new QAction("8", snapToXGrpVMode3));
+
+    foreach(QAction *action, snapToXGrpVMode3->actions())
+        action->setCheckable(true);
+    snapToXGrpVMode3->actions().takeLast()->setChecked(true);
+    connect(snapToXGrpVMode3, SIGNAL(triggered(QAction*)), this, SLOT(setSnapToResolutionX(QAction*)));
+
+    ui->menuSnapToX->addActions(snapToXGrpVMode3->actions());
+    ui->menuSnapToY->addActions(snapToYGrp->actions());
 
     // Init external process comms slots
     connect(procMake, SIGNAL(readyReadStandardOutput()), this, SLOT(makeOutputReady()));
@@ -171,7 +202,6 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     {
         PlatzGraphicsScene *scene = static_cast<PlatzGraphicsScene*>(ui->graphicsView->scene());
         scene->initSceneDrawTools();
-        scene->setSnapToResolution(8);
         connect(scene, SIGNAL(currentTileIndexChanged(int)), ui->tileListWidget, SLOT(setCurrentImage(int)));
         connect(scene, SIGNAL(currentMapIndexChanged(int)), ui->mapListWidget, SLOT(setCurrentImage(int)));
         connect(scene, SIGNAL(currentAnimIndexChanged(int)), ui->animListWidget, SLOT(setCurrentImage(int)));
@@ -311,6 +341,8 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(settings, SIGNAL(makeExePathChanged(QString)), this, SLOT(setMakeExePath(QString)));
     connect(settings, SIGNAL(emuExePathChanged(QString)), this, SLOT(setEmuExePath(QString)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), ui->graphicsView, SLOT(setSliceSize(QSize)));
+    connect(settings, SIGNAL(videoModeChanged(int)), this, SLOT(setVideoMode(int)));
+    connect(settings, SIGNAL(tileWidthChanged(int)), ui->graphicsView, SLOT(setTileWidth(int)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), this, SLOT(setSliceSize(QSize)));
     connect(settings, SIGNAL(spriteSizeChanged(QSize)), this, SLOT(setSpriteSize(QSize)));
 
@@ -346,7 +378,7 @@ void PlatzWin::aboutLePlatz()
 {
     QPointer<About> about = new About(this);
     about->setWindowTitle("About LePlatz");
-    about->setTitle("LePlatz v1.0");
+    about->setTitle("LePlatz " + VERSION_STR);
     about->setText("LePlatz is a Level Editor for the Platz Toolset. It allows developers to define, through a graphical interface, "
                    "the display of their Platz levels and how their characters interact within them. \n\nThis process was previously "
                    "done by hand in a text editor. LePlatz affords much a more efficient and iterative development cycle by significantly "
@@ -397,7 +429,7 @@ void PlatzWin::aboutUzebox()
     delete about;
 }
 
-void PlatzWin::setSnapToResolution(QAction* action)
+void PlatzWin::setSnapToResolutionX(QAction* action)
 {
     // Would like to store values within the actions, but for now...
     bool ok;
@@ -408,7 +440,37 @@ void PlatzWin::setSnapToResolution(QAction* action)
     PlatzGraphicsScene *scene = static_cast<PlatzGraphicsScene*>(ui->graphicsView->scene());
 
     if (scene)
-        scene->setSnapToResolution(resolution);
+        scene->setSnapToResolutionX(resolution);
+}
+
+void PlatzWin::setSnapToResolutionY(QAction* action)
+{
+    // Would like to store values within the actions, but for now...
+    bool ok;
+    int resolution = action->text().toInt(&ok, 10);
+
+    if (!ok)
+        return;
+    PlatzGraphicsScene *scene = static_cast<PlatzGraphicsScene*>(ui->graphicsView->scene());
+
+    if (scene)
+        scene->setSnapToResolutionY(resolution);
+}
+
+void PlatzWin::setVideoMode(int vmode)
+{
+    if (vmode != 2 && vmode != 3)
+        return;
+     ui->menuSnapToX->clear();
+
+    if (vmode == 2)
+        ui->menuSnapToX->addActions(snapToXGrpVMode2->actions());
+    else if (vmode == 3)
+        ui->menuSnapToX->addActions(snapToXGrpVMode3->actions());
+    foreach(QAction *action, ui->menuSnapToX->actions()) {
+        if (action->isChecked())
+            setSnapToResolutionX(action);
+    }
 }
 
 void PlatzWin::toggleSelectedSliceLock()

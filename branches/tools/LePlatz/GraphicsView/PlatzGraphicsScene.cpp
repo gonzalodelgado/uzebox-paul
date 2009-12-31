@@ -91,14 +91,21 @@ void PlatzGraphicsScene::rowsAboutToBeRemoved(const QModelIndex &parent, int sta
 
 PlatzGraphicsScene::PlatzGraphicsScene(QObject *parent)
     : QGraphicsScene(parent), bgOutline(0.0,0.0,0.0,0.0), state(NoDraw), item(0), sel(0), sceneMode(IM_SELECT),
-        row(0), parent(QModelIndex()), selectionHidden(false), useCustomPayload(false), mutParent(0), snapToResolution(8)
+        row(0), parent(QModelIndex()), selectionHidden(false), useCustomPayload(false), mutParent(0),
+        snapToResolutionX(8), snapToResolutionY(8)
 {
 }
 
-void PlatzGraphicsScene::setSnapToResolution(int resolution)
+void PlatzGraphicsScene::setSnapToResolutionX(int resolution)
 {
     if (resolution > 0)
-        snapToResolution = resolution;
+        snapToResolutionX = resolution;
+}
+
+void PlatzGraphicsScene::setSnapToResolutionY(int resolution)
+{
+    if (resolution > 0)
+        snapToResolutionY = resolution;
 }
 
 void PlatzGraphicsScene::clearOuterJoin()
@@ -428,7 +435,7 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             bgOutline.setBottomRight(p);
             sel = new PlatzGraphicsItem(0, Platz::SELECTED);
             sel->setZValue(100);
-            sel->setOffsetX((int)p.x()&~255);
+            sel->setOffsetX((int)p.x()-((int)p.x()%mSliceSize.width()));
             sel->setBoundingRect(bgOutline);
             addItem(sel);
             state = BeginDraw;
@@ -681,33 +688,21 @@ void PlatzGraphicsScene::clampToScene(QPointF &p) {
 // Clamp to 8x8-pixel grid
 void PlatzGraphicsScene::clampToGrid(QPointF &p) {
     int x = (int)p.x(), y = (int)p.y();
-    int xMod = x%snapToResolution, yMod = y%snapToResolution;
+    int xMod = x%snapToResolutionX, yMod = y%snapToResolutionY;
 
     if (xMod) {
-        if (xMod < (snapToResolution/2))
+        if (xMod < (snapToResolutionX/2))
             x -= xMod;
         else
-            x += snapToResolution-xMod;
+            x += snapToResolutionX-xMod;
     }
 
     if (yMod) {
-        if (yMod < (snapToResolution/2))
+        if (yMod < (snapToResolutionY/2))
             y -= yMod;
         else
-            y += snapToResolution-yMod;
+            y += snapToResolutionY-yMod;
     }
-
-#if 0
-    if (x&7) {
-        if ((x&7) < 5) x -= x&7;
-        else x += 8-(x&7);
-    }
-
-    if (y&7) {
-        if ((y&7) < 5) y -= y&7;
-        else y += 8-(y&7);
-    }
-#endif
     p.setX(x);
     p.setY(y);
 }

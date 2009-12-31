@@ -2,6 +2,7 @@
 <!DOCTYPE LePlatz>
 <LePlatz version="1.0">
     <ProjectSettings>
+        <VideoMode mode="3"/>
         <SliceSize width="256" height="200"/>
         <SpriteSize width="24" height="16"/>
         <ImageFormat>.png</ImageFormat>
@@ -136,15 +137,6 @@
             </BgOuterProxy>
             <BgObjectProxy>
                 <Title>BG Objects</Title>
-                <BgObject map="56">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>24</Left>
-                        <Top>64</Top>
-                        <Right>40</Right>
-                        <Bottom>80</Bottom>
-                    </Bounds>
-                </BgObject>
                 <BgObject map="52">
                     <Title>BgObject</Title>
                     <Bounds>
@@ -268,6 +260,15 @@
                         <Left>184</Left>
                         <Top>64</Top>
                         <Right>200</Right>
+                        <Bottom>80</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="56">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>24</Left>
+                        <Top>64</Top>
+                        <Right>40</Right>
                         <Bottom>80</Bottom>
                     </Bounds>
                 </BgObject>

@@ -35,10 +35,15 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
 
     // Initial settings
     ui->splitter->setSizes(QList<int>() << 140 << 360);
-    ui->lePsSliceWidth->setValidator(new QIntValidator(0, 256, ui->lePsSliceWidth));
-    ui->lePsSliceHeight->setValidator(new QIntValidator(0, 256, ui->lePsSliceHeight));
-    ui->lePsSpriteWidth->setValidator(new QIntValidator(0, 256, ui->lePsSpriteWidth));
-    ui->lePsSpriteHeight->setValidator(new QIntValidator(0, 256, ui->lePsSpriteHeight));
+    ui->lePsSpriteWidth->setValidator(new QIntValidator(0, 128, ui->lePsSpriteWidth));
+    ui->lePsSpriteHeight->setValidator(new QIntValidator(0, 128, ui->lePsSpriteHeight));
+
+    if (settings->videoMode() == 2)
+        maxOverlayLines = settings->VMODE2_SCREEN_TILES_V;
+    else
+        maxOverlayLines = settings->VMODE3_SCREEN_TILES_V;
+    ui->spbOverlayLines->setRange(0, maxOverlayLines);
+    ui->spbOverlayLines->setValue(qMin(settings->overlayLines(), maxOverlayLines));
 
     // Populate trees
     QTreeWidgetItem *projectSettings = new QTreeWidgetItem(ui->treeWidget);
@@ -50,9 +55,10 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     ui->twLps->setHeaderLabels(QStringList() << QString("Name") << QString("Value"));
     ui->twLps->header()->resizeSection(0, 140);
     QList<QTreeWidgetItem*> items;
-    items.append(QList<QTreeWidgetItem*>() << new QTreeWidgetItem(QStringList() << QString("Slice Size") << QString("Width: %1\tHeight: %2").arg(
-            settings->sliceSize().width()).arg(
-            settings->sliceSize().height()))
+    items.append(QList<QTreeWidgetItem*>() << new QTreeWidgetItem(QStringList() << QString("Video Mode")
+            << QString("%1\tOverlay Lines: %2").arg(settings->videoMode()).arg(ui->spbOverlayLines->value()))
+            << new QTreeWidgetItem(QStringList() << QString("Slice Size") << QString("Width: %1\tHeight: %2").arg(
+            settings->sliceSize().width()).arg(settings->sliceSize().height()))
             << new QTreeWidgetItem(QStringList() << QString("Largest Sprite") << QString("Width: %1\tHeight: %2").arg(
             settings->spriteSize().width()).arg(settings->spriteSize().height()))
             << new QTreeWidgetItem(QStringList() << QString("Slice Path") << settings->slicePath())
@@ -72,8 +78,6 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     ui->twLps->insertTopLevelItems(0, items);
 
     // Populate stacked widgets
-    ui->lePsSliceWidth->setText(QString::number(settings->sliceSize().width()));
-    ui->lePsSliceHeight->setText(QString::number(settings->sliceSize().height()));
     ui->lePsSpriteWidth->setText(QString::number(settings->spriteSize().width()));
     ui->lePsSpriteHeight->setText(QString::number(settings->spriteSize().height()));
     ui->leSlicePath->setText(settings->slicePath());
@@ -98,8 +102,7 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     connect(ui->twLps, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
             this, SLOT(settingLpsItemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     // Tree updates
-    connect(ui->lePsSliceWidth, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
-    connect(ui->lePsSliceHeight, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
+    connect(ui->spbOverlayLines, SIGNAL(valueChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->lePsSpriteWidth, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->lePsSpriteHeight, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leSlicePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
@@ -125,7 +128,6 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     connect(ui->pbEmuExePath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
 }
 
-// Qt bug fix for 4.5.4 should fix QTreeWidget not updating properly when QTreeWidgetItem.setText() is called on index = 0
 void SettingsDialog::updateTrees(const QString &text)
 {
     int twIndex = 0, itemIndex = 0;
@@ -144,12 +146,16 @@ void SettingsDialog::updateTrees(const QString &text)
     QTreeWidgetItem *item = tree->topLevelItem(itemIndex);
 
     if (item) {
-        if (twIndex == 0 && itemIndex == 0)
-            item->setText(1, QString("Width: %1\tHeight: %2").arg(ui->lePsSliceWidth->text()).arg(ui->lePsSliceHeight->text()));
-        else if (twIndex == 0 && itemIndex == 1)
+        if (twIndex == 0 && itemIndex == 0) {
+            int overlayLines = ui->spbOverlayLines->value();
+            item->setText(1, QString("%1\tOverlay Lines: %2").arg(settings->videoMode()).arg(overlayLines));
+            item = tree->topLevelItem(itemIndex+1);
+            item->setText(1, QString("Width: %1\tHeight: %2").arg(settings->sliceSize().width()).arg((maxOverlayLines-overlayLines)<<3));
+        } else if (twIndex == 0 && itemIndex == 2) {
             item->setText(1, QString("Width: %1\tHeight: %2").arg(ui->lePsSpriteWidth->text()).arg(ui->lePsSpriteHeight->text()));
-        else
+        } else {
             item->setText(1, text);
+        }
     }
 }
 
@@ -258,11 +264,14 @@ void SettingsDialog::applySettings()
     bool ok;
     int wid, hgt;
 
-    wid = ui->lePsSliceWidth->text().toInt(&ok);
-    if (ok)
-        hgt = ui->lePsSliceHeight->text().toInt(&ok);
-    if (ok)
-        settings->setSliceSize(wid, hgt);
+    wid = settings->sliceSize().width();
+
+    if (settings->videoMode() == 2)
+        hgt = settings->VMODE2_SCREEN_TILES_V-ui->spbOverlayLines->value();
+    else
+        hgt = settings->VMODE3_SCREEN_TILES_V-ui->spbOverlayLines->value();
+    settings->setSliceSize(wid, hgt<<3);
+
     wid = ui->lePsSpriteWidth->text().toInt(&ok);
     if (ok)
         hgt = ui->lePsSpriteHeight->text().toInt(&ok);

@@ -92,6 +92,10 @@ void PlatzWriter::writeSettings()
     if (!settings)
         return;
     writeStartElement("ProjectSettings");
+
+    writeStartElement("VideoMode");
+    writeAttribute("mode", QString::number(settings->videoMode()));
+    writeEndElement();  // VideoMode
     writeStartElement("SliceSize");
     writeAttribute("width", QString::number(settings->sliceSize().width()));
     writeAttribute("height", QString::number(settings->sliceSize().height()));

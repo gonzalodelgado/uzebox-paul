@@ -69,6 +69,7 @@ public slots:
     void clearOuterJoin();
     void hideSelection();
     void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
+    void setSliceSize(const QSize &size) { mSliceSize = size; }
     void setBgiFlags(int flags) { bgiFlags = flags; }
     void setBgoFlags(int flags) { bgoFlags = flags; }
     void setBgoTriggers(int id, int orientation) { trigId = id; trigOrientation = orientation; }
@@ -81,7 +82,8 @@ public slots:
     void setCustomPayload(const Platz::MutablePayload &payload) { customPayload = payload; }
     void emitIndexChanges(const WorldItem *item);
     void setMutableParent(BgInner *mp) { mutParent = mp; }
-    void setSnapToResolution(int resolution);
+    void setSnapToResolutionX(int resolution);
+    void setSnapToResolutionY(int resolution);
 signals:
     void selectionChanged(const QModelIndex &index);
     void itemDrawn(WorldItem *item);
@@ -123,7 +125,9 @@ private:
     bool useCustomPayload;
     Platz::MutablePayload customPayload;
     BgInner *mutParent;
-    int snapToResolution;
+    QSize mSliceSize;
+    int snapToResolutionX;
+    int snapToResolutionY;
 };
 
 #endif // PLATZGRAPHICSSCENE_H
