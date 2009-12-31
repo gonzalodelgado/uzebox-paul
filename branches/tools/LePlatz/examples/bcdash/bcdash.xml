@@ -3541,7 +3541,7 @@
                     <Bounds>
                         <Left>3184</Left>
                         <Top>40</Top>
-                        <Right>3304</Right>
+                        <Right>3296</Right>
                         <Bottom>48</Bottom>
                     </Bounds>
                     <Platform flags="64" clearTile="CLR_SKY" velocity="4">

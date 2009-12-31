@@ -59,8 +59,9 @@ class Settings : public QObject
         const QString& makefilePath() { return mMakefilePath; }
         const QString& hexfilePath() { return mHexfilePath; }
         const QString& platzfilePath() { return mPlatzfilePath; }
-        int videoMode() { return mVideoMode; }
-        int overlayLines();
+        int videoMode() const { return mVideoMode; }
+        int overlayLines() const;
+        int tileWidth() const;
         QSize sliceSize() { return mSliceSize; }
         QSize spriteSize() { return mSpriteSize; }
         // Project - set

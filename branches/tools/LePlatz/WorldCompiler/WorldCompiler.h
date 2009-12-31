@@ -80,6 +80,7 @@ public:
     void setRoot(WorldItem *rootItem);
     void setSliceSize(const QSize &size);
     void setSpriteSize(const QSize &size);
+    void setTileWidth(int width) { tileWidth = width; }
 private:
     void clearLists();
     void compileBgObjects(int sliceIndex, ProxyItem *parent, QTextStream &ts);
@@ -90,7 +91,7 @@ private:
     void compilePlatformDirectory(QTextStream &ts);
     void compileAnimations(QTextStream &ts);
     void compileBgDirectory(QTextStream &ts);
-    QString rectFToString(const QRectF &rect, int shifted = 0);
+    QString rectFToString(const QRectF &rect, int div = 1);
     WorldItem *root;
     int platformIndex;
     QList<BgDirectory*> bgDir;
@@ -98,6 +99,7 @@ private:
     QMap<int, PlatformMap*> platformDir;
     QSize sliceSize;
     QSize spriteSize;
+    int tileWidth;
 };
 
 #endif // WORLDCOMPILER_H

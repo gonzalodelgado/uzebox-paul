@@ -976,6 +976,7 @@ void PlatzWin::compileWorld()
     WorldCompiler wc(model->root());
     wc.setSliceSize(sliceSize);
     wc.setSpriteSize(spriteSize);
+    wc.setTileWidth(settings->tileWidth());
 
     if (wc.compileWorld(&file, projectName))
         ui->statusBar->showMessage("World compiled successfully. Output to " + QFileInfo(platzfilePath).absoluteFilePath(), STATUS_DELAY);

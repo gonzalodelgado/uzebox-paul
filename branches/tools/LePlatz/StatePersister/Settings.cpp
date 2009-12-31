@@ -81,10 +81,15 @@ QString Settings::projectName()
     return name;
 }
 
-int Settings::overlayLines()
+int Settings::overlayLines() const
 {
     int maxHgt = (mVideoMode == 2)?VMODE2_SCREEN_TILES_V<<3:VMODE3_SCREEN_TILES_V<<3;
     return (maxHgt-mSliceSize.height())>>3;
+}
+
+int Settings::tileWidth() const
+{
+    return (mVideoMode == 2) ? 6 : 8;
 }
 
 void Settings::setProjectPath(const QString &path) {
