@@ -118,9 +118,6 @@
 #define BGM		0x80	// Mutable
 
 
-
-
-
 /****************************************
  *			Type declarations			*
  ****************************************/
@@ -152,11 +149,6 @@ typedef struct rect16 {
 	int top;
 	int btm;
 } rect16;
-
-typedef struct line16 {
-	pt16 p1;
-	pt16 p2;
-} line16;
 
 typedef struct velocity {		// Single axis velocity
 	char 	vel;				// Base velocity - implemented as mod, modDisp and disp
@@ -281,9 +273,7 @@ void PlatzSetBgDirectory(const bgDirectory *bgd);
 // Platz utilities
 void PlatzFill(const rect *r, u8 tileId);
 void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int dataOffset);
-char PlatzCcw(const pt16 *p0, const pt16 *p1, const pt16 *p2);
 void PlatzHideSprite(u8 spriteIndex, u8 wid, u8 hgt);
-u8 PlatzLinesIntersect(const line16 *l1, const line16 *l2);
 void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags);
 u8 PlatzRectsIntersect(const rect *r1, const rect *r2);
 u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2);
