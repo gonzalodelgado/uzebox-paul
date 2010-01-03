@@ -112,6 +112,8 @@ const bgOuter *bgoTbl;				// Collidable bg containers in flash
 const bgDirectory *bgDir;			// Bg directory in flash
 const platformDirectory *platDir;	// Moving platform headers
 const platform *platTbl;			// Moving platforms' attributes
+const mutableClass *mcTbl;			// Mutable classes directory to consolidate similar functionality
+
 #if MAX_ANIMATED_BGS
 	animatedBgs	animBgs;			// Animated bgs container
 #endif
@@ -147,6 +149,7 @@ u8 scrXMod;							// The current scroll position in tiles
 	void PlatzLoadMovingPlatforms(u8 sp, char dir);
 	void PlatzMoveMovingPlatforms(void);
 	void PlatzDrawMovingPlatforms(u8);
+	u8 PlatzDetectMovingPlatformCollisions(platzActor *a, char *xDelta);
 #endif
 
 #if MAX_ANIMATED_BGS
@@ -154,7 +157,7 @@ u8 scrXMod;							// The current scroll position in tiles
 	void PlatzAnimateBgs(void);
 	void PlatzDrawAnimatedBgs(void);
 #endif
-u8 PlatzDetectMovingPlatformCollisions(platzActor *a, char *xDelta);
+void PlatzBuildMutableBgFromClass(bgInner *bgi, bgInner *bgm);
 u8 DetectBgCollisions(platzActor *a, u8 enTrig);
 void PlatzDrawColumn(u8 paintX, char dir);
 void PlatzUpdateCollisionPointer(platzActor *a);
@@ -172,6 +175,10 @@ void PlatzSetTriggerCallback(trigCallback tcb) {
 // Mutator callback is a user-defined function to handle mutable background events
 void PlatzSetMutCallback(mutCallback mcb) {
 	mutCb = mcb;
+}
+
+void PlatzSetMutClassTable(const mutableClass *mc) {
+	mcTbl = mc;
 }
 
 // Query callback is a user-defined function to handle queryable background collisions
@@ -268,6 +275,16 @@ void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 shTilesIndex
 }
 #endif
 
+inline void PlatzBuildMutableBgFromClass(bgInner *bgi, bgInner *bgm) {
+	mutableClass bgmc;
+	memcpy_P(&bgmc,mcTbl+bgi->tile,sizeof(mutableClass));
+	bgm->type = bgi->r.right;	// Mutable bitmap index was stored in bgi rect.right
+	bgi->tile = bgmc.tile;
+	bgm->tile = bgmc.id;
+	bgi->r.right = bgi->r.left+bgmc.wid;
+	bgi->r.btm = bgi->r.top+bgmc.hgt;
+	bgm->r = bgi->r;
+}
 
 // Moves the actor to slice sp and centers the viewport on their sprite position
 void PlatzMoveToSlice(platzActor *a, u8 sp) {
@@ -350,10 +367,13 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 					if (PlatzRectsIntersect(&bgo.r,&vp)) {
 						memcpy_P(&bgi,bgiTbl+bgo.index+k,sizeof(bgInner));
 
-						if ((bgi.type&BGM) && mutCb) {
-							++k;
-							memcpy_P(&bgm,bgiTbl+bgo.index+k,sizeof(bgInner));
-
+						if ((bgi.type&(BGMC|BGM)) && mutCb) {
+							if (bgi.type&BGM) {
+								++k;
+								memcpy_P(&bgm,bgiTbl+bgo.index+k,sizeof(bgInner));
+							} else {
+								PlatzBuildMutableBgFromClass(&bgi,&bgm);
+							}
 							if (mutCb(PLATZ_MUT_EV_DRAW,&bgi,&bgm,&bgo) == 0)
 								continue;
 						}
@@ -400,6 +420,7 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 		}
 	}
 }
+
 
 // Adjusts the player's bounding box size, anchor point and trigger point in the event that their sprite
 // dimensions have changed. Will fail safely if the increased size would result in an overlap with a bg
@@ -556,11 +577,14 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 					memcpy_P(&bgi,bgiTbl+bgo.index+j,sizeof(bgInner));
 
 					if ((bgi.r.left <= paintX) && (bgi.r.right > paintX)) {
-						if ((bgi.type&BGM) && mutCb) {
-							memcpy_P(&bgm,bgiTbl+bgo.index+j+1,sizeof(bgInner));
-
+						if ((bgi.type&(BGMC|BGM)) && mutCb) {
+							if (bgi.type&BGM)
+								memcpy_P(&bgm,bgiTbl+bgo.index+j+1,sizeof(bgInner));
+							else
+								PlatzBuildMutableBgFromClass(&bgi,&bgm);
 							if (mutCb(PLATZ_MUT_EV_DRAW,&bgi,&bgm,&bgo) == 0) {
-								++j;	// Skip mutable bg payload
+								if (bgi.type&BGM)	// Skip mutable bg payload for BGM bgs
+									++j;
 								continue;
 							}
 						}
@@ -942,8 +966,11 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 					if ((bgo.type&BGM) && mutCb) {
 						bgInner bgi,bgm;
 						memcpy_P(&bgi,bgiTbl+bgo.index,sizeof(bgInner));
-						memcpy_P(&bgm,bgiTbl+bgo.index+1,sizeof(bgInner));
 
+						if (bgi.type&BGM)
+							memcpy_P(&bgm,bgiTbl+bgo.index+1,sizeof(bgInner));
+						else
+							PlatzBuildMutableBgFromClass(&bgi,&bgm);
 						if (mutCb(PLATZ_MUT_EV_COLLISION,&bgi,&bgm,&bgo) == 0)
 							continue;
 					}
@@ -1361,8 +1388,12 @@ void PlatzLoadAnimatedBgs(u8 sp, char dir) {
 			bgiIndex = pgm_read_word(byteGrab+BGI_INDEX_OFFSET);
 			memcpy_P(&animBgs.bgs[src][i],bgiTbl+bgiIndex+bgai.iInner,sizeof(bgInner));
 #ifdef MUTABLE_BGS
-			if (animBgs.bgs[src][i].type&BGM)
-				memcpy_P(&animBgs.mutBgs[src][i],bgiTbl+bgiIndex+bgai.iInner+1,sizeof(bgInner));
+			if (animBgs.bgs[src][i].type&(BGMC|BGM)) {
+				if (animBgs.bgs[src][i].type&BGM)
+					memcpy_P(&animBgs.mutBgs[src][i],bgiTbl+bgiIndex+bgai.iInner+1,sizeof(bgInner));
+				else
+					PlatzBuildMutableBgFromClass(&animBgs.bgs[src][i],&animBgs.mutBgs[src][i]);
+			}
 #endif
 			memcpy_P(&animBgs.anims[src][i],animBgTbl+animBgs.bgs[src][i].tile,sizeof(animation));
 
@@ -1391,7 +1422,7 @@ void PlatzDrawAnimatedBgs(void) {
 	for (i = 0; i < MAX_VIS_SLICES; i++) {
 		for (j = 0; j < animBgs.count[i]; j++) {
 #ifdef MUTABLE_BGS
-			if ((animBgs.bgs[i][j].type&BGM) && mutCb)
+			if ((animBgs.bgs[i][j].type&(BGMC|BGM)) && mutCb)
 				if (mutCb(PLATZ_MUT_EV_ANIM,&animBgs.bgs[i][j],&animBgs.mutBgs[i][j],&animBgs.anims[i][j]) == 0)
 					continue;
 #endif

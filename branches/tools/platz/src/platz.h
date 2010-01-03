@@ -113,6 +113,7 @@
 	// Inner
 #define BGP		0x01	// Patterned
 #define BGA		0x02	// Animated (automatically repeats like a pattern)
+#define BGMC	0x40	// Mutable class
 
 	// Common
 #define BGM		0x80	// Mutable
@@ -193,6 +194,13 @@ typedef struct object {			// Non-interactive objects (may be option interactivit
 	pt			begin;			// Position that top-left corner of object will be placed
 	u8			map;			// Object data (points to MapsTable)
 } object;
+
+typedef struct mutableClass {	// Mutable classes are re-used across many mutable bgs that have common attributes in order to save flash
+	u8 tile;					// The tile/map/animation index
+	u8 id;						// Mutable bg id
+	u8 wid;						// We only store width and height and use top left pt from inner bg to know where to draw. The tile
+	u8 hgt;						// attribute of the inner bg becomes an index into the mutableClasses table. The r.right attribute
+} mutableClass;					// of the inner bg becomes the mutable bitmap index
 
 typedef struct bgDirectory {
 	u16 objOffset;				// Index into pgmObjects flash array

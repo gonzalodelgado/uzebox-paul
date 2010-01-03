@@ -1253,6 +1253,7 @@ extern const bgOuter *bgoTbl;				// Collidable bg containers in flash
 extern const bgDirectory *bgDir;			// Bg directory in flash
 extern const platformDirectory *platDir;	// Moving platform headers
 extern const platform *platTbl;				// Moving platforms' attributes
+extern const mutableClass *mcTbl;			// Mutable bg class directory - for consolidating similar behavior
 
 
 int main(void) {
@@ -1302,6 +1303,7 @@ int main(void) {
 	bgiTbl = pgmBgsInner;
 	bgoTbl = pgmBgsOuter;
 	bgDir = pgmBgDir;
+	mcTbl = pgmMcDir;
 
 /*
 	PlatzSetTriggerCallback(ActivateTrigger);

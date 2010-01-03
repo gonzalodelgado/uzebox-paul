@@ -258,8 +258,8 @@ const bgInner pgmBgsInner[] PROGMEM = {
 	{BGP|BGM,7,{4,10,15,17}},
 	{3,MUT_BOMB_TARGET,{4,10,15,17}},
 	{BGP,7,{20,26,12,14}},
-	{BGA|BGM,4,{22,24,10,12}},
-	{4,MUT_COIN,{22,24,10,12}},
+	{BGA|BGMC,0,{22,4,10,12}},
+	{BGI,7,{4,10,11,13}},
 	{BGA|BGM,2,{0,32,17,18}},
 	{5,MUT_WLK_WATER,{0,32,17,18}},
 	{0,1,{0,32,18,25}},
@@ -1164,6 +1164,10 @@ const bgAnimIndex pgmAnimDir[] PROGMEM = {
 	{0,0},{7,0},{8,0},{12,0},{15,0},
 	{0,0},{0,1},
 	{0,0},{2,0},{5,0}
+};
+
+const mutableClass pgmMcDir[] PROGMEM = {
+	{4,MUT_COIN,2,2}
 };
 
 const bgDirectory pgmBgDir[] PROGMEM = {
