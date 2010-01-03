@@ -196,11 +196,10 @@ typedef struct object {			// Non-interactive objects (may be option interactivit
 } object;
 
 typedef struct mutableClass {	// Mutable classes are re-used across many mutable bgs that have common attributes in order to save flash
-	u8 tile;					// The tile/map/animation index
 	u8 id;						// Mutable bg id
-	u8 wid;						// We only store width and height and use top left pt from inner bg to know where to draw. The tile
-	u8 hgt;						// attribute of the inner bg becomes an index into the mutableClasses table. The r.right attribute
-} mutableClass;					// of the inner bg becomes the mutable bitmap index
+	u8 tile;					// Tile/map/animation index
+	u8 hgt;						// We only store height and use top left pt from inner bg to know where to draw. The tile attribute of the inner bg
+} mutableClass;					// becomes an index into the mutableClasses table. The r.btm attribute of the inner bg becomes the mutable bitmap index
 
 typedef struct bgDirectory {
 	u16 objOffset;				// Index into pgmObjects flash array

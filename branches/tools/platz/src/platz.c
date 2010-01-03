@@ -278,10 +278,9 @@ void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 shTilesIndex
 inline void PlatzBuildMutableBgFromClass(bgInner *bgi, bgInner *bgm) {
 	mutableClass bgmc;
 	memcpy_P(&bgmc,mcTbl+bgi->tile,sizeof(mutableClass));
-	bgm->type = bgi->r.right;	// Mutable bitmap index was stored in bgi rect.right
-	bgi->tile = bgmc.tile;
+	bgm->type = bgi->r.btm;		// Mutable bitmap index was stored in bgi rect.btm
 	bgm->tile = bgmc.id;
-	bgi->r.right = bgi->r.left+bgmc.wid;
+	bgi->tile = bgmc.tile;
 	bgi->r.btm = bgi->r.top+bgmc.hgt;
 	bgm->r = bgi->r;
 }
