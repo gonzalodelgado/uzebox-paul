@@ -101,6 +101,7 @@ namespace Platz
     const QStringList SUPPORTED_IMAGE_FORMATS(QStringList() << "*.bmp" << "*.jpg" << "*.png");
     const QStringList SUPPORTED_IMAGE_FORMATS_EXTS(QStringList() << ".bmp" << ".jpg" << ".png");
     const QString MUTABLE_IDS_MARKER = "_LePlatz_Mutable_Bg_Ids_";
+    const QString MUTABLE_CLASS_IDS_MARKER = "_LePlatz_Mutable_Class_Ids_";
     const QString TRIGGER_IDS_MARKER = "_LePlatz_Trigger_Ids_";
     const QString PLATFORM_CLR_TILE_IDS_MARKER = "_LePlatz_Platform_Clear_Tiles_Ids_";
     const QString VERSION_STR = "v1.0";

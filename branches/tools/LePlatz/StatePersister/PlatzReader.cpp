@@ -181,7 +181,6 @@ void PlatzReader::readSettings()
     Q_ASSERT(isStartElement() && name() == "ProjectSettings");
     Q_ASSERT(settings);
 
-    bool ok;
     QString s;
 
     while (!atEnd()) {
@@ -193,17 +192,17 @@ void PlatzReader::readSettings()
             s = name().toString();
 
             if (s == "VideoMode") {
-                int vmode = attributes().value("mode").toString().toInt(&ok, 10);
+                int vmode = attributes().value("mode").toString().toInt();
                 settings->setVideoMode(vmode);
                 readElementText();
             } else if (s == "SliceSize") {
-                int width = attributes().value("width").toString().toInt(&ok, 10);
-                int height = attributes().value("height").toString().toInt(&ok, 10);
+                int width = attributes().value("width").toString().toInt();
+                int height = attributes().value("height").toString().toInt();
                 settings->setSliceSize(width, height);
                 readElementText();
             } else if (s == "SpriteSize") {
-                int width = attributes().value("width").toString().toInt(&ok, 10);
-                int height = attributes().value("height").toString().toInt(&ok, 10);
+                int width = attributes().value("width").toString().toInt();
+                int height = attributes().value("height").toString().toInt();
                 settings->setSpriteSize(width, height);
                 readElementText();
             } else if (s == "ImageFormat") {
@@ -234,9 +233,8 @@ void PlatzReader::readSlice()
     Q_ASSERT(isStartElement() && name() == "Slice");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    bool ok;
-    int replica = attributes().value("replica").toString().toInt(&ok, 10);
-    int locked = attributes().value("locked").toString().toInt(&ok, 10);
+    int replica = attributes().value("replica").toString().toInt();
+    int locked = attributes().value("locked").toString().toInt();
     QString title = readTitle();
     Slice *slice = new Slice(QList<QVariant>() << title, worldPtr.top());
     model->insertRow(worldPtr.top()->childCount(), slice, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
@@ -305,10 +303,9 @@ void PlatzReader::readBgOuter()
     Q_ASSERT(isStartElement() && name() == "BgOuter");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    bool ok;
-    int flags = attributes().value("flags").toString().toInt(&ok, 10);
-    int trigIndex = attributes().value("trigIndex").toString().toInt(&ok, 10);
-    int trigOrientation = attributes().value("trigOrientation").toString().toInt(&ok, 10);
+    int flags = attributes().value("flags").toString().toInt();
+    int trigIndex = attributes().value("trigIndex").toString().toInt();
+    int trigOrientation = attributes().value("trigOrientation").toString().toInt();
     QString title = readTitle();
     BgOuter *bgo = new BgOuter(QList<QVariant>() << title, worldPtr.top());
     bgo->setBoundingRect(readRect("Bounds"));
@@ -345,16 +342,21 @@ void PlatzReader::readBgInner()
     Q_ASSERT(isStartElement() && name() == "BgInner");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    bool ok;
-    int flags = attributes().value("flags").toString().toInt(&ok, 10);
-    int tile = attributes().value("tile").toString().toInt(&ok, 10);
+    int flags = attributes().value("flags").toString().toInt();
+    int tile = attributes().value("tile").toString().toInt();
+    int bgmClass;
+
+    if (flags&BgInner::BGMC)
+        bgmClass = attributes().value("bgmc").toString().toInt();
     QString title = readTitle();
     BgInner *bgi = new BgInner(QList<QVariant>() << title, worldPtr.top());
     bgi->setBoundingRect(readRect("Bounds"));
     bgi->setGraphicalRepresentation(new PlatzGraphicsItem(bgi, Platz::NORMAL));
-
     bgi->setFlags(flags);
     bgi->setTile(tile);
+
+    if (flags&BgInner::BGMC)
+        bgi->setBgmClass(bgmClass);
     prevBgi = bgi;
     model->insertRow(worldPtr.top()->childCount(), bgi, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
 
@@ -376,11 +378,9 @@ void PlatzReader::readBgMutable()
 
     if (!prevBgi)
         return;
-    bool ok;
-    int flags = attributes().value("flags").toString().toInt(&ok, 10);
-    int tile = attributes().value("tile").toString().toInt(&ok, 10);
-    int custom = attributes().value("custom").toString().toInt(&ok, 10);
-    QString mstr = attributes().value("mutableString").toString();
+    int flags = attributes().value("flags").toString().toInt();
+    int tile = attributes().value("tile").toString().toInt();
+    int custom = attributes().value("custom").toString().toInt();
     QString title = readTitle();
     BgMutable *bgm = new BgMutable(QList<QVariant>() << title, prevBgi, worldPtr.top());
     bgm->setBoundingRect(readRect("Bounds"));
@@ -442,8 +442,7 @@ void PlatzReader::readBgObject()
     Q_ASSERT(isStartElement() && name() == "BgObject");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    bool ok;
-    int map = attributes().value("map").toString().toInt(&ok, 10);
+    int map = attributes().value("map").toString().toInt();
     QString title = readTitle();
     BgObject *obj = new BgObject(QList<QVariant>() << title, worldPtr.top());
     obj->setBoundingRect(readRect("Bounds"));
@@ -497,8 +496,7 @@ void PlatzReader::readPlatformPath()
     Q_ASSERT(isStartElement() && name() == "PlatformPath");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    bool ok;
-    int axis = attributes().value("axis").toString().toInt(&ok, 10);
+    int axis = attributes().value("axis").toString().toInt();
     QString title = readTitle();
     BgPlatformPath *platPath = new BgPlatformPath(QList<QVariant>() << title, worldPtr.top());
     platPath->setBoundingRect(readRect("Bounds"));
@@ -531,10 +529,9 @@ void PlatzReader::readPlatform()
     Q_ASSERT(isStartElement() && name() == "Platform");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    bool ok;
-    int flags = attributes().value("flags").toString().toInt(&ok, 10);
+    int flags = attributes().value("flags").toString().toInt();
     QString clrTile = attributes().value("clearTile").toString();
-    int vel = attributes().value("velocity").toString().toInt(&ok, 10);
+    int vel = attributes().value("velocity").toString().toInt();
     QString title = readTitle();
     BgPlatform *plat = new BgPlatform(QList<QVariant>() << title, worldPtr.top());
     plat->setBoundingRect(readRect("Bounds"));
@@ -590,7 +587,6 @@ QString PlatzReader::readTitle()
 
 QRectF PlatzReader::readRect(const QString &eleName)
 {
-    bool ok;
     QRectF rect(0.0,0.0,0.0,0.0);
     QString s;
 
@@ -605,13 +601,13 @@ QRectF PlatzReader::readRect(const QString &eleName)
             if (s == eleName)
                 continue;
             else if (s == "Left")
-                rect.setLeft(readElementText().toDouble(&ok));
+                rect.setLeft(readElementText().toDouble());
             else if (s == "Top")
-                rect.setTop(readElementText().toDouble(&ok));
+                rect.setTop(readElementText().toDouble());
             else if (s == "Right")
-                rect.setRight(readElementText().toDouble(&ok));
+                rect.setRight(readElementText().toDouble());
             else if (s == "Bottom")
-                rect.setBottom(readElementText().toDouble(&ok));
+                rect.setBottom(readElementText().toDouble());
             else
                 readUnknownElement();
         }
@@ -621,7 +617,6 @@ QRectF PlatzReader::readRect(const QString &eleName)
 
 Platz::MutablePayload PlatzReader::readMutablePayload(const QString &eleName)
 {
-    bool ok;
     Platz::MutablePayload payload;
     QString s;
 
@@ -636,13 +631,13 @@ Platz::MutablePayload PlatzReader::readMutablePayload(const QString &eleName)
             if (s == eleName)
                 continue;
             else if (s == "Left")
-                payload.left = readElementText().toInt(&ok);
+                payload.left = readElementText().toInt();
             else if (s == "Right")
-                payload.right = readElementText().toInt(&ok);
+                payload.right = readElementText().toInt();
             else if (s == "Top")
-                payload.top = readElementText().toInt(&ok);
+                payload.top = readElementText().toInt();
             else if (s == "Bottom")
-                payload.btm = readElementText().toInt(&ok);
+                payload.btm = readElementText().toInt();
             else
                 readUnknownElement();
         }

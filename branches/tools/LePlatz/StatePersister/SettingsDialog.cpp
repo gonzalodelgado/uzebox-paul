@@ -167,42 +167,42 @@ void SettingsDialog::pathFileDialog()
 
     if (ui->stackedWidget->currentIndex() == 0) {
         switch (ui->swPs->currentIndex()) {
-            case 2:
+            case 3:
                 le = ui->leSlicePath;
                 openPath = settings->slicePath();
                 type = DirPath;
                 break;
-            case 3:
+            case 4:
                 le = ui->leTilePath;
                 openPath = settings->tilePath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 4:
+            case 5:
                 le = ui->leMapPath;
                 openPath = settings->mapPath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 5:
+            case 6:
                 le = ui->leAnimPath;
                 openPath = settings->animPath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 6:
+            case 7:
                 le = ui->lePlatzPath;
                 openPath = settings->platzfilePath();
                 filter = PLATZ_INCLUDE_FORMATS_STR;
                 break;
-            case 7:
+            case 8:
                 le = ui->leSrcFolder;
                 openPath = settings->srcFolder();
                 type = DirPath;
                 break;
-            case 8:
+            case 9:
                 le = ui->leMakefilePath;
                 openPath = settings->makefilePath();
                 filter = "*";
                 break;
-            case 9:
+            case 10:
                 le = ui->leHexfilePath;
                 openPath = settings->hexfilePath();
                 filter = INTEL_HEX_FILES_STR;

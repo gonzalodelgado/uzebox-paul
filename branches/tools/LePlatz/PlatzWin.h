@@ -109,6 +109,7 @@ public slots:
     void toggleSelectedSliceLock();
     void setSnapToResolutionX(QAction* action);
     void setSnapToResolutionY(QAction* action);
+    void publicKeyPressEvent(QKeyEvent *e);
 signals:
     void zoomIn(int delta = 120);
     void zoomOut(int delta = -120);
@@ -116,6 +117,7 @@ signals:
     void bgoTriggerChanged(int trigId, int trigOrientation);
     void bgiTileChanged(int tile);
     void bgiFlagsChanged(int flags);
+    void bgmClassChanged(int bgmc);
     void bgmCustomPayloadChanged(const Platz::MutablePayload &payload);
     void platformStyleChanged(BgPlatform::PlatformStyle style);
     void platformAxisChanged(BgPlatformPath::PlatformAxis axis);
@@ -126,6 +128,10 @@ protected:
     void keyPressEvent(QKeyEvent *event);
     void closeEvent(QCloseEvent *event);
     void changeEvent (QEvent *event);
+private slots:
+    void toggleBgmi(bool checked);
+    void toggleBgmc(bool checked);
+    void toggleBgmcCombo(bool enable);
 private:
     void PrintProcError(QProcess::ProcessError error, QPlainTextEdit *txtEdit);
     Ui::PlatzWin *ui;

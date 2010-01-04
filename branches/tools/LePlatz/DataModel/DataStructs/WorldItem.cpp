@@ -27,6 +27,7 @@ WorldItem::WorldStats WorldItem::worldStats;
 QList<QIcon> WorldItem::WorldItemIcons;
 QList<QPixmap> WorldItem::WorldDetailPixmaps;
 QStringList WorldItem::mutableIds;
+QStringList WorldItem::mutableClassIds;
 QStringList WorldItem::triggerIds;
 QStringList WorldItem::platClrTileIds;
 

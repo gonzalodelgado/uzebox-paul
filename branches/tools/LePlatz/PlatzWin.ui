@@ -668,21 +668,21 @@
         </layout>
        </widget>
        <widget class="QWidget" name="pageInner">
-        <layout class="QHBoxLayout" name="horizontalLayout_11">
-         <item>
-          <spacer name="horizontalSpacer_8">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <spacer name="horizontalSpacer_18">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>15</width>
+             <width>12</width>
              <height>20</height>
             </size>
            </property>
           </spacer>
          </item>
-         <item>
+         <item row="0" column="1" rowspan="2">
           <widget class="QGroupBox" name="groupBox_2">
            <property name="maximumSize">
             <size>
@@ -721,85 +721,116 @@
            </layout>
           </widget>
          </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_17">
+         <item row="0" column="2">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>13</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="3">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
-            <spacer name="verticalSpacer_4">
+            <widget class="QCheckBox" name="chkBgmi">
+             <property name="text">
+              <string>BGM</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
              <property name="orientation">
-              <enum>Qt::Vertical</enum>
+              <enum>Qt::Horizontal</enum>
              </property>
              <property name="sizeHint" stdset="0">
               <size>
-               <width>20</width>
-               <height>13</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>15</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QCheckBox" name="chkBgmi">
-               <property name="text">
-                <string>BGM</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>14</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>13</height>
+               <width>14</width>
+               <height>20</height>
               </size>
              </property>
             </spacer>
            </item>
           </layout>
          </item>
-         <item>
-          <spacer name="horizontalSpacer_9">
+         <item row="1" column="0">
+          <spacer name="horizontalSpacer_17">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>14</width>
+             <width>12</width>
              <height>20</height>
             </size>
            </property>
           </spacer>
+         </item>
+         <item row="1" column="2">
+          <spacer name="horizontalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>13</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="1" column="3">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QCheckBox" name="chkBgmc">
+             <property name="text">
+              <string>BGMC</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>14</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0" colspan="4">
+          <layout class="QVBoxLayout" name="verticalLayout_17">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblBgmc">
+             <property name="text">
+              <string>Mutable Class Ids:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="LePlatzComboBox" name="cboBgmc">
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
@@ -818,7 +849,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="cboBgm">
+            <widget class="LePlatzComboBox" name="cboBgm">
              <property name="maximumSize">
               <size>
                <width>16777215</width>
@@ -1092,7 +1123,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="cboPlatformClearTile"/>
+            <widget class="LePlatzComboBox" name="cboPlatformClearTile"/>
            </item>
           </layout>
          </item>
@@ -1401,7 +1432,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QComboBox" name="cboBgt">
+          <widget class="LePlatzComboBox" name="cboBgt">
            <property name="maximumSize">
             <size>
              <width>16777215</width>
@@ -1895,6 +1926,11 @@
    <class>LePlatzSpinBox</class>
    <extends>QSpinBox</extends>
    <header>LePlatzSpinBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>LePlatzComboBox</class>
+   <extends>QComboBox</extends>
+   <header location="global">LePlatzComboBox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

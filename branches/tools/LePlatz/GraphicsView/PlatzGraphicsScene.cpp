@@ -343,6 +343,8 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 
                     if (bgi->flags()&BgInner::BGM)
                         setMutableParent(bgi);
+                    else if (bgi->flags()&BgInner::BGMC)
+                        bgi->setBgmClass(bgmc);
                     emit (selectionChanged(dataModel->indexOf(row, 0, bgi)));
                     break;
                 }

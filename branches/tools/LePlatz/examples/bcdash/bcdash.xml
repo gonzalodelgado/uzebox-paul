@@ -682,7 +682,7 @@
                             <Bottom>144</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>672</Left>
@@ -814,7 +814,7 @@
                             <Bottom>144</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>768</Left>
@@ -865,7 +865,7 @@
                             <Bottom>120</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="2" mutableString="MUT_BOMB" custom="0">
+                    <BgMutable flags="0" tile="2" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>800</Left>
@@ -898,7 +898,7 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="8" mutableString="MUT_BOMB_TARGET" custom="0">
+                    <BgMutable flags="0" tile="8" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>800</Left>
@@ -940,7 +940,7 @@
                         <Right>960</Right>
                         <Bottom>96</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>944</Left>
@@ -949,21 +949,6 @@
                             <Bottom>96</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>944</Left>
-                            <Top>80</Top>
-                            <Right>960</Right>
-                            <Bottom>96</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>176</Left>
-                            <Right>192</Right>
-                            <Top>80</Top>
-                            <Bottom>96</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -1072,7 +1057,7 @@
                             <Bottom>144</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>1024</Left>
@@ -1142,7 +1127,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                <BgOuter flags="8" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>1184</Left>
@@ -1150,7 +1135,7 @@
                         <Right>1200</Right>
                         <Bottom>184</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="10">
+                    <BgInner flags="9" tile="10" bgmc="2">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>1184</Left>
@@ -1159,21 +1144,6 @@
                             <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="1" mutableString="MUT_POISON" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>1184</Left>
-                            <Top>168</Top>
-                            <Right>1200</Right>
-                            <Bottom>184</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>160</Left>
-                            <Right>176</Right>
-                            <Top>168</Top>
-                            <Bottom>184</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="17" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -1255,7 +1225,7 @@
                             <Bottom>144</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>1280</Left>
@@ -1307,7 +1277,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                <BgOuter flags="8" trigIndex="166465224" trigOrientation="166465224">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>1344</Left>
@@ -1315,7 +1285,7 @@
                         <Right>1360</Right>
                         <Bottom>72</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>1344</Left>
@@ -1324,21 +1294,6 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>1344</Left>
-                            <Top>56</Top>
-                            <Right>1360</Right>
-                            <Bottom>72</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>64</Left>
-                            <Right>80</Right>
-                            <Top>56</Top>
-                            <Bottom>72</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="17" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -1438,7 +1393,7 @@
                             <Bottom>200</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="12" mutableString="MUT_SECRET_WATER" custom="0">
+                    <BgMutable flags="0" tile="12" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>1504</Left>
@@ -1588,7 +1543,7 @@
                         <Right>1592</Right>
                         <Bottom>184</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="12">
+                    <BgInner flags="9" tile="12" bgmc="4">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>1576</Left>
@@ -1597,21 +1552,6 @@
                             <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="3" mutableString="MUT_BOOTS" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>1576</Left>
-                            <Top>176</Top>
-                            <Right>1592</Right>
-                            <Bottom>184</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>40</Left>
-                            <Right>56</Right>
-                            <Top>176</Top>
-                            <Bottom>184</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -1621,7 +1561,7 @@
                         <Right>1672</Right>
                         <Bottom>48</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>1656</Left>
@@ -1630,21 +1570,6 @@
                             <Bottom>48</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>1656</Left>
-                            <Top>32</Top>
-                            <Right>1672</Right>
-                            <Bottom>48</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>120</Left>
-                            <Right>136</Right>
-                            <Top>32</Top>
-                            <Bottom>48</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -1753,7 +1678,7 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>1792</Left>
@@ -1822,7 +1747,7 @@
                             <Bottom>48</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="2" mutableString="MUT_BOMB" custom="0">
+                    <BgMutable flags="0" tile="2" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>1824</Left>
@@ -1855,7 +1780,7 @@
                             <Bottom>64</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="8" mutableString="MUT_BOMB_TARGET" custom="0">
+                    <BgMutable flags="0" tile="8" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>1824</Left>
@@ -1906,7 +1831,7 @@
                             <Bottom>48</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="2" mutableString="MUT_BOMB" custom="0">
+                    <BgMutable flags="0" tile="2" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>1936</Left>
@@ -1939,7 +1864,7 @@
                             <Bottom>64</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="8" mutableString="MUT_BOMB_TARGET" custom="0">
+                    <BgMutable flags="0" tile="8" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>1936</Left>
@@ -2161,7 +2086,7 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>2112</Left>
@@ -2266,7 +2191,7 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>2304</Left>
@@ -2300,7 +2225,7 @@
                         <Bottom>112</Bottom>
                     </Bounds>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                <BgOuter flags="8" trigIndex="197248864" trigOrientation="197248864">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>2456</Left>
@@ -2308,7 +2233,7 @@
                         <Right>2472</Right>
                         <Bottom>48</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>2456</Left>
@@ -2317,21 +2242,6 @@
                             <Bottom>48</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>2456</Left>
-                            <Top>32</Top>
-                            <Right>2472</Right>
-                            <Bottom>48</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>152</Left>
-                            <Right>168</Right>
-                            <Top>32</Top>
-                            <Bottom>48</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
@@ -2503,7 +2413,7 @@
                             <Bottom>144</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>2632</Left>
@@ -2590,7 +2500,7 @@
                         <Right>2712</Right>
                         <Bottom>128</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>2696</Left>
@@ -2599,21 +2509,6 @@
                             <Bottom>128</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>2696</Left>
-                            <Top>112</Top>
-                            <Right>2712</Right>
-                            <Bottom>128</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>136</Left>
-                            <Right>152</Right>
-                            <Top>112</Top>
-                            <Bottom>128</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -2813,7 +2708,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="1" trigOrientation="1">
+                <BgOuter flags="8" trigIndex="164092112" trigOrientation="164092112">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>2896</Left>
@@ -2821,7 +2716,7 @@
                         <Right>2904</Right>
                         <Bottom>176</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="18">
+                    <BgInner flags="9" tile="18" bgmc="6">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>2896</Left>
@@ -2830,23 +2725,8 @@
                             <Bottom>176</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="5" mutableString="MUT_POGO" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>2896</Left>
-                            <Top>160</Top>
-                            <Right>2904</Right>
-                            <Bottom>176</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>80</Left>
-                            <Right>88</Right>
-                            <Top>160</Top>
-                            <Bottom>176</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="1" trigOrientation="1">
+                <BgOuter flags="8" trigIndex="186574512" trigOrientation="186574512">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>2928</Left>
@@ -2854,7 +2734,7 @@
                         <Right>2944</Right>
                         <Bottom>32</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>2928</Left>
@@ -2863,21 +2743,6 @@
                             <Bottom>32</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>2928</Left>
-                            <Top>16</Top>
-                            <Right>2944</Right>
-                            <Bottom>32</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>112</Left>
-                            <Right>128</Right>
-                            <Top>16</Top>
-                            <Bottom>32</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -2932,7 +2797,7 @@
                         <Right>3000</Right>
                         <Bottom>112</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>2984</Left>
@@ -2941,21 +2806,6 @@
                             <Bottom>112</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>2984</Left>
-                            <Top>96</Top>
-                            <Right>3000</Right>
-                            <Bottom>112</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>168</Left>
-                            <Right>184</Right>
-                            <Top>96</Top>
-                            <Bottom>112</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -3056,7 +2906,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="16777215" trigOrientation="14">
+                <BgOuter flags="8" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>3032</Left>
@@ -3064,7 +2914,7 @@
                         <Right>3040</Right>
                         <Bottom>152</Bottom>
                     </Bounds>
-                    <BgInner flags="4" tile="26">
+                    <BgInner flags="8" tile="26" bgmc="7">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>3032</Left>
@@ -3073,21 +2923,6 @@
                             <Bottom>152</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="6" mutableString="MUT_EGG" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>3032</Left>
-                            <Top>144</Top>
-                            <Right>3040</Right>
-                            <Bottom>152</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>216</Left>
-                            <Right>224</Right>
-                            <Top>144</Top>
-                            <Bottom>152</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -3205,7 +3040,7 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="13" mutableString="MUT_FIRE" custom="0">
+                    <BgMutable flags="0" tile="13" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3072</Left>
@@ -3238,7 +3073,7 @@
                             <Bottom>168</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3104</Left>
@@ -3281,39 +3116,6 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="7864421" trigOrientation="2097210">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>3104</Left>
-                        <Top>168</Top>
-                        <Right>3120</Right>
-                        <Bottom>184</Bottom>
-                    </Bounds>
-                    <BgInner flags="5" tile="10">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>3104</Left>
-                            <Top>168</Top>
-                            <Right>3120</Right>
-                            <Bottom>184</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgMutable flags="0" tile="1" mutableString="MUT_POISON" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>3104</Left>
-                            <Top>168</Top>
-                            <Right>3120</Right>
-                            <Bottom>184</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>32</Left>
-                            <Right>48</Right>
-                            <Top>168</Top>
-                            <Bottom>184</Bottom>
-                        </Payload>
-                    </BgMutable>
-                </BgOuter>
                 <BgOuter flags="2" trigIndex="4" trigOrientation="1">
                     <Title>BgOuter</Title>
                     <Bounds>
@@ -3322,6 +3124,24 @@
                         <Right>3184</Right>
                         <Bottom>176</Bottom>
                     </Bounds>
+                </BgOuter>
+                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>3104</Left>
+                        <Top>168</Top>
+                        <Right>3120</Right>
+                        <Bottom>184</Bottom>
+                    </Bounds>
+                    <BgInner flags="9" tile="10" bgmc="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>3104</Left>
+                            <Top>168</Top>
+                            <Right>3120</Right>
+                            <Bottom>184</Bottom>
+                        </Bounds>
+                    </BgInner>
                 </BgOuter>
                 <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -3340,7 +3160,7 @@
                             <Bottom>64</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="13" mutableString="MUT_FIRE" custom="0">
+                    <BgMutable flags="0" tile="13" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3184</Left>
@@ -3419,7 +3239,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="80609384" trigOrientation="183131944">
+                <BgOuter flags="8" trigIndex="166399184" trigOrientation="166399184">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>3248</Left>
@@ -3427,7 +3247,7 @@
                         <Right>3264</Right>
                         <Bottom>152</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="23">
+                    <BgInner flags="9" tile="23" bgmc="9">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>3248</Left>
@@ -3436,21 +3256,6 @@
                             <Bottom>152</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="7" mutableString="MUT_HOURGLASS" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>3248</Left>
-                            <Top>136</Top>
-                            <Right>3264</Right>
-                            <Bottom>152</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>176</Left>
-                            <Right>192</Right>
-                            <Top>136</Top>
-                            <Bottom>152</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -3460,7 +3265,7 @@
                         <Right>3288</Right>
                         <Bottom>152</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="24">
+                    <BgInner flags="9" tile="24" bgmc="5">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>3272</Left>
@@ -3469,21 +3274,6 @@
                             <Bottom>152</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="4" mutableString="MUT_BUDDHA" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>3272</Left>
-                            <Top>136</Top>
-                            <Right>3288</Right>
-                            <Bottom>152</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>200</Left>
-                            <Right>216</Right>
-                            <Top>136</Top>
-                            <Bottom>152</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -3682,7 +3472,7 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="13" mutableString="MUT_FIRE" custom="0">
+                    <BgMutable flags="0" tile="13" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3344</Left>
@@ -3715,7 +3505,7 @@
                             <Bottom>144</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3432</Left>
@@ -3802,7 +3592,7 @@
                             <Bottom>200</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="12" mutableString="MUT_SECRET_WATER" custom="0">
+                    <BgMutable flags="0" tile="12" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3472</Left>
@@ -3980,7 +3770,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                <BgOuter flags="8" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>3696</Left>
@@ -3988,7 +3778,7 @@
                         <Right>3712</Right>
                         <Bottom>136</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="24">
+                    <BgInner flags="9" tile="24" bgmc="5">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>3696</Left>
@@ -3997,21 +3787,6 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="4" mutableString="MUT_BUDDHA" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>3696</Left>
-                            <Top>120</Top>
-                            <Right>3712</Right>
-                            <Bottom>136</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>112</Left>
-                            <Right>128</Right>
-                            <Top>120</Top>
-                            <Bottom>136</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -4147,7 +3922,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="1">
+        <Slice replica="-1" locked="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>3840</Left>
@@ -4265,7 +4040,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="1" trigOrientation="1">
+                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>3880</Left>
@@ -4273,7 +4048,7 @@
                         <Right>3896</Right>
                         <Bottom>192</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="10">
+                    <BgInner flags="9" tile="10" bgmc="2">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>3880</Left>
@@ -4282,21 +4057,6 @@
                             <Bottom>192</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="1" mutableString="MUT_POISON" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>3880</Left>
-                            <Top>176</Top>
-                            <Right>3896</Right>
-                            <Bottom>192</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>40</Left>
-                            <Right>56</Right>
-                            <Top>176</Top>
-                            <Bottom>192</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="8" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
@@ -4315,7 +4075,7 @@
                             <Bottom>48</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="2" mutableString="MUT_BOMB" custom="0">
+                    <BgMutable flags="0" tile="2" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3872</Left>
@@ -4348,7 +4108,7 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="14" mutableString="MUT_BOMB_TARGET_SWITCH" custom="1">
+                    <BgMutable flags="0" tile="14" custom="1">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3872</Left>
@@ -4381,7 +4141,7 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3872</Left>
@@ -4405,7 +4165,7 @@
                         <Right>3928</Right>
                         <Bottom>136</Bottom>
                     </Bounds>
-                    <BgInner flags="4" tile="27">
+                    <BgInner flags="8" tile="27" bgmc="8">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>3920</Left>
@@ -4414,21 +4174,6 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="6" mutableString="MUT_EGG" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>3920</Left>
-                            <Top>128</Top>
-                            <Right>3928</Right>
-                            <Bottom>136</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>80</Left>
-                            <Right>88</Right>
-                            <Top>128</Top>
-                            <Bottom>136</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -4438,7 +4183,7 @@
                         <Right>3952</Right>
                         <Bottom>136</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="10">
+                    <BgInner flags="9" tile="10" bgmc="2">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>3936</Left>
@@ -4447,21 +4192,6 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="1" mutableString="MUT_POISON" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>3936</Left>
-                            <Top>120</Top>
-                            <Right>3952</Right>
-                            <Bottom>136</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>96</Left>
-                            <Right>112</Right>
-                            <Top>120</Top>
-                            <Bottom>136</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -4543,7 +4273,7 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>3968</Left>
@@ -4577,39 +4307,6 @@
                         <Bottom>80</Bottom>
                     </Bounds>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="1" trigOrientation="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>4008</Left>
-                        <Top>32</Top>
-                        <Right>4024</Right>
-                        <Bottom>48</Bottom>
-                    </Bounds>
-                    <BgInner flags="5" tile="32">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>4008</Left>
-                            <Top>32</Top>
-                            <Right>4024</Right>
-                            <Bottom>48</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgMutable flags="0" tile="1" mutableString="MUT_POISON" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>4008</Left>
-                            <Top>32</Top>
-                            <Right>4024</Right>
-                            <Bottom>48</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>168</Left>
-                            <Right>184</Right>
-                            <Top>32</Top>
-                            <Bottom>48</Bottom>
-                        </Payload>
-                    </BgMutable>
-                </BgOuter>
                 <BgOuter flags="1" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
                     <Bounds>
@@ -4634,6 +4331,24 @@
                             <Top>48</Top>
                             <Right>4024</Right>
                             <Bottom>64</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="8" trigIndex="198154936" trigOrientation="198154936">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>4008</Left>
+                        <Top>32</Top>
+                        <Right>4024</Right>
+                        <Bottom>48</Bottom>
+                    </Bounds>
+                    <BgInner flags="9" tile="32" bgmc="1">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>4008</Left>
+                            <Top>32</Top>
+                            <Right>4024</Right>
+                            <Bottom>48</Bottom>
                         </Bounds>
                     </BgInner>
                 </BgOuter>
@@ -4663,7 +4378,7 @@
                         <Right>4056</Right>
                         <Bottom>64</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>4040</Left>
@@ -4672,21 +4387,6 @@
                             <Bottom>64</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>4040</Left>
-                            <Top>48</Top>
-                            <Right>4056</Right>
-                            <Bottom>64</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>200</Left>
-                            <Right>216</Right>
-                            <Top>48</Top>
-                            <Bottom>64</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
@@ -5803,7 +5503,7 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>4736</Left>
@@ -6107,7 +5807,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                <BgOuter flags="8" trigIndex="196795536" trigOrientation="196795536">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>5288</Left>
@@ -6115,7 +5815,7 @@
                         <Right>5304</Right>
                         <Bottom>32</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>5288</Left>
@@ -6124,21 +5824,6 @@
                             <Bottom>32</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>5288</Left>
-                            <Top>16</Top>
-                            <Right>5304</Right>
-                            <Bottom>32</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>168</Left>
-                            <Right>184</Right>
-                            <Top>16</Top>
-                            <Bottom>32</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
@@ -6284,39 +5969,6 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>5488</Left>
-                        <Top>96</Top>
-                        <Right>5496</Right>
-                        <Bottom>112</Bottom>
-                    </Bounds>
-                    <BgInner flags="5" tile="18">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>5488</Left>
-                            <Top>96</Top>
-                            <Right>5496</Right>
-                            <Bottom>112</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgMutable flags="0" tile="5" mutableString="MUT_POGO" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>5488</Left>
-                            <Top>96</Top>
-                            <Right>5496</Right>
-                            <Bottom>112</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>112</Left>
-                            <Right>120</Right>
-                            <Top>96</Top>
-                            <Bottom>112</Bottom>
-                        </Payload>
-                    </BgMutable>
-                </BgOuter>
                 <BgOuter flags="8" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
                     <Bounds>
@@ -6325,7 +5977,7 @@
                         <Right>5504</Right>
                         <Bottom>72</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>5488</Left>
@@ -6334,21 +5986,24 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
+                </BgOuter>
+                <BgOuter flags="8" trigIndex="231357056" trigOrientation="231357056">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>5488</Left>
+                        <Top>96</Top>
+                        <Right>5496</Right>
+                        <Bottom>112</Bottom>
+                    </Bounds>
+                    <BgInner flags="9" tile="18" bgmc="6">
+                        <Title>BgInner</Title>
                         <Bounds>
                             <Left>5488</Left>
-                            <Top>56</Top>
-                            <Right>5504</Right>
-                            <Bottom>72</Bottom>
+                            <Top>96</Top>
+                            <Right>5496</Right>
+                            <Bottom>112</Bottom>
                         </Bounds>
-                        <Payload>
-                            <Left>112</Left>
-                            <Right>128</Right>
-                            <Top>56</Top>
-                            <Bottom>72</Bottom>
-                        </Payload>
-                    </BgMutable>
+                    </BgInner>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -6466,7 +6121,7 @@
                         <Right>5768</Right>
                         <Bottom>40</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>5752</Left>
@@ -6475,21 +6130,6 @@
                             <Bottom>40</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>5752</Left>
-                            <Top>24</Top>
-                            <Right>5768</Right>
-                            <Bottom>40</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>120</Left>
-                            <Right>136</Right>
-                            <Top>24</Top>
-                            <Bottom>40</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -6590,7 +6230,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                <BgOuter flags="8" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>6056</Left>
@@ -6598,7 +6238,7 @@
                         <Right>6072</Right>
                         <Bottom>40</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6056</Left>
@@ -6607,21 +6247,6 @@
                             <Bottom>40</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>6056</Left>
-                            <Top>24</Top>
-                            <Right>6072</Right>
-                            <Bottom>40</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>168</Left>
-                            <Right>184</Right>
-                            <Top>24</Top>
-                            <Bottom>40</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -6766,7 +6391,7 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>6192</Left>
@@ -6818,7 +6443,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="5177412">
+                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>6344</Left>
@@ -6826,7 +6451,7 @@
                         <Right>6360</Right>
                         <Bottom>88</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6344</Left>
@@ -6835,21 +6460,6 @@
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>6344</Left>
-                            <Top>72</Top>
-                            <Right>6360</Right>
-                            <Bottom>88</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>200</Left>
-                            <Right>216</Right>
-                            <Top>72</Top>
-                            <Bottom>88</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -6949,7 +6559,7 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>6400</Left>
@@ -6983,7 +6593,7 @@
                         <Bottom>144</Bottom>
                     </Bounds>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                <BgOuter flags="8" trigIndex="6" trigOrientation="4">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>6488</Left>
@@ -6991,7 +6601,7 @@
                         <Right>6504</Right>
                         <Bottom>88</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6488</Left>
@@ -7000,21 +6610,6 @@
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>6488</Left>
-                            <Top>72</Top>
-                            <Right>6504</Right>
-                            <Bottom>88</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>88</Left>
-                            <Right>104</Right>
-                            <Top>72</Top>
-                            <Bottom>88</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="17" trigIndex="2015110222" trigOrientation="184420984">
                     <Title>BgOuter</Title>
@@ -7042,7 +6637,7 @@
                         <Right>6648</Right>
                         <Bottom>88</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6632</Left>
@@ -7051,21 +6646,6 @@
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>6632</Left>
-                            <Top>72</Top>
-                            <Right>6648</Right>
-                            <Bottom>88</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>232</Left>
-                            <Right>248</Right>
-                            <Top>72</Top>
-                            <Bottom>88</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -7129,7 +6709,7 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>6656</Left>
@@ -7189,7 +6769,7 @@
                         <Right>6800</Right>
                         <Bottom>88</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6784</Left>
@@ -7198,21 +6778,6 @@
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>6784</Left>
-                            <Top>72</Top>
-                            <Right>6800</Right>
-                            <Bottom>88</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>128</Left>
-                            <Right>144</Right>
-                            <Top>72</Top>
-                            <Bottom>88</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="17" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -7303,7 +6868,7 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>6912</Left>
@@ -7363,7 +6928,7 @@
                         <Right>6960</Right>
                         <Bottom>96</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6944</Left>
@@ -7372,21 +6937,6 @@
                             <Bottom>96</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>6944</Left>
-                            <Top>80</Top>
-                            <Right>6960</Right>
-                            <Bottom>96</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>32</Left>
-                            <Right>48</Right>
-                            <Top>80</Top>
-                            <Bottom>96</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="17" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -7495,7 +7045,7 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>7168</Left>
@@ -7547,39 +7097,6 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>7232</Left>
-                        <Top>56</Top>
-                        <Right>7248</Right>
-                        <Bottom>72</Bottom>
-                    </Bounds>
-                    <BgInner flags="6" tile="4">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>7232</Left>
-                            <Top>56</Top>
-                            <Right>7248</Right>
-                            <Bottom>72</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>7232</Left>
-                            <Top>56</Top>
-                            <Right>7248</Right>
-                            <Bottom>72</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>64</Left>
-                            <Right>80</Right>
-                            <Top>56</Top>
-                            <Bottom>72</Bottom>
-                        </Payload>
-                    </BgMutable>
-                </BgOuter>
                 <BgOuter flags="8" trigIndex="120" trigOrientation="2">
                     <Title>BgOuter</Title>
                     <Bounds>
@@ -7597,7 +7114,7 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="2" mutableString="MUT_BOMB" custom="0">
+                    <BgMutable flags="0" tile="2" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>7256</Left>
@@ -7630,7 +7147,7 @@
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="8" mutableString="MUT_BOMB_TARGET" custom="0">
+                    <BgMutable flags="0" tile="8" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>7256</Left>
@@ -7663,39 +7180,6 @@
                             <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
-                </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>7296</Left>
-                        <Top>160</Top>
-                        <Right>7312</Right>
-                        <Bottom>176</Bottom>
-                    </Bounds>
-                    <BgInner flags="5" tile="10">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>7296</Left>
-                            <Top>160</Top>
-                            <Right>7312</Right>
-                            <Bottom>176</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgMutable flags="0" tile="1" mutableString="MUT_POISON" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>7296</Left>
-                            <Top>160</Top>
-                            <Right>7312</Right>
-                            <Bottom>176</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>128</Left>
-                            <Right>144</Right>
-                            <Top>160</Top>
-                            <Bottom>176</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="5177412">
                     <Title>BgOuter</Title>
@@ -7745,12 +7229,48 @@
                 <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
                     <Bounds>
+                        <Left>7296</Left>
+                        <Top>160</Top>
+                        <Right>7312</Right>
+                        <Bottom>176</Bottom>
+                    </Bounds>
+                    <BgInner flags="9" tile="10" bgmc="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>7296</Left>
+                            <Top>160</Top>
+                            <Right>7312</Right>
+                            <Bottom>176</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>7232</Left>
+                        <Top>56</Top>
+                        <Right>7248</Right>
+                        <Bottom>72</Bottom>
+                    </Bounds>
+                    <BgInner flags="10" tile="4" bgmc="0">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>7232</Left>
+                            <Top>56</Top>
+                            <Right>7248</Right>
+                            <Bottom>72</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="8" trigIndex="166473536" trigOrientation="166473536">
+                    <Title>BgOuter</Title>
+                    <Bounds>
                         <Left>7384</Left>
                         <Top>56</Top>
                         <Right>7400</Right>
                         <Bottom>64</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="26">
+                    <BgInner flags="9" tile="26" bgmc="3">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>7384</Left>
@@ -7759,21 +7279,6 @@
                             <Bottom>64</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="3" mutableString="MUT_BOOTS" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>7384</Left>
-                            <Top>56</Top>
-                            <Right>7400</Right>
-                            <Bottom>64</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>216</Left>
-                            <Right>232</Right>
-                            <Top>56</Top>
-                            <Bottom>64</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -7900,7 +7405,7 @@
                         <Right>7504</Right>
                         <Bottom>104</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>7488</Left>
@@ -7909,21 +7414,6 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>7488</Left>
-                            <Top>88</Top>
-                            <Right>7504</Right>
-                            <Bottom>104</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>64</Left>
-                            <Right>80</Right>
-                            <Top>88</Top>
-                            <Bottom>104</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -7942,7 +7432,7 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="13" mutableString="MUT_FIRE" custom="0">
+                    <BgMutable flags="0" tile="13" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>7528</Left>
@@ -7984,7 +7474,7 @@
                         <Right>7600</Right>
                         <Bottom>40</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="23">
+                    <BgInner flags="9" tile="23" bgmc="9">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>7584</Left>
@@ -7993,21 +7483,6 @@
                             <Bottom>40</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="7" mutableString="MUT_HOURGLASS" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>7584</Left>
-                            <Top>24</Top>
-                            <Right>7600</Right>
-                            <Bottom>40</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>160</Left>
-                            <Right>176</Right>
-                            <Top>24</Top>
-                            <Bottom>40</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -8062,7 +7537,7 @@
                         <Right>7672</Right>
                         <Bottom>136</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="32">
+                    <BgInner flags="9" tile="32" bgmc="1">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>7656</Left>
@@ -8071,21 +7546,6 @@
                             <Bottom>136</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="1" mutableString="MUT_POISON" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>7656</Left>
-                            <Top>120</Top>
-                            <Right>7672</Right>
-                            <Bottom>136</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>232</Left>
-                            <Right>248</Right>
-                            <Top>120</Top>
-                            <Bottom>136</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -8942,7 +8402,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="155901616" trigOrientation="155901616">
+                <BgOuter flags="8" trigIndex="185805984" trigOrientation="185805984">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>8488</Left>
@@ -8950,7 +8410,7 @@
                         <Right>8504</Right>
                         <Bottom>40</Bottom>
                     </Bounds>
-                    <BgInner flags="5" tile="24">
+                    <BgInner flags="9" tile="24" bgmc="9">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>8488</Left>
@@ -8959,21 +8419,6 @@
                             <Bottom>40</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="4" mutableString="MUT_BUDDHA" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>8488</Left>
-                            <Top>24</Top>
-                            <Right>8504</Right>
-                            <Bottom>40</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>40</Left>
-                            <Right>56</Right>
-                            <Top>24</Top>
-                            <Bottom>40</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="1" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
@@ -9010,7 +8455,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>8496</Left>
@@ -9115,7 +8560,7 @@
                             <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>8592</Left>
@@ -9274,7 +8719,7 @@
                             <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>8704</Left>
@@ -9308,7 +8753,7 @@
                         <Bottom>168</Bottom>
                     </Bounds>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="155590672" trigOrientation="-11639598">
+                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>8728</Left>
@@ -9316,7 +8761,7 @@
                         <Right>8744</Right>
                         <Bottom>32</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>8728</Left>
@@ -9325,21 +8770,6 @@
                             <Bottom>32</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>8728</Left>
-                            <Top>16</Top>
-                            <Right>8744</Right>
-                            <Bottom>32</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>24</Left>
-                            <Right>40</Right>
-                            <Top>16</Top>
-                            <Bottom>32</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -9448,7 +8878,7 @@
                             <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>8960</Left>
@@ -9482,7 +8912,7 @@
                         <Bottom>168</Bottom>
                     </Bounds>
                 </BgOuter>
-                <BgOuter flags="8" trigIndex="0" trigOrientation="0">
+                <BgOuter flags="8" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>8984</Left>
@@ -9490,7 +8920,7 @@
                         <Right>9000</Right>
                         <Bottom>32</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="4">
+                    <BgInner flags="10" tile="4" bgmc="0">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>8984</Left>
@@ -9499,21 +8929,6 @@
                             <Bottom>32</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="0" mutableString="MUT_COIN" custom="0">
-                        <Title>BgMutable</Title>
-                        <Bounds>
-                            <Left>8984</Left>
-                            <Top>16</Top>
-                            <Right>9000</Right>
-                            <Bottom>32</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>24</Left>
-                            <Right>40</Right>
-                            <Top>16</Top>
-                            <Bottom>32</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
                 <BgOuter flags="8" trigIndex="1" trigOrientation="1">
                     <Title>BgOuter</Title>
@@ -9532,7 +8947,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>9200</Left>
@@ -9682,7 +9097,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>9216</Left>
@@ -9823,7 +9238,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>9472</Left>
@@ -9973,7 +9388,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>9728</Left>
@@ -10114,7 +9529,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>9984</Left>
@@ -10246,7 +9661,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10240</Left>
@@ -10360,7 +9775,7 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="13" mutableString="MUT_FIRE" custom="0">
+                    <BgMutable flags="0" tile="13" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10336</Left>
@@ -10393,7 +9808,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10456</Left>
@@ -10534,7 +9949,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10496</Left>
@@ -10639,7 +10054,7 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="13" mutableString="MUT_FIRE" custom="0">
+                    <BgMutable flags="0" tile="13" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10592</Left>
@@ -10699,7 +10114,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10712</Left>
@@ -10813,7 +10228,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10752</Left>
@@ -10918,7 +10333,7 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="13" mutableString="MUT_FIRE" custom="0">
+                    <BgMutable flags="0" tile="13" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10848</Left>
@@ -10978,7 +10393,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>10968</Left>
@@ -11083,7 +10498,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>11008</Left>
@@ -11233,7 +10648,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>11264</Left>
@@ -11374,7 +10789,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>11520</Left>
@@ -11506,7 +10921,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>11776</Left>
@@ -11674,7 +11089,7 @@
                             <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgMutable flags="0" tile="10" mutableString="MUT_WLK_WATER" custom="0">
+                    <BgMutable flags="0" tile="10" custom="0">
                         <Title>BgMutable</Title>
                         <Bounds>
                             <Left>12032</Left>

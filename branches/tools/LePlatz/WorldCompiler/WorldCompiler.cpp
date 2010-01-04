@@ -318,8 +318,17 @@ void WorldCompiler::compileBgInners(int sliceIndex, BgOuter *parent, QTextStream
 
         if (child->type() == WorldItem::Inner) {
             bgoRect = parent->relativeBoundingRect();
-            ts << "\t{" << BgInner::bgiFlagsToString(bgi->flags()) << "," << bgi->tile() << "," <<
-                    rectFToString(bgi->relativeBoundingRect().adjusted(bgoRect.left(), 0, bgoRect.left(), 0), tileWidth) << "}";
+
+            if (bgi->flags()&BgInner::BGMC) {
+                QRectF bgmcRect = bgi->relativeBoundingRect().adjusted(bgoRect.left(), 0, bgoRect.left(), 0);
+
+                ts << "\t{" << BgInner::bgiFlagsToString(bgi->flags()) << "," << bgi->bgmClassString() << ",{";
+                ts << ((int)bgmcRect.left() / tileWidth) << "," << ((int)bgmcRect.right() / tileWidth) << ","
+                        << ((int)bgmcRect.top() / tileWidth) << "," << bgi->mutableCount() << "}}";
+            } else {
+                ts << "\t{" << BgInner::bgiFlagsToString(bgi->flags()) << "," << bgi->tile() << "," <<
+                        rectFToString(bgi->relativeBoundingRect().adjusted(bgoRect.left(), 0, bgoRect.left(), 0), tileWidth) << "}";
+            }
         } else {    // type() == Mutable
             BgMutable *bgm = static_cast<BgMutable*>(child);
 

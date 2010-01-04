@@ -36,6 +36,10 @@ QString BgInner::bgiFlagsToString(const int &flags)
         if (retval.length())
             retval += "|";
         retval += "BGM";
+    } else if (flags&BGMC) {
+        if (retval.length())
+            retval += "|";
+        retval += "BGMC";
     }
     if (!retval.length())
         retval = "0";
@@ -43,14 +47,14 @@ QString BgInner::bgiFlagsToString(const int &flags)
 }
 
 BgInner::BgInner()
-    : WorldItem(0), bgMutator(0), bgFlags(0), bgTile(-1)
+    : WorldItem(0), bgMutator(0), bgFlags(0), bgTile(-1), bgmc(-1)
 {
     innerData = "";
     WorldItem::worldStats.innerCount++;
 }
 
 BgInner::BgInner(const QList<QVariant> &data, WorldItem* parent)
-    : WorldItem(parent), bgMutator(0), bgFlags(0), bgTile(-1)
+    : WorldItem(parent), bgMutator(0), bgFlags(0), bgTile(-1), bgmc(-1)
 {
     if (data.length() > 0)
         innerData = data[0].toString();
@@ -66,12 +70,22 @@ WorldItem* BgInner::createItem(const QList<QVariant> &data, WorldItem *parent)
     if (bgi) {
         bgi->setFlags(bgFlags);
         bgi->setTile(bgTile);
+        bgi->setBgmClass(bgmClass());
         bgi->setRelativeBoundingRect(relativeBoundingRect());
 
         if (graphicalRepresentation())
             bgi->setGraphicalRepresentation(new PlatzGraphicsItem(bgi, graphicalRepresentation()->mode()));
     }
     return bgi;
+}
+
+void BgInner::setFlags(int f)
+{
+    if ((f&BGMC) && (bgFlags&BGMC) == 0)
+        incMutableCount();
+    else if ((bgFlags&BGMC) && (f&BGMC) == 0)
+        decMutableCount();
+    bgFlags = f;
 }
 
 WorldItem* BgInner::validateState()
@@ -96,7 +110,9 @@ QVariant BgInner::data(int column) const
 
 QVariant BgInner::dataDecoration(int) const
 {
-    if (bgFlags&BGA)
+    if (bgFlags&BGMC)
+        return QVariant(WorldItem::worldItemIcon(WorldItem::MutableIcon));
+    else if (bgFlags&BGA)
         return QVariant(WorldItem::worldItemIcon(WorldItem::AnimatedIcon));
     else if (bgFlags&BGP)
         return QVariant(WorldItem::worldItemIcon(WorldItem::PatternedIcon));
@@ -106,8 +122,10 @@ QVariant BgInner::dataDecoration(int) const
 
 QVariant BgInner::tooltipData(int column) const
 {
-    return QVariant(data(column).toString() +
-                    "\nTile Index: " + QString::number(bgTile));
+    if (bgFlags&BGMC)
+        return QVariant(data(column).toString() + "\nBgm Class: " + bgmClassString());
+    else
+        return QVariant(data(column).toString() + "\nTile Index: " + QString::number(bgTile));
 }
 
 QString BgInner::detailData() const
@@ -116,13 +134,18 @@ QString BgInner::detailData() const
 
     details = "Bg Flags: " + bgiFlagsToString(bgFlags);
 
-    if (bgFlags&BGP)
-        details += "\nMap Index: ";
-    else if (bgFlags&BGA)
-        details += "\nAnim Index: ";
-    else
-        details += "\nTile Index: ";
-    details += QString::number(bgTile);
+    if (bgFlags&BGMC) {
+        details += "\tBgm Class: " + bgmClassString();
+        details += "\nMutable Index: " + QString::number(mutableCount());
+    } else {
+        if (bgFlags&BGP)
+            details += "\nMap Index: ";
+        else if (bgFlags&BGA)
+            details += "\nAnim Index: ";
+        else
+            details += "\nTile Index: ";
+        details += QString::number(bgTile);
+    }
     return details;
 }
 
@@ -146,6 +169,13 @@ void BgInner::setTile(int t)
     bgTile = t;
 }
 
+QString BgInner::bgmClassString() const {
+    if (bgmClass() >= 0 && WorldItem::mutableClassIds.count() > bgmClass())
+        return WorldItem::mutableClassIds.at(bgmClass());
+    else
+        return Platz::UNDEFINED;
+}
+
 qreal BgInner::offsetX() const
 {
     WorldItem *p = this->parent();
@@ -163,9 +193,18 @@ void BgInner::setMutator(BgInner *mutator)
     bgMutator = mutator;
 }
 
+int BgInner::mutableCount(int) const
+{
+    if (!parent())
+        return ((bgFlags&BGMC)?1:0);
+    return parent()->mutableCount(row());
+}
+
 BgInner::~BgInner()
 {
     if (type() == WorldItem::Inner && bgMutator)
         bgMutator->setMutator(0);
+    if (bgFlags&BGMC)
+        decMutableCount();
     WorldItem::worldStats.innerCount--;
 }

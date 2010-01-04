@@ -112,6 +112,8 @@ const bgOuter *bgoTbl;				// Collidable bg containers in flash
 const bgDirectory *bgDir;			// Bg directory in flash
 const platformDirectory *platDir;	// Moving platform headers
 const platform *platTbl;			// Moving platforms' attributes
+const mutableClass *mcTbl;			// Mutable classes directory to consolidate similar functionality
+
 #if MAX_ANIMATED_BGS
 	animatedBgs	animBgs;			// Animated bgs container
 #endif
@@ -147,6 +149,7 @@ u8 scrXMod;							// The current scroll position in tiles
 	void PlatzLoadMovingPlatforms(u8 sp, char dir);
 	void PlatzMoveMovingPlatforms(void);
 	void PlatzDrawMovingPlatforms(u8);
+	u8 PlatzDetectMovingPlatformCollisions(platzActor *a, char *xDelta);
 #endif
 
 #if MAX_ANIMATED_BGS
@@ -154,7 +157,7 @@ u8 scrXMod;							// The current scroll position in tiles
 	void PlatzAnimateBgs(void);
 	void PlatzDrawAnimatedBgs(void);
 #endif
-u8 PlatzDetectMovingPlatformCollisions(platzActor *a, char *xDelta);
+void PlatzBuildMutableBgFromClass(bgInner *bgi, bgInner *bgm);
 u8 DetectBgCollisions(platzActor *a, u8 enTrig);
 void PlatzDrawColumn(u8 paintX, char dir);
 void PlatzUpdateCollisionPointer(platzActor *a);
@@ -172,6 +175,10 @@ void PlatzSetTriggerCallback(trigCallback tcb) {
 // Mutator callback is a user-defined function to handle mutable background events
 void PlatzSetMutCallback(mutCallback mcb) {
 	mutCb = mcb;
+}
+
+void PlatzSetMutClassTable(const mutableClass *mc) {
+	mcTbl = mc;
 }
 
 // Query callback is a user-defined function to handle queryable background collisions
@@ -268,6 +275,15 @@ void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 shTilesIndex
 }
 #endif
 
+inline void PlatzBuildMutableBgFromClass(bgInner *bgi, bgInner *bgm) {
+	mutableClass bgmc;
+	memcpy_P(&bgmc,mcTbl+bgi->tile,sizeof(mutableClass));
+	bgm->type = bgi->r.btm;		// Mutable bitmap index was stored in bgi rect.btm
+	bgm->tile = bgmc.id;
+	bgi->tile = bgmc.tile;
+	bgi->r.btm = bgi->r.top+bgmc.hgt;
+	bgm->r = bgi->r;
+}
 
 // Moves the actor to slice sp and centers the viewport on their sprite position
 void PlatzMoveToSlice(platzActor *a, u8 sp) {
@@ -350,10 +366,13 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 					if (PlatzRectsIntersect(&bgo.r,&vp)) {
 						memcpy_P(&bgi,bgiTbl+bgo.index+k,sizeof(bgInner));
 
-						if ((bgi.type&BGM) && mutCb) {
-							++k;
-							memcpy_P(&bgm,bgiTbl+bgo.index+k,sizeof(bgInner));
-
+						if ((bgi.type&(BGMC|BGM)) && mutCb) {
+							if (bgi.type&BGM) {
+								++k;
+								memcpy_P(&bgm,bgiTbl+bgo.index+k,sizeof(bgInner));
+							} else {
+								PlatzBuildMutableBgFromClass(&bgi,&bgm);
+							}
 							if (mutCb(PLATZ_MUT_EV_DRAW,&bgi,&bgm,&bgo) == 0)
 								continue;
 						}
@@ -400,6 +419,7 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 		}
 	}
 }
+
 
 // Adjusts the player's bounding box size, anchor point and trigger point in the event that their sprite
 // dimensions have changed. Will fail safely if the increased size would result in an overlap with a bg
@@ -556,11 +576,14 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 					memcpy_P(&bgi,bgiTbl+bgo.index+j,sizeof(bgInner));
 
 					if ((bgi.r.left <= paintX) && (bgi.r.right > paintX)) {
-						if ((bgi.type&BGM) && mutCb) {
-							memcpy_P(&bgm,bgiTbl+bgo.index+j+1,sizeof(bgInner));
-
+						if ((bgi.type&(BGMC|BGM)) && mutCb) {
+							if (bgi.type&BGM)
+								memcpy_P(&bgm,bgiTbl+bgo.index+j+1,sizeof(bgInner));
+							else
+								PlatzBuildMutableBgFromClass(&bgi,&bgm);
 							if (mutCb(PLATZ_MUT_EV_DRAW,&bgi,&bgm,&bgo) == 0) {
-								++j;	// Skip mutable bg payload
+								if (bgi.type&BGM)	// Skip mutable bg payload for BGM bgs
+									++j;
 								continue;
 							}
 						}
@@ -631,6 +654,7 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 }
 
 
+#if 0 // Not needed due to post v1.0 collision code
 // Source: Sedgewick
 // PlatzLinesIntersect helper
 char PlatzCcw(const pt16 *p0, const pt16 *p1, const pt16 *p2) {
@@ -652,6 +676,7 @@ u8 PlatzLinesIntersect(const line16 *l1, const line16 *l2) {
 	return ((PlatzCcw(&l1->p1, &l1->p2, &l2->p1)*PlatzCcw(&l1->p1, &l1->p2, &l2->p2)) <= 0)
         && ((PlatzCcw(&l2->p1, &l2->p2, &l1->p1)*PlatzCcw(&l2->p1, &l2->p2, &l1->p2)) <= 0);
 }
+#endif
 
 // Determines if two rect16's overlap
 inline u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2) {
@@ -779,31 +804,24 @@ u8 PlatzDetectMovingPlatformCollisions(platzActor *a, char *xDelta) {
 #endif
 
 
-// Relevant to DetectBgCollisions() only
-#define DBGC_MODE_PLATS		0
-#define DBGC_MODE_NO_SEAM	1
-#define DBGC_MODE_SEAM_CURR	2
-#define DBGC_MODE_SEAM_NEXT	3
-
 // Detects collisions between the player and background elements and adjusts their speed to avoid these collisions.
 // Also handles firing event triggers.
 u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
-	u8 j,retVal = 0,colVal = 0,sp = 0,loops = 0,loopMax = 0,mode = 0;
-#ifdef SMALL_WORLD
-	u8 i,inc,start,fin;
-#else
-	u16 i,inc,start,fin;
-#endif
+	u8 colVal;		// Immediate collision flags
+	u8 retVal = 0;	// Aggregate collision flags
+	u8 sp;			// Slice pointer of slice being processed
 #if MAX_MOVING_PLATFORMS
-	u8 mpIndex = 0;
+	u8 mpsp = 0;	// Moving platforms slice pointer
 #endif
-	char trig,collDir,overlap,xVel = GET_VEL(a->vx),yVel = GET_VEL(a->vy);
-	rect16 rPre,rPost,rBg,rColl,rTrig;
-	line16 lMove,lBg;
-	pt pos = (pt){a->loc.x+a->trLoc.x,a->loc.y+a->trLoc.y};
-	bgOuter bgo;
+	u8 start,fin;	// Loop conditionals
+	char step;		// Loop increment
+	char xVel = GET_VEL(a->vx),yVel = GET_VEL(a->vy); // Actor's velocities
+	int xAdjust = 0;
+	int xDist, yDist; // For calculating collision specifics
+	pt16 trigPos; 	// Trigger point
+	rect16 rPre,rPost,rBg; // Collision bounds
 	bgDirectory bgd;
-	bgInner bgi,bgm;
+	bgOuter bgo;
 
 	// Pre-use rPost to save allocating another variable
 	rPost.left = (int)(a->loc.y)+(int)yVel;
@@ -818,292 +836,203 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 		retVal |= B_INTERSECT;
 	}
 
-	rPre.left = a->loc.x-a->bbx;
-	rPre.right = a->loc.x+a->bbx;
+	if (((a->vx.dir == DIR_RIGHT) && (csp == wsp)) || ((a->vx.dir == DIR_LEFT) && (csp != wsp)))
+		xAdjust = SCRL_WID;
+	//trigPos = (pt16){(int)a->loc.x+(int)a->trLoc.x+xAdjust,a->loc.y+a->trLoc.y};
+
+	// Make sure sp always points to left slice (wrapping from end to start adds the complexity)
+	//sp = (csp < wsp)?(wsp != wspMax)?csp:wsp:(csp != wspMax):wsp:csp;
+
+	rPre.left = a->loc.x-a->bbx+xAdjust;
+	rPre.right = a->loc.x+a->bbx+xAdjust;
 	rPre.top = a->loc.y-a->bby;
 	rPre.btm = a->loc.y+a->bby;
 	rPost.left = rPre.left+xVel;
 	rPost.right = rPre.right+xVel;
 	rPost.top = rPre.top+yVel;
 	rPost.btm = rPre.btm+yVel;
-
-	if ((rPre.left >= 0) && (rPost.left >= 0) && (rPre.right <= (SCRL_WID-1)) && (rPost.right <= (SCRL_WID-1))) {
-		// Not on seam - test slice that player is on
-		overlap = 0;
-		loopMax = 2;
+	trigPos = (pt16){rPost.left+a->bbx,rPost.top+a->bby};
+	sp = csp;
+	
+	// i: 0-1 Moving Platforms
+	// i: 2-3 Outer Bgs
+	
 #if MAX_MOVING_PLATFORMS
-		mode = DBGC_MODE_PLATS;
+	for (u8 i = 0; i < 2*MAX_VIS_SLICES; i++) {
 #else
-		mode = DBGC_MODE_NO_SEAM;
+	for (u8 i = 0; i < MAX_VIS_SLICES; i++) {
 #endif
-		collDir = 0;
-		sp = csp;
-	} else {
-		// On seam - test both slices
-		loopMax = 2;
-		mode = DBGC_MODE_SEAM_CURR;
-	}
-
-	// Only need to check through once on each slice IF bgs are tile-aligned AND GET_VEL <= MIN(TILE_HEIGHT,TILE_WIDTH)
-	while (loops++ < loopMax) {
-		if (mode == DBGC_MODE_SEAM_CURR) {
-			if ((rPost.left < 0) || (rPost.right > (SCRL_WID-1))) {
-				if (a->loc.x > (SCRL_WID>>1)) {
-					rPost.left -= SCRL_WID;
-					rPost.right -= SCRL_WID;
-					collDir = 1;
-					sp = (csp < wspMax)?csp+1:0;
-				} else {
-					rPost.left += SCRL_WID+1;	// SCRL_WID would force a false positive due to 0 == 256
-					rPost.right += SCRL_WID+1;	// Doesn't occur when going right because max xLoc is 255
-					collDir = -1;
-					sp = (csp)?csp-1:wspMax;
-				}
-
-				if ((rPost.left > (SCRL_WID>>1)) && (rPre.left < (SCRL_WID>>1))) {
-					overlap = 1;
-				} else if ((rPost.left < (SCRL_WID>>1)) && (rPre.left > (SCRL_WID>>1))) {
-					overlap = -1;
-				} else {
-					overlap = 0;
-				}
-			} else {
-				++mode;
+		if (i&1) {	// 1 && 3
+			if (xAdjust)
+				rBg = (rect16){0,SCRL_WID,0,PLATZ_SCRN_HGT-(OVERLAY_LINES<<3)};
+			else
+				rBg = (rect16){SCRL_WID,SCRL_WID<<1,0,PLATZ_SCRN_HGT-(OVERLAY_LINES<<3)};
+			if (!PlatzRectsIntersect16(&rPost,&rBg))
 				continue;
-			}
-		} else if (mode == DBGC_MODE_SEAM_NEXT) {
+			if (sp != wsp)
+				sp = wsp;
+			else if (a->vx.dir == DIR_RIGHT)
+				sp = (sp)?sp-1:wspMax;
+			else
+				sp = (sp < wspMax)?sp+1:0;
+		} else {
 			sp = csp;
-			collDir = -collDir;
-			rPost.left = rPre.left+xVel;
-			rPost.top = rPre.top+yVel;
-			rPost.right = rPre.right+xVel;
-			rPost.btm = rPre.btm+yVel;
-				
-			if ((rPost.left > (SCRL_WID>>1)) && (rPre.left < (SCRL_WID>>1))) {
-				overlap = 1;
-			} else if ((rPost.left < (SCRL_WID>>1)) && (rPre.left > (SCRL_WID>>1))) {
-				overlap = -1;
-			} else {
-				overlap = 0;
-			}
 		}
 
-		memcpy_P(&bgd, bgDir+sp, sizeof(bgDirectory));
-		inc = 1;
-		
 #if MAX_MOVING_PLATFORMS
-		if (mode == DBGC_MODE_PLATS) {
+		if (i < 2) {
 			start = 0;
+			step = 1;
 			
 			if (mp.slice[0] == sp) {
 				fin = mp.count[0];
-				mpIndex = 0;
+				mpsp = 0;
 			} else if (mp.slice[1] == sp) {
 				fin = mp.count[1];
-				mpIndex = 1;
+				mpsp = 1;
 			} else {
 				fin = 0;
 			}
-		} else if (collDir > 0) {
-#else
-		if (collDir > 0) {
-#endif
-			start = bgd.bgoIndex;
-			fin = start+bgd.bgoBeginCount;
-		} else if (collDir < 0) {
-			//start = bgd.bgoIndex+bgd.bgoEndIndex;
-			//fin = start+bgd.bgoEndCount;
-			start = bgd.bgoIndex+bgd.bgoBeginCount-bgd.bgoCommonCount;
-
-			if (bgd.bgoEndIndex == 0)	// Set to zero when no distinct end bgs
-				fin = start+bgd.bgoBeginCount;
-			else
-				fin = bgd.bgoIndex+bgd.bgoCount;	// Manage begin/end section in for loop
 		} else {
+#else
+		if (1) {
+#endif
+			memcpy_P(&bgd, bgDir+sp, sizeof(bgDirectory));
+
 			if (a->vx.dir == DIR_RIGHT) {
-				start = bgd.bgoIndex;
-				fin = start+bgd.bgoCount;
+				start = 0;
+				fin = bgd.bgoCount;
+				step = 1;
 			} else {
-				start = bgd.bgoIndex+bgd.bgoCount-1;
-				fin = bgd.bgoIndex-1;
-				inc = -1;
+				start = bgd.bgoCount-1;
+				fin = 255;
+				step = -1;
 			}
 		}
 
-		for (i = start, j = 0; i != fin; i+=inc) {
+		for (u8 j = start; j < fin; j+=step) {
 			colVal = 0;
-
-			// When testing end seam, skip middle bgs
-			if ((collDir < 0) && (i == bgd.bgoBeginCount))
-				i = bgd.bgoEndIndex;
-
 #if MAX_MOVING_PLATFORMS
-			if (mode == DBGC_MODE_PLATS) {
-				rBg.left = mp.p[mpIndex][j].r.left;
-				rBg.right = mp.p[mpIndex][j].r.right;
-				rBg.top = mp.p[mpIndex][j].r.top;
-				rBg.btm = mp.p[mpIndex][j++].r.btm;
+			if (i < 2) {
+				bgo.type = 0;
+				rBg.left = mp.p[mpsp][j].r.left;
+				rBg.right = mp.p[mpsp][j].r.right;
+				rBg.top = mp.p[mpsp][j].r.top;
+				rBg.btm = mp.p[mpsp][j].r.btm;
+
+				if ((i == 0 && xAdjust) || (i == 1 && !xAdjust)) {
+					rBg.left += SCRL_WID;
+					rBg.right += SCRL_WID;
+				}
 			} else {
-				memcpy_P(&bgo,bgoTbl+i,sizeof(bgOuter));
-				rBg.left = (bgo.r.left<<3);
-				rBg.right = (bgo.r.right<<3);
-				rBg.top = (bgo.r.top<<3);
-				rBg.btm = (bgo.r.btm<<3);
-			}
 #else
-			memcpy_P(&bgo,bgoTbl+i,sizeof(bgOuter));
-			rBg.left = (bgo.r.left<<3);
-			rBg.right = (bgo.r.right<<3);
-			rBg.top = (bgo.r.top<<3);
-			rBg.btm = (bgo.r.btm<<3);
+			if (1) {
 #endif
+				memcpy_P(&bgo,bgoTbl+bgd.bgoIndex+j,sizeof(bgOuter));
+
+				if (!(bgo.type&(BGC|BGM|BGT)))
+					continue;
+				rBg.left = bgo.r.left<<3;
+				rBg.right = bgo.r.right<<3;
+				rBg.top = bgo.r.top<<3;
+				rBg.btm = bgo.r.btm<<3;
+
+				if ((i == 2 && xAdjust) || (i == 3 && !xAdjust)) {
+					rBg.left += SCRL_WID;
+					rBg.right += SCRL_WID;
+				}
+			}
 
 			if (PlatzRectsIntersect16(&rPost,&rBg)) {
-				rColl.left = MAX(rPost.left,rBg.left);
-				rColl.right = MIN(rPost.right,rBg.right);
-				rColl.top = MAX(rPost.top,rBg.top);
-				rColl.btm = MIN(rPost.btm,rBg.btm);
+				// Triggers
+				if (bgo.type&BGT) {	// Leave this on separate line so that a false enTrig stops here
+					if (enTrig && trigCb && !PT_NOT_IN_RECT(trigPos,rBg)) {
+						char trig;	// Trigger orientation
 
-				// Process triggers
-				if ((mode != DBGC_MODE_PLATS) && (bgo.type&BGT)) {
-					if (enTrig) {
-						if (!PT_NOT_IN_RECT(pos,rBg)) {
-							rTrig = rBg;
-
-							if ((rTrig.btm-rTrig.top) < (rTrig.right-rTrig.left)) {
-								rTrig.btm -= (rTrig.btm-rTrig.top)>>1;
-							} else {
-								rTrig.right -= (rTrig.right-rTrig.left)>>1;
-							}
-				
-							if (!PT_NOT_IN_RECT(pos,rTrig)) {
-								// Unused bgOuter.count in triggers used for firing orientation (not axis)
-								trig = (bgo.count)?-1:1;
-							} else {
-								trig = (bgo.count)?1:-1;
-							}
-
-							trigCb(bgo.index,bgo.type,trig);
-						}
+						if ((rBg.btm-rBg.top) < (rBg.right-rBg.left))
+							rBg.btm -= (rBg.btm-rBg.top)>>1;
+						else
+							rBg.right -= (rBg.right-rBg.left)>>1;
+						// Unused bgOuter.count in triggers used for firing orientation (not axis)
+						if (!PT_NOT_IN_RECT(trigPos,rBg))
+							trig = (bgo.count)?-1:1;
+						else
+							trig = (bgo.count)?1:-1;
+						trigCb(bgo.index,bgo.type,trig);
 					}
-				} else if ((mode == DBGC_MODE_PLATS) || (bgo.type&(BGC|BGM))) {
-					if ((mode != DBGC_MODE_PLATS) && (bgo.type&BGM) && mutCb) {	// Awkward - may try to rephrase these conditionals
+					continue;
+				} else {
+					if ((bgo.type&BGM) && mutCb) {
+						bgInner bgi,bgm;
 						memcpy_P(&bgi,bgiTbl+bgo.index,sizeof(bgInner));
-						memcpy_P(&bgm,bgiTbl+bgo.index+1,sizeof(bgInner));
 
+						if (bgi.type&BGM)
+							memcpy_P(&bgm,bgiTbl+bgo.index+1,sizeof(bgInner));
+						else
+							PlatzBuildMutableBgFromClass(&bgi,&bgm);
 						if (mutCb(PLATZ_MUT_EV_COLLISION,&bgi,&bgm,&bgo) == 0)
 							continue;
 					}
-
+				
 					if (xVel == 0) {
 						colVal = H_INTERSECT;
 					} else if (yVel == 0) {
 						colVal = V_INTERSECT;
 					} else {
-						lMove.p1.x = (xVel > 0)?rPre.right+((int)overlap<<SCRL_WID_SHFT):rPre.left+((int)overlap<<SCRL_WID_SHFT);
-						lMove.p1.y = (yVel > 0)?rPre.btm:rPre.top;
-						lMove.p2.x = lMove.p1.x+xVel;
-						lMove.p2.y = lMove.p1.y+yVel;
+						xDist = (xVel > 0)?rBg.left-rPre.right:rPre.left-rBg.right;
+						yDist = (yVel > 0)?rBg.top-rPre.btm:rPre.top-rBg.btm;
 
-						if ((lMove.p1.x >= rBg.left) && (lMove.p1.x < rBg.right)) {
-							colVal = 12;
-						} else if ((lMove.p1.y >= rBg.top) && (lMove.p1.y < rBg.btm)) {
-							colVal = 3;
-						} else if ((PT_NOT_IN_RECT(lMove.p2,rBg)) && (((lMove.p1.x < rBg.left) || (lMove.p1.x >= rBg.right))
-								&& ((lMove.p1.y >= rBg.btm) || (lMove.p1.y < rBg.top)))) {
-							if (xVel > 0) {
-								colVal = (rPost.right < rBg.right)?V_INTERSECT:H_INTERSECT;
-							} else {
-								colVal = (rPost.left > rBg.left)?V_INTERSECT:H_INTERSECT;
-							}
+						if (yDist < 0) {
+							colVal = V_INTERSECT;
+						} else if (xDist < 0) {
+							colVal = H_INTERSECT;
 						} else {
-							lBg.p1.x = rBg.left;
-							lBg.p2.x = rBg.right;
-
-							if (lMove.p1.y < rBg.top) {
-								lBg.p1.y = rBg.top;
-								lBg.p2.y = rBg.top;
-							} else {
-								lBg.p1.y = rBg.btm;
-								lBg.p2.y = rBg.btm;
-							}
-						
-							if (PlatzLinesIntersect(&lMove,&lBg)) {
-								// Top/Btm intersect
-								colVal = H_INTERSECT;
-							} else {
-								// Left/Right intersect
-								colVal = V_INTERSECT;
-							}
+							colVal = ((xDist-ABS(xVel)) < (yDist-ABS(yVel)))?V_INTERSECT:H_INTERSECT;
 						}
 					}
 
 					// Query collision callback
 					if (queryCb && (bgo.type&BGQ))
 						queryCb(&bgo,&colVal);
-					else if (queryCb && (mode == DBGC_MODE_PLATS))
+#if MAX_MOVING_PLATFORMS
+					else if (queryCb && (i < 2))
 						queryCb(0,&colVal);
+#endif
 
 					if (colVal&V_INTERSECT) {
-						xVel -= NORMALIZE(xVel)+NORMALIZE(xVel)*(rColl.right-rColl.left);
+						xVel -= NORMALIZE(xVel)*(MIN(rPost.right,rBg.right)-MAX(rPost.left,rBg.left)+1);
+						rPost.left = rPre.left+xVel;
+						rPost.right = rPre.right+xVel;
+
+						if ((rPre.right) < rBg.left)
+							retVal |= L_INTERSECT;		// Left intersect
+						else
+							retVal |= R_INTERSECT;		// Right intersect
 					} else if (colVal&H_INTERSECT) {
-						yVel -= NORMALIZE(yVel)+NORMALIZE(yVel)*(rColl.btm-rColl.top);
-					}
+						yVel -= NORMALIZE(yVel)*(MIN(rPost.btm,rBg.btm)-MAX(rPost.top,rBg.top)+1);
+						rPost.top = rPre.top+yVel;
+						rPost.btm = rPre.btm+yVel;
 
-					rPost.left = rPre.left+xVel;
-					rPost.top = rPre.top+yVel;
-					rPost.right = rPre.right+xVel;
-					rPost.btm = rPre.btm+yVel;
-
-					if (mode == DBGC_MODE_SEAM_CURR) {
-						if (a->loc.x > (SCRL_WID>>1)) {
-							rPost.left -= SCRL_WID;
-							rPost.right -= SCRL_WID;
-							collDir = 1;
-							sp = (csp < wspMax)?csp+1:0;
-						} else {
-							rPost.left += SCRL_WID;
-							rPost.right += SCRL_WID;
-							collDir = -1;
-							sp = (csp)?csp-1:wspMax;
-						}
-					}
-
-					// Determine exact intersect type
-					if (colVal&V_INTERSECT) {
-						// Horizontal
-						if (rPre.right < rBg.left) {
-							// Left intersect
-							retVal |= L_INTERSECT;
-						} else {
-							// Right intersect
-							retVal |= R_INTERSECT;
-						}
-					} else if (colVal&H_INTERSECT) {
-						// Vertical
-						if (rPre.btm < rBg.top) {
-							// Top intersect
-							retVal |= T_INTERSECT;
-						} else {
-							// Btm intersect
-							retVal |= B_INTERSECT;
-						}
+						if (rPre.btm < rBg.top)
+							retVal |= T_INTERSECT;		// Top intersect
+						else
+							retVal |= B_INTERSECT;		// Btm intersect
 					}
 				}
-			}		
+			}
 		}
-		++mode;
 	}
 
-	// Commit altered speeds
+	// Commit altered velocities
 	if (retVal&V_INTERSECT) {
-		PlatzSetVelocity(&a->vx,xVel<<2,&a->trLoc.x);
+		PlatzSetVelocity(&a->vx,xVel,&a->trLoc.x);
 	}
 
 	if (retVal&H_INTERSECT) {
-		PlatzSetVelocity(&a->vy,yVel<<2,&a->trLoc.y);
+		PlatzSetVelocity(&a->vy,yVel,&a->trLoc.y);
 	}
-
+	//if (enTrig == 0)
+	//	return 0;
 	return retVal;
 }
 
@@ -1458,8 +1387,12 @@ void PlatzLoadAnimatedBgs(u8 sp, char dir) {
 			bgiIndex = pgm_read_word(byteGrab+BGI_INDEX_OFFSET);
 			memcpy_P(&animBgs.bgs[src][i],bgiTbl+bgiIndex+bgai.iInner,sizeof(bgInner));
 #ifdef MUTABLE_BGS
-			if (animBgs.bgs[src][i].type&BGM)
-				memcpy_P(&animBgs.mutBgs[src][i],bgiTbl+bgiIndex+bgai.iInner+1,sizeof(bgInner));
+			if (animBgs.bgs[src][i].type&(BGMC|BGM)) {
+				if (animBgs.bgs[src][i].type&BGM)
+					memcpy_P(&animBgs.mutBgs[src][i],bgiTbl+bgiIndex+bgai.iInner+1,sizeof(bgInner));
+				else
+					PlatzBuildMutableBgFromClass(&animBgs.bgs[src][i],&animBgs.mutBgs[src][i]);
+			}
 #endif
 			memcpy_P(&animBgs.anims[src][i],animBgTbl+animBgs.bgs[src][i].tile,sizeof(animation));
 
@@ -1488,7 +1421,7 @@ void PlatzDrawAnimatedBgs(void) {
 	for (i = 0; i < MAX_VIS_SLICES; i++) {
 		for (j = 0; j < animBgs.count[i]; j++) {
 #ifdef MUTABLE_BGS
-			if ((animBgs.bgs[i][j].type&BGM) && mutCb)
+			if ((animBgs.bgs[i][j].type&(BGMC|BGM)) && mutCb)
 				if (mutCb(PLATZ_MUT_EV_ANIM,&animBgs.bgs[i][j],&animBgs.mutBgs[i][j],&animBgs.anims[i][j]) == 0)
 					continue;
 #endif

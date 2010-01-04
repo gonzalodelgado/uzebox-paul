@@ -90,25 +90,31 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->actionPlatformPathCursor->setIcon(QIcon(":/icons/128x128/mpPath.png"));
     ui->actionPlatformCursor->setIcon(QIcon(":/icons/128x128/mp.png"));
     ui->actionBgMutableCursor->setIcon(QIcon(":/icons/128x128/bgm.png"));
-    ui->chkBgmi->setEnabled(false);
+    ui->cboBgm->setFkeyProxy(this);
+    ui->cboBgmc->setFkeyProxy(this);
+    ui->cboBgt->setFkeyProxy(this);
+    ui->cboPlatformClearTile->setFkeyProxy(this);
+    ui->chkBgmi->setDisabled(true);
+    ui->chkBgmc->setDisabled(true);
+    ui->cboBgmc->setDisabled(true);
     ui->leMutLeft->setValidator(new QIntValidator(0, 255, ui->leMutLeft));
     ui->leMutRight->setValidator(new QIntValidator(0, 255, ui->leMutRight));
     ui->leMutTop->setValidator(new QIntValidator(0, 255, ui->leMutTop));
     ui->leMutBottom->setValidator(new QIntValidator(0, 255, ui->leMutBottom));
-    ui->leMutLeft->setEnabled(false);
-    ui->leMutRight->setEnabled(false);
-    ui->leMutTop->setEnabled(false);
-    ui->leMutBottom->setEnabled(false);
+    ui->leMutLeft->setDisabled(true);
+    ui->leMutRight->setDisabled(true);
+    ui->leMutTop->setDisabled(true);
+    ui->leMutBottom->setDisabled(true);
     ui->dockWidgetToolbox->setFeatures(QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable);
     ui->dockWidgetUtilities->setFeatures(QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable);
     ui->dockWidgetWorldDetails->setFeatures(QDockWidget::DockWidgetMovable|QDockWidget::DockWidgetFloatable);
-    ui->actionSelectCursor->setToolTip("Select background elements (H to toggle selection hiding)");
-    ui->actionBgOuterCursor->setToolTip("Define new Outer BG");
-    ui->actionBgInnerCursor->setToolTip("Define new Inner BG");
-    ui->actionBgObjectCursor->setToolTip("Define new BG Object");
-    ui->actionPlatformPathCursor->setToolTip("Define new Moving Platform Path");
-    ui->actionPlatformCursor->setToolTip("Define new Moving Platform");
-    ui->actionBgMutableCursor->setToolTip("Define new Mutable BG (must be tied to an existing Inner BG)");
+    ui->actionSelectCursor->setToolTip("Select background elements (H to toggle selection hiding) (F1)");
+    ui->actionBgOuterCursor->setToolTip("Define new Outer BG (F2)");
+    ui->actionBgInnerCursor->setToolTip("Define new Inner BG (F3)");
+    ui->actionBgObjectCursor->setToolTip("Define new BG Object (F4)");
+    ui->actionPlatformPathCursor->setToolTip("Define new Moving Platform Path (F5)");
+    ui->actionPlatformCursor->setToolTip("Define new Moving Platform (F6)");
+    ui->actionBgMutableCursor->setToolTip("Define new Mutable BG (must be tied to an existing Inner BG) (F7)");
 
     // Menus
     recProjMenu = new QMenu("Recent Projects", ui->menuFile);
@@ -284,6 +290,8 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->chkBgc, SIGNAL(toggled(bool)), this, SLOT(updateBgoToolboxAttributes()));
     connect(ui->chkBgi, SIGNAL(toggled(bool)), this, SLOT(updateBgoToolboxAttributes()));
     connect(ui->chkBgmo, SIGNAL(toggled(bool)), ui->chkBgmi, SLOT(setEnabled(bool)));
+    connect(ui->chkBgmo, SIGNAL(toggled(bool)), ui->chkBgmc, SLOT(setEnabled(bool)));    
+    connect(ui->chkBgmo, SIGNAL(toggled(bool)), this, SLOT(toggleBgmcCombo(bool)));
     connect(ui->chkBgmo, SIGNAL(toggled(bool)), this, SLOT(updateBgiToolboxAttributes()));
     connect(ui->chkBgmo, SIGNAL(toggled(bool)), this, SLOT(updateBgoToolboxAttributes()));
     connect(ui->chkBgq, SIGNAL(toggled(bool)), this, SLOT(updateBgoToolboxAttributes()));
@@ -299,12 +307,14 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->rbtnBga, SIGNAL(toggled(bool)), this, SLOT(updateBgiToolboxAttributes()));
     connect(ui->rbtnBgp, SIGNAL(toggled(bool)), this, SLOT(updateBgiToolboxAttributes()));
     connect(ui->rbtnTile, SIGNAL(toggled(bool)), this, SLOT(updateBgiToolboxAttributes()));
-    connect(ui->chkBgmi, SIGNAL(toggled(bool)), this, SLOT(updateBgiToolboxAttributes()));
-    connect(ui->cboBgm, SIGNAL(currentIndexChanged(int)), this, SLOT(updateBgiToolboxAttributes()));
     connect(this, SIGNAL(bgiTileChanged(int)), scene, SLOT(setBgiTile(int)));
     connect(this, SIGNAL(bgiFlagsChanged(int)), scene, SLOT(setBgiFlags(int)));
 
     // Bgm attributes
+    connect(ui->chkBgmi, SIGNAL(toggled(bool)), this, SLOT(toggleBgmi(bool)));
+    connect(ui->chkBgmc, SIGNAL(toggled(bool)), this, SLOT(toggleBgmc(bool)));
+    connect(ui->cboBgm, SIGNAL(currentIndexChanged(int)), this, SLOT(updateBgiToolboxAttributes()));
+    connect(ui->cboBgmc, SIGNAL(currentIndexChanged(int)), this, SLOT(updateBgiToolboxAttributes()));
     connect(ui->chkPayload, SIGNAL(toggled(bool)), ui->leMutLeft, SLOT(setEnabled(bool)));
     connect(ui->chkPayload, SIGNAL(toggled(bool)), ui->leMutRight, SLOT(setEnabled(bool)));
     connect(ui->chkPayload, SIGNAL(toggled(bool)), ui->leMutTop, SLOT(setEnabled(bool)));
@@ -314,6 +324,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->leMutTop, SIGNAL(editingFinished()), this, SLOT(updateBgmToolboxAttributes()));
     connect(ui->leMutBottom, SIGNAL(editingFinished()), this, SLOT(updateBgmToolboxAttributes()));
     connect(ui->chkPayload, SIGNAL(toggled(bool)), scene, SLOT(setPayloadToCustom(bool)));
+    connect(this, SIGNAL(bgmClassChanged(int)), scene, SLOT(setBgmClass(int)));
     connect(this, SIGNAL(bgmCustomPayloadChanged(Platz::MutablePayload)), scene, SLOT(setCustomPayload(Platz::MutablePayload)));
 
     // Platform attributes
@@ -551,6 +562,32 @@ void PlatzWin::populateCombo(const QStringList &ids, QComboBox *cbo)
         cbo->addItem(s, i++);
 }
 
+void PlatzWin::toggleBgmi(bool checked)
+{
+    if (checked)
+        ui->chkBgmc->setChecked(false);
+    updateBgiToolboxAttributes();
+}
+
+void PlatzWin::toggleBgmc(bool checked)
+{
+    if (checked) {
+        ui->cboBgmc->setEnabled(true);
+        ui->chkBgmi->setChecked(false);
+    } else {
+        ui->cboBgmc->setDisabled(true);
+    }
+    updateBgiToolboxAttributes();
+}
+
+void PlatzWin::toggleBgmcCombo(bool enable)
+{
+    if (enable && ui->chkBgmc->isEnabled() && ui->chkBgmc->isChecked())
+        ui->cboBgmc->setEnabled(true);
+    else
+        ui->cboBgmc->setDisabled(true);
+}
+
 void PlatzWin::updatePlatformToolboxAttributes()
 {
     BgPlatform::PlatformStyle style;
@@ -572,19 +609,26 @@ void PlatzWin::updatePlatformToolboxAttributes()
 
 void PlatzWin::updateBgiToolboxAttributes()
 {
-    int tile = -1, flags = 0;
+    int tile = -1, flags = 0, bgmClass = -1;
 
     if (ui->rbtnBga->isChecked())
         flags = BgInner::BGA;
     else if (ui->rbtnBgp->isChecked())
         flags = BgInner::BGP;
     // else already 0 for Tile
-    if (ui->chkBgmi->isEnabled() && ui->chkBgmi->isChecked())
+
+    if (ui->chkBgmi->isEnabled() && ui->chkBgmi->isChecked()) {
         flags |= BgInner::BGM;
+    } else if (ui->chkBgmc->isEnabled() && ui->chkBgmc->isChecked()) {
+        flags |= BgInner::BGMC;
+        bgmClass = ui->cboBgmc->currentIndex();
+    }
+
     if (ui->graphicsView->mode() == Platz::IM_MUTABLE_BG)
         tile = ui->cboBgm->itemData(ui->cboBgm->currentIndex()).toInt();
     emit bgiTileChanged(tile);
     emit bgiFlagsChanged(flags);
+    emit bgmClassChanged(bgmClass);
 }
 
 void PlatzWin::updateBgmToolboxAttributes()
@@ -663,6 +707,11 @@ InteractionMode PlatzWin::fkeyToIntMode(int fkey)
         case Qt::Key_F7: return IM_MUTABLE_BG;
         default: return IM_SELECT;
     }
+}
+
+void PlatzWin::publicKeyPressEvent(QKeyEvent *e)
+{
+    keyPressEvent(e);
 }
 
 void PlatzWin::keyPressEvent(QKeyEvent *event)
@@ -885,6 +934,7 @@ void PlatzWin::loadResources(QString &msg)
     ui->cboBgt->clear();
     ui->cboPlatformClearTile->clear();
     WorldItem::mutableIds.clear();
+    WorldItem::mutableClassIds.clear();
     WorldItem::triggerIds.clear();
     WorldItem::platClrTileIds.clear();
 
@@ -923,9 +973,11 @@ void PlatzWin::loadResources(QString &msg)
     } else {
         SourceParser parser;
         WorldItem::mutableIds = parser.parseForStrings(srcFolder, MUTABLE_IDS_MARKER);
+        WorldItem::mutableClassIds = parser.parseForStrings(srcFolder, MUTABLE_CLASS_IDS_MARKER);
         WorldItem::triggerIds = parser.parseForStrings(srcFolder, TRIGGER_IDS_MARKER);
         WorldItem::platClrTileIds = parser.parseForStrings(srcFolder, PLATFORM_CLR_TILE_IDS_MARKER);
         populateCombo(WorldItem::mutableIds, ui->cboBgm);
+        populateCombo(WorldItem::mutableClassIds, ui->cboBgmc);
         populateCombo(WorldItem::triggerIds, ui->cboBgt);
         populateCombo(WorldItem::platClrTileIds, ui->cboPlatformClearTile);
     }

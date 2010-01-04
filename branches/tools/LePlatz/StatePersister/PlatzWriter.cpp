@@ -161,6 +161,8 @@ void PlatzWriter::writeItem(WorldItem *item)
             writeStartElement("BgInner");
             writeAttribute("flags", QString::number(bgi->flags()));
             writeAttribute("tile", QString::number(bgi->tile()));
+            if (bgi->flags()&BgInner::BGMC)
+                writeAttribute("bgmc", QString::number(bgi->bgmClass()));
             writeTextElement("Title", "BgInner");
             writeBounds(bgi->boundingRect());
             writeEndElement();
@@ -172,7 +174,6 @@ void PlatzWriter::writeItem(WorldItem *item)
             writeStartElement("BgMutable");
             writeAttribute("flags", QString::number(bgm->flags()));
             writeAttribute("tile", QString::number(bgm->tile()));
-            writeAttribute("mutableString", bgm->mutableString());
             writeAttribute("custom", QString::number((bgm->isCustomPayload()?1:0)));
             writeTextElement("Title", "BgMutable");
             writeBounds(bgm->boundingRect());

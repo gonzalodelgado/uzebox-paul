@@ -113,12 +113,10 @@
 	// Inner
 #define BGP		0x01	// Patterned
 #define BGA		0x02	// Animated (automatically repeats like a pattern)
+#define BGMC	0x40	// Mutable class
 
 	// Common
 #define BGM		0x80	// Mutable
-
-
-
 
 
 /****************************************
@@ -152,11 +150,6 @@ typedef struct rect16 {
 	int top;
 	int btm;
 } rect16;
-
-typedef struct line16 {
-	pt16 p1;
-	pt16 p2;
-} line16;
 
 typedef struct velocity {		// Single axis velocity
 	char 	vel;				// Base velocity - implemented as mod, modDisp and disp
@@ -201,6 +194,12 @@ typedef struct object {			// Non-interactive objects (may be option interactivit
 	pt			begin;			// Position that top-left corner of object will be placed
 	u8			map;			// Object data (points to MapsTable)
 } object;
+
+typedef struct mutableClass {	// Mutable classes are re-used across many mutable bgs that have common attributes in order to save flash
+	u8 id;						// Mutable bg id
+	u8 tile;					// Tile/map/animation index
+	u8 hgt;						// We only store height and use top left pt from inner bg to know where to draw. The tile attribute of the inner bg
+} mutableClass;					// becomes an index into the mutableClasses table. The r.btm attribute of the inner bg becomes the mutable bitmap index
 
 typedef struct bgDirectory {
 	u16 objOffset;				// Index into pgmObjects flash array
@@ -281,9 +280,7 @@ void PlatzSetBgDirectory(const bgDirectory *bgd);
 // Platz utilities
 void PlatzFill(const rect *r, u8 tileId);
 void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int dataOffset);
-char PlatzCcw(const pt16 *p0, const pt16 *p1, const pt16 *p2);
 void PlatzHideSprite(u8 spriteIndex, u8 wid, u8 hgt);
-u8 PlatzLinesIntersect(const line16 *l1, const line16 *l2);
 void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags);
 u8 PlatzRectsIntersect(const rect *r1, const rect *r2);
 u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2);

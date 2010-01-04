@@ -37,7 +37,8 @@ public:
         BG0 = 0x00,
         BGP = 0x01,
         BGA = 0x02,
-        BGM = 0x04  // Means next sibling is BGM info BgInner
+        BGM = 0x04, // Means next sibling is BGM info BgInner
+        BGMC = 0x08 // Mutable class (cheap mutable bg)
     };
 
     static QString bgiFlagsToString(const int &flags);
@@ -59,15 +60,20 @@ public:
     int tile() const { return bgTile; }
     virtual void setTile(int t);
     int flags() const { return bgFlags; }
-    void setFlags(int f) { bgFlags = f; }
+    void setFlags(int f);
+    QString bgmClassString() const;
+    int bgmClass() const { return bgmc; }
+    void setBgmClass(int c) { bgmc = c; }
     BgInner* mutator() const { return bgMutator; }
     void setMutator(BgInner *mutator);    // Always set through this public interface (see ~BgMutable)
+    int mutableCount(int index = -1) const;
 
 private:
     BgInner *bgMutator;
     QString innerData;
     int bgFlags;
     int bgTile; // Doubles as mutable id due to Platz level format
+    int bgmc;
 };
 
 #endif // BGINNER_H

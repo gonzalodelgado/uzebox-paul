@@ -74,6 +74,7 @@ public slots:
     void setBgoFlags(int flags) { bgoFlags = flags; }
     void setBgoTriggers(int id, int orientation) { trigId = id; trigOrientation = orientation; }
     void setBgiTile(int tile) { bgiTile = tile; }
+    void setBgmClass(int bgmClass) { bgmc = bgmClass; }
     void setPlatformStyle(BgPlatform::PlatformStyle style) { platformStyle = style; }
     void setPlatformAxis(BgPlatformPath::PlatformAxis axis) { platformAxis = axis; }
     void setPlatformClearTile(const QString &tile) { platformClrTile = tile; }
@@ -117,7 +118,8 @@ private:
     int bgoFlags;
     int trigId;
     int trigOrientation;
-    int bgiTile; // Doubles as mutable id due to Platz level format
+    int bgiTile;    // Doubles as mutable id due to Platz level format
+    int bgmc;
     BgPlatform::PlatformStyle platformStyle;
     BgPlatformPath::PlatformAxis platformAxis;
     QString platformClrTile;

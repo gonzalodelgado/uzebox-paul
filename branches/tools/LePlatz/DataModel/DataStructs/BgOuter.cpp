@@ -21,6 +21,7 @@
 #include <QRectF>
 #include "WorldItem.h"
 #include "BgOuter.h"
+#include "BgInner.h"
 
 QString BgOuter::bgoFlagsToString(const int &flags)
 {
@@ -187,9 +188,16 @@ int BgOuter::mutableCount(int index) const
     int count = 0;
     index = qMin(index, childCount()-1);
 
-    for (int i = index-1; i >= 0; i--)
-        if (child(i)->type() == WorldItem::Mutable)
+    for (int i = index-1; i >= 0; i--) {
+        if (child(i)->type() == WorldItem::Mutable) {
             ++count;
+        } else if (child(i)->type() == WorldItem::Inner) {
+            BgInner *bgi = static_cast<BgInner*>(child(i));
+
+            if (bgi->flags()&BgInner::BGMC)
+                ++count;
+        }
+    }
     if (parent())
         count += parent()->mutableCount(row());
     return count;

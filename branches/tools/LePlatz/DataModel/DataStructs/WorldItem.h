@@ -47,6 +47,7 @@ public:
     static void loadWorldDetailPixmaps();
     static const QPixmap& worldDetailPixmap(const WorldItemType &type);
     static QStringList mutableIds;
+    static QStringList mutableClassIds;
     static QStringList triggerIds;
     static QStringList platClrTileIds;
 

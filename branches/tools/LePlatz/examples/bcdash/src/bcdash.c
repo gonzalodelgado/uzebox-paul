@@ -156,6 +156,33 @@
 #define MUT_BOMB_TARGET_SWITCH			14
 // _LePlatz_Mutable_Bg_Ids_
 
+// _LePlatz_Mutable_Class_Ids_
+#define MC_COIN							0
+#define MC_POISON						1
+#define MC_POISON_WATER					2
+#define MC_BOOTS						3
+#define MC_BOOTS_WATER					4
+#define MC_BUDDHA						5
+#define MC_POGO							6
+#define MC_EGG							7
+#define MC_EGG_WATER					8
+#define MC_HOURGLASS					9
+// _LePlatz_Mutable_Class_Ids_
+
+// Order should correspond with above defines
+const mutableClass pgmMcDir[] PROGMEM = {
+	{MUT_COIN,4,2},
+	{MUT_POISON,32,2},
+	{MUT_POISON,10,2},
+	{MUT_BOOTS,26,1},
+	{MUT_BOOTS,12,1},
+	{MUT_BUDDHA,24,2},
+	{MUT_POGO,18,2},
+	{MUT_EGG,TILE_EGG,1},
+	{MUT_EGG,TILE_EGG_WATER,1},
+	{MUT_HOURGLASS,23,2}
+};
+
 #define MUT_BG_COUNT					32	// 32x8 bits for 256 bgs total
 
 // HUD
@@ -1253,6 +1280,7 @@ extern const bgOuter *bgoTbl;				// Collidable bg containers in flash
 extern const bgDirectory *bgDir;			// Bg directory in flash
 extern const platformDirectory *platDir;	// Moving platform headers
 extern const platform *platTbl;				// Moving platforms' attributes
+extern const mutableClass *mcTbl;			// Mutable bg class directory - for consolidating similar behavior
 
 
 int main(void) {
@@ -1302,6 +1330,7 @@ int main(void) {
 	bgiTbl = pgmBgsInner;
 	bgoTbl = pgmBgsOuter;
 	bgDir = pgmBgDir;
+	mcTbl = pgmMcDir;
 
 /*
 	PlatzSetTriggerCallback(ActivateTrigger);
