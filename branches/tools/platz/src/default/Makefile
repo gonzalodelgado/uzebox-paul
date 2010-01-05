@@ -4,9 +4,11 @@
 
 ## General Flags
 PROJECT = platz_demo
+GAME= platz_demo
 MCU = atmega644
-TARGET = platz_demo.elf
+TARGET = $(GAME).elf
 CC = avr-gcc
+INFO=../gameinfo.properties
 ## CC Flags: -fverbose-asm -S -fno-inline-small-functions
 
 ## Escape spaces in mixer path (due to custom sounds.inc)
@@ -48,7 +50,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS += -Wl,-Map=platz_demo.map 
+LDFLAGS += -Wl,-Map=$(GAME).map 
 LDFLAGS += -Wl,-gc-sections 
 
 
@@ -61,7 +63,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = uzeboxVideoEngineCore.o uzeboxCore.o uzeboxSoundEngine.o uzeboxSoundEngineCore.o uzeboxVideoEngine.o platz.o platz_demo.o 
+OBJECTS = uzeboxVideoEngineCore.o uzeboxCore.o uzeboxSoundEngine.o uzeboxSoundEngineCore.o uzeboxVideoEngine.o platz.o $(GAME).o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -70,7 +72,7 @@ LINKONLYOBJECTS =
 INCLUDES = -I"$(KERNEL_DIR)" 
 
 ## Build
-all: $(TARGET) platz_demo.hex platz_demo.eep platz_demo.lss size
+all: $(TARGET) $(GAME).hex $(GAME).eep $(GAME).lss $(GAME).uze size
 
 ## Compile Kernel files
 uzeboxVideoEngineCore.o: $(KERNEL_DIR)/uzeboxVideoEngineCore.s
@@ -92,7 +94,7 @@ uzeboxVideoEngine.o: $(KERNEL_DIR)/uzeboxVideoEngine.c
 platz.o: ../platz.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-platz_demo.o: ../platz_demo.c
+$(GAME).o: ../$(GAME).c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -108,6 +110,10 @@ $(TARGET): $(OBJECTS)
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
 
+%.uze: $(TARGET)
+	@echo
+	-packrom $(GAME).hex $@ $(INFO)
+
 size: ${TARGET}
 	@echo
 	@avr-size -C --mcu=${MCU} ${TARGET}
@@ -115,8 +121,7 @@ size: ${TARGET}
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) platz_demo.elf dep/* platz_demo.hex platz_demo.eep platz_demo.lss platz_demo.map
-
+	-rm -rf $(OBJECTS) $(GAME).* dep/*
 
 ## Other dependencies
 -include $(shell mkdir dep 2>/dev/null) $(wildcard dep/*)

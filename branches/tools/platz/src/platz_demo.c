@@ -156,7 +156,7 @@
 #define MUT_BOMB_TARGET_SWITCH			14
 // _LePlatz_Mutable_Bg_Ids_
 
-// _LePlatz_Mutable_Class_Ids_
+// _LePlatz_Mutable_Class_Ids_`
 #define MC_COIN							0
 #define MC_POISON						1
 #define MC_POISON_WATER					2
