@@ -835,13 +835,10 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 		yVel = -(a->loc.y-a->bby);
 		retVal |= B_INTERSECT;
 	}
-
+	
+	// If csp is the right slice
 	if (((a->vx.dir == DIR_RIGHT) && (csp == wsp)) || ((a->vx.dir == DIR_LEFT) && (csp != wsp)))
 		xAdjust = SCRL_WID;
-	//trigPos = (pt16){(int)a->loc.x+(int)a->trLoc.x+xAdjust,a->loc.y+a->trLoc.y};
-
-	// Make sure sp always points to left slice (wrapping from end to start adds the complexity)
-	//sp = (csp < wsp)?(wsp != wspMax)?csp:wsp:(csp != wspMax):wsp:csp;
 
 	rPre.left = a->loc.x-a->bbx+xAdjust;
 	rPre.right = a->loc.x+a->bbx+xAdjust;
@@ -852,7 +849,6 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	rPost.top = rPre.top+yVel;
 	rPost.btm = rPre.btm+yVel;
 	trigPos = (pt16){rPost.left+a->bbx,rPost.top+a->bby};
-	sp = csp;
 	
 	// i: 0-1 Moving Platforms
 	// i: 2-3 Outer Bgs
@@ -878,7 +874,6 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 		} else {
 			sp = csp;
 		}
-
 #if MAX_MOVING_PLATFORMS
 		if (i < 2) {
 			start = 0;
@@ -919,11 +914,6 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 				rBg.right = mp.p[mpsp][j].r.right;
 				rBg.top = mp.p[mpsp][j].r.top;
 				rBg.btm = mp.p[mpsp][j].r.btm;
-
-				if ((i == 0 && xAdjust) || (i == 1 && !xAdjust)) {
-					rBg.left += SCRL_WID;
-					rBg.right += SCRL_WID;
-				}
 			} else {
 #else
 			if (1) {
@@ -936,12 +926,16 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 				rBg.right = bgo.r.right<<3;
 				rBg.top = bgo.r.top<<3;
 				rBg.btm = bgo.r.btm<<3;
-
-				if ((i == 2 && xAdjust) || (i == 3 && !xAdjust)) {
-					rBg.left += SCRL_WID;
-					rBg.right += SCRL_WID;
-				}
 			}
+
+			if (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust)) {
+				rBg.left += SCRL_WID;
+				rBg.right += SCRL_WID;
+			}
+
+			// Because bgs are ordered left-to-right, we can break early
+			if (a->vx.dir == DIR_RIGHT && rBg.left > rPost.right)
+				break;
 
 			if (PlatzRectsIntersect16(&rPost,&rBg)) {
 				// Triggers
