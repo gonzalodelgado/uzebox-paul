@@ -43,6 +43,13 @@ public:
         Platform = 0x400
     };
 
+    enum StringDataType {
+        TriggerStrings = 0x01,
+        ClrTileStrings = 0x02,
+        MutClassIdStrings = 0x04,
+        MutIdStrings = 0x08
+    };
+
     static void loadWorldItemIcons();
     static void loadWorldDetailPixmaps();
     static const QPixmap& worldDetailPixmap(const WorldItemType &type);
@@ -88,6 +95,8 @@ public:
     void appendChild(WorldItem *child);
     void insertChild(int pos, WorldItem *child);
     WorldItem* child(int row) const;
+    WorldItem* nextChild(WorldItem *w) const;
+    WorldItem* prevChild(WorldItem *w) const;
     const QList<WorldItem*>* children(void);
     int childCount() const;
     virtual int columnCount() const;

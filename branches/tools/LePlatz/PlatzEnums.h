@@ -104,6 +104,8 @@ namespace Platz
     const QString MUTABLE_CLASS_IDS_MARKER = "_LePlatz_Mutable_Class_Ids_";
     const QString TRIGGER_IDS_MARKER = "_LePlatz_Trigger_Ids_";
     const QString PLATFORM_CLR_TILE_IDS_MARKER = "_LePlatz_Platform_Clear_Tiles_Ids_";
+    const QString TRIGGER_NML = "ORI_LRUD";
+    const QString TRIGGER_REV = "ORI_RLDU";
     const QString VERSION_STR = "v1.0";
     const int MAX_RECENT_PROJECTS = 8;
     const int CLEAR = 65535;

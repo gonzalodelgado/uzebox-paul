@@ -68,12 +68,11 @@ BgOuter::BgOuter()
 }
 
 BgOuter::BgOuter(const QList<QVariant> &data, WorldItem* parent)
-    : WorldItem(parent), bgFlags(0)
+    : WorldItem(parent),  bgOuterData(""), bgFlags(0), mTrigger(""), mTriggerOrientation("")
 {
     if (data.length() > 0)
         bgOuterData = data[0].toString();
-    else
-        bgOuterData = "";
+
     WorldItem::worldStats.outerCount++;
     setMutableCount(mutableCount(row()));
 }
@@ -83,9 +82,9 @@ WorldItem* BgOuter::createItem(const QList<QVariant> &data, WorldItem *parent)
     BgOuter *bgo = new BgOuter(data, (parent) ? parent : this->parent());
 
     if (bgo) {
-        bgo->setFlags(bgFlags);
-        bgo->setTrigger(trigIndex);
-        bgo->setTriggerOrientation(trigOrientation);
+        bgo->setFlags(flags());
+        bgo->setTrigger(trigger());
+        bgo->setTriggerOrientation(triggerOrientation());
         bgo->setRelativeBoundingRect(relativeBoundingRect());
 
         if (graphicalRepresentation())
@@ -126,30 +125,14 @@ QString BgOuter::detailData() const
     details = "Bg Flags: " + bgoFlagsToString(bgFlags);
 
     if (bgFlags&BGT) {
-        details += "\nTrigger Index: " + triggerStr() + "\tTrigger Orientation: ";
-        details += triggerOrientationStr();
+        details += "\nTrigger Index: " + trigger();
+        details +=  + "\tTrigger Orientation: " + triggerOrientation();
     }
     return details;
 }
 
 WorldItem::WorldItemType BgOuter::type() const {
     return WorldItem::Outer;
-}
-
-QString BgOuter::triggerStr() const
-{
-    if (trigIndex >= 0 && WorldItem::triggerIds.count() > trigIndex)
-        return WorldItem::triggerIds.at(trigIndex);
-    else
-        return Platz::UNDEFINED;
-}
-
-QString BgOuter::triggerOrientationStr() const
-{
-    if (trigOrientation == 1)
-        return "ORI_LRUD";
-    else
-        return "ORI_RLDU";
 }
 
 void BgOuter::setData(const QVariant &data)

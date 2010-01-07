@@ -63,7 +63,7 @@ private:
     void readPlatformPath();
     void readPlatform();
     void readUnknownElement();
-    QString readTitle();
+    QString readString(const QString &str);
     QRectF readRect(const QString &eleName);
     Platz::MutablePayload readMutablePayload(const QString &eleName);
     Settings *settings;

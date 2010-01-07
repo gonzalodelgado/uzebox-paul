@@ -37,6 +37,7 @@
 #include <NewProject.h>
 #include <SettingsDialog.h>
 #include <SourceParser.h>
+#include <FindReplace.h>
 #include <About.h>
 #include "PlatzWin.h"
 #include "ui_PlatzWin.h"
@@ -165,6 +166,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
 
     ui->menuSnapToX->addActions(snapToXGrpVMode3->actions());
     ui->menuSnapToY->addActions(snapToYGrp->actions());
+    connect(ui->actionFindReplace, SIGNAL(triggered()), this, SLOT(findReplaceSrcDefines()));
 
     // Init external process comms slots
     connect(procMake, SIGNAL(readyReadStandardOutput()), this, SLOT(makeOutputReady()));
@@ -301,7 +303,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->pbBgt, SIGNAL(clicked()), this, SLOT(toggleBgoTriggerMode()));
     connect(ui->pbBgtNot, SIGNAL(clicked()), this, SLOT(toggleBgoTriggerMode()));
     connect(this, SIGNAL(bgoAttributesChanged(int)), scene, SLOT(setBgoFlags(int)));
-    connect(this, SIGNAL(bgoTriggerChanged(int,int)), scene, SLOT(setBgoTriggers(int,int)));
+    connect(this, SIGNAL(bgoTriggerChanged(QString,QString)), scene, SLOT(setBgoTriggers(QString,QString)));
 
     // Bgi attributes
     connect(ui->rbtnBga, SIGNAL(toggled(bool)), this, SLOT(updateBgiToolboxAttributes()));
@@ -324,7 +326,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->leMutTop, SIGNAL(editingFinished()), this, SLOT(updateBgmToolboxAttributes()));
     connect(ui->leMutBottom, SIGNAL(editingFinished()), this, SLOT(updateBgmToolboxAttributes()));
     connect(ui->chkPayload, SIGNAL(toggled(bool)), scene, SLOT(setPayloadToCustom(bool)));
-    connect(this, SIGNAL(bgmClassChanged(int)), scene, SLOT(setBgmClass(int)));
+    connect(this, SIGNAL(bgmClassChanged(QString)), scene, SLOT(setBgmClass(QString)));
     connect(this, SIGNAL(bgmCustomPayloadChanged(Platz::MutablePayload)), scene, SLOT(setCustomPayload(Platz::MutablePayload)));
 
     // Platform attributes
@@ -438,6 +440,15 @@ void PlatzWin::aboutUzebox()
     about->setPixmap(QPixmap(":/misc/UzeboxLogo.png"));
     about->exec();
     delete about;
+}
+
+int PlatzWin::findReplaceSrcDefines()
+{
+    QPointer<FindReplace> fr = new FindReplace(model, this);
+    int result = fr->exec();
+    delete fr;
+    flagUnsavedChanges();
+    return result;
 }
 
 void PlatzWin::setSnapToResolutionX(QAction* action)
@@ -609,7 +620,8 @@ void PlatzWin::updatePlatformToolboxAttributes()
 
 void PlatzWin::updateBgiToolboxAttributes()
 {
-    int tile = -1, flags = 0, bgmClass = -1;
+    int tile = -1, flags = 0;
+    QString mutString, bgmClass;
 
     if (ui->rbtnBga->isChecked())
         flags = BgInner::BGA;
@@ -624,10 +636,13 @@ void PlatzWin::updateBgiToolboxAttributes()
         bgmClass = ui->cboBgmc->currentIndex();
     }
 
-    if (ui->graphicsView->mode() == Platz::IM_MUTABLE_BG)
+    if (ui->graphicsView->mode() == Platz::IM_MUTABLE_BG) {
         tile = ui->cboBgm->itemData(ui->cboBgm->currentIndex()).toInt();
+        mutString = ui->cboBgm->currentText();
+    }
     emit bgiTileChanged(tile);
     emit bgiFlagsChanged(flags);
+    emit bgmMutableStringChanged(mutString);
     emit bgmClassChanged(bgmClass);
 }
 
@@ -657,12 +672,13 @@ void PlatzWin::updateBgmToolboxAttributes()
 
 void PlatzWin::updateBgoToolboxAttributes()
 {
-    int flags = 0, trigOrientation = 0, trigId = 0;
+    int flags = 0;
+    QString trigOrientation, trigId;
 
     if (bgoTrigger) {
         flags |= BgOuter::BGT;
-        trigId = ui->cboBgt->itemData(ui->cboBgt->currentIndex()).toInt();
-        trigOrientation = (ui->rbtnLrud->isChecked()) ? 1 : -1;
+        trigId = ui->cboBgt->currentText();
+        trigOrientation = (ui->rbtnLrud->isChecked()) ? TRIGGER_NML : TRIGGER_REV;
     } else {
         if (ui->chkBgc->isChecked())
             flags |= BgOuter::BGC;

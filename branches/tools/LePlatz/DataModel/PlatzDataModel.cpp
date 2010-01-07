@@ -20,6 +20,7 @@
 #include <QtGui>
 #include <QHash>
 #include <QRectF>
+#include <QStringList>
 #include <WorldItem.h>
 #include <Slice.h>
 #include <Level.h>
@@ -32,6 +33,9 @@
 #include <ProxyItem.h>
 #include "PlatzDataModel.h"
 
+typedef int (PlatzDataModel::*Collect)(WorldItem *w, QStringList &data, bool set);
+#define CALL_COLLECT_MFN(object,ptrToMember) ((object).*(ptrToMember))
+
 PlatzDataModel::PlatzDataModel(QObject *parent)
     : QAbstractItemModel(parent), selectedDataItem(0), dropState(Invalid), selectedIndex(QModelIndex()), droppedItem(0)
 {
@@ -42,6 +46,155 @@ PlatzDataModel::PlatzDataModel(QObject *parent)
 PlatzDataModel::~PlatzDataModel()
 {
     delete rootItem;
+}
+
+int PlatzDataModel::replaceStringData(QStringList &data, const WorldItem::StringDataType &type, int from, int to)
+{
+    return retrieveStringData(data, type, from, to, true);
+}
+
+int PlatzDataModel::retrieveStringData(QStringList &data, const WorldItem::StringDataType &type, int from, int to, bool set)
+{
+    int count = 0;
+
+    if (!root())
+        return count;
+    if (from == -1)
+        from = 0;
+    if (to == -1)
+        to = root()->childCount()-1;
+    to = qMin(to, root()->childCount()-1);
+
+    if (from < 0 || from >= root()->childCount() || from > to)
+        return count;
+    if (set && data.count() < 2)
+        return count;
+    Collect mfn;
+
+    switch (type) {
+        case WorldItem::TriggerStrings: mfn = &PlatzDataModel::collectTriggers; break;
+        case WorldItem::ClrTileStrings: mfn = &PlatzDataModel::collectPlatformClearTiles; break;
+        case WorldItem::MutClassIdStrings: mfn = &PlatzDataModel::collectMutableClassIds; break;
+        case WorldItem::MutIdStrings: mfn = &PlatzDataModel::collectMutableIds; break;
+        default: return count;
+    }
+
+    WorldItem *it = root()->child(from);
+
+    while (it->row() <= to) {
+        count += CALL_COLLECT_MFN(*this,mfn)(it, data, set);
+
+        if (it->parent())
+            it = it->parent()->nextChild(it);
+        else
+            it = 0;
+        if (!it)
+            break;
+    }
+    return count;
+}
+
+int PlatzDataModel::collectTriggers(WorldItem *w, QStringList &triggers, bool set)
+{
+    int count = 0;
+
+    if (!w)
+        return count;
+    foreach(WorldItem *child, *w->children()) {
+        if (child->type() == WorldItem::Outer) {
+            BgOuter *bgo = static_cast<BgOuter*>(child);
+            QString trigger = bgo->trigger();
+
+            if (set && trigger == triggers.first())
+                bgo->setTrigger(triggers.last());
+            else if (!set && !trigger.isEmpty() && !triggers.contains(trigger))
+                triggers << trigger;
+            else
+                continue;
+            ++count;
+        } else if (child->type()&(WorldItem::Slice|WorldItem::OuterProxy)) {
+            count += collectTriggers(child, triggers, set);
+        }
+    }
+    return count;
+}
+
+int PlatzDataModel::collectPlatformClearTiles(WorldItem *w, QStringList &clrTiles, bool set)
+{
+    int count = 0;
+
+    if (!w)
+        return count;
+    foreach(WorldItem *child, *w->children()) {
+        if (child->type() == WorldItem::Platform) {
+            BgPlatform *plat = static_cast<BgPlatform*>(child);
+            QString clrTile = plat->clearTile();
+
+            if (set && clrTile == clrTiles.first())
+                plat->setClearTile(clrTiles.last());
+            else if (!set && !clrTile.isEmpty() && !clrTiles.contains(clrTile))
+                clrTiles << clrTile;
+            else
+                continue;
+            ++count;
+        } else if (child->type()&(WorldItem::Slice|WorldItem::PlatformPathProxy|WorldItem::PlatformPath)) {
+            count += collectPlatformClearTiles(child, clrTiles, set);
+        }
+    }
+    return count;
+}
+
+int PlatzDataModel::collectMutableClassIds(WorldItem *w, QStringList &bgmcIds, bool set)
+{
+    int count = 0;
+
+    if (!w)
+        return count;
+    foreach(WorldItem *child, *w->children()) {
+        if (child->type() == WorldItem::Inner) {
+            BgInner *bgi = static_cast<BgInner*>(child);
+
+            if (bgi->flags()&BgInner::BGMC) {
+                QString bgmc = bgi->bgmClass();
+
+                if (set && bgmc == bgmcIds.first())
+                    bgi->setBgmClass(bgmcIds.last());
+                else if (!set && !bgmc.isEmpty() && !bgmcIds.contains(bgmc))
+                    bgmcIds << bgmc;
+                else
+                    continue;
+                ++count;
+            }
+        } else if (child->type()&(WorldItem::Slice|WorldItem::OuterProxy|WorldItem::Outer)) {
+            count += collectMutableClassIds(child, bgmcIds, set);
+        }
+    }
+    return count;
+}
+
+int PlatzDataModel::collectMutableIds(WorldItem *w, QStringList &mutStrings, bool set)
+{
+    int count = 0;
+
+    if (!w)
+        return count;
+    foreach(WorldItem *child, *w->children()) {
+        if (child->type() == WorldItem::Mutable) {
+            BgMutable *bgm = static_cast<BgMutable*>(child);
+            QString mutString = bgm->mutableString();
+
+            if (set && mutString == mutStrings.first())
+                bgm->setMutableString(mutStrings.last());
+            else if (!set && !mutString.isEmpty() && !mutStrings.contains(mutString))
+                mutStrings << mutString;
+            else
+                continue;
+            ++count;
+        } else if (child->type()&(WorldItem::Slice|WorldItem::OuterProxy|WorldItem::Outer)) {
+            count += collectMutableIds(child, mutStrings, set);
+        }
+    }
+    return count;
 }
 
 QModelIndex PlatzDataModel::validateModel()
@@ -96,7 +249,10 @@ void PlatzDataModel::setSelectedIndex(const QModelIndex &index)
 
 WorldItem* PlatzDataModel::root()
 {
-    return rootItem->child(0);
+    if (rootItem)
+        return rootItem->child(0);
+    else
+        return 0;
 }
 
 void PlatzDataModel::clear()

@@ -390,6 +390,7 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             BgMutable *bgm = new BgMutable(QList<QVariant>() << "BgMutable", bgi, bgo);
             bgm->setFlags(0);
             bgm->setTile(bgiTile);
+            bgm->setMutableString(mutString);
             bgm->setBoundingRect(bgOutline);
 
             if (useCustomPayload)

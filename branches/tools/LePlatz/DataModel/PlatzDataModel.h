@@ -39,6 +39,14 @@ public:
     PlatzDataModel(QObject *parent = 0);
     ~PlatzDataModel();
 
+    // Probably a bad idea to double-up as set/get, but it's only used from FindReplace anyway, so no big deal
+    int replaceStringData(QStringList &data, const WorldItem::StringDataType &type, int from = -1, int to = -1);
+    int retrieveStringData(QStringList &data, const WorldItem::StringDataType &type, int from = -1, int to = -1, bool set = false);
+    int collectTriggers(WorldItem *w, QStringList &triggers, bool set = false);
+    int collectPlatformClearTiles(WorldItem *w, QStringList &clrTiles, bool set = false);
+    int collectMutableClassIds(WorldItem *w, QStringList &bgmcIds, bool set = false);
+    int collectMutableIds(WorldItem *w, QStringList &mutString, bool set = false);
+
     QModelIndex validateModel();
     WorldItem* root();
     void clear();

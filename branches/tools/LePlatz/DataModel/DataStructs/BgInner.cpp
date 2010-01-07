@@ -47,14 +47,13 @@ QString BgInner::bgiFlagsToString(const int &flags)
 }
 
 BgInner::BgInner()
-    : WorldItem(0), bgMutator(0), bgFlags(0), bgTile(-1), bgmc(-1)
+    : WorldItem(0), bgMutator(0), innerData(""), bgFlags(0), bgTile(-1), bgmc("")
 {
-    innerData = "";
     WorldItem::worldStats.innerCount++;
 }
 
 BgInner::BgInner(const QList<QVariant> &data, WorldItem* parent)
-    : WorldItem(parent), bgMutator(0), bgFlags(0), bgTile(-1), bgmc(-1)
+    : WorldItem(parent), bgMutator(0), innerData(""), bgFlags(0), bgTile(-1), bgmc("")
 {
     if (data.length() > 0)
         innerData = data[0].toString();
@@ -68,8 +67,8 @@ WorldItem* BgInner::createItem(const QList<QVariant> &data, WorldItem *parent)
     BgInner *bgi = new BgInner(data, (parent) ? parent : this->parent());
 
     if (bgi) {
-        bgi->setFlags(bgFlags);
-        bgi->setTile(bgTile);
+        bgi->setFlags(flags());
+        bgi->setTile(tile());
         bgi->setBgmClass(bgmClass());
         bgi->setRelativeBoundingRect(relativeBoundingRect());
 
@@ -123,7 +122,7 @@ QVariant BgInner::dataDecoration(int) const
 QVariant BgInner::tooltipData(int column) const
 {
     if (bgFlags&BGMC)
-        return QVariant(data(column).toString() + "\nBgm Class: " + bgmClassString());
+        return QVariant(data(column).toString() + "\nBgm Class: " + bgmClass());
     else
         return QVariant(data(column).toString() + "\nTile Index: " + QString::number(bgTile));
 }
@@ -135,7 +134,7 @@ QString BgInner::detailData() const
     details = "Bg Flags: " + bgiFlagsToString(bgFlags);
 
     if (bgFlags&BGMC) {
-        details += "\tBgm Class: " + bgmClassString();
+        details += "\tBgm Class: " + bgmClass();
         details += "\nMutable Index: " + QString::number(mutableCount());
     } else {
         if (bgFlags&BGP)
@@ -167,13 +166,6 @@ void BgInner::setData(const QVariant &data)
 void BgInner::setTile(int t)
 {
     bgTile = t;
-}
-
-QString BgInner::bgmClassString() const {
-    if (bgmClass() >= 0 && WorldItem::mutableClassIds.count() > bgmClass())
-        return WorldItem::mutableClassIds.at(bgmClass());
-    else
-        return Platz::UNDEFINED;
 }
 
 qreal BgInner::offsetX() const

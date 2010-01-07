@@ -109,15 +109,17 @@ public slots:
     void toggleSelectedSliceLock();
     void setSnapToResolutionX(QAction* action);
     void setSnapToResolutionY(QAction* action);
+    int findReplaceSrcDefines();
     void publicKeyPressEvent(QKeyEvent *e);
 signals:
     void zoomIn(int delta = 120);
     void zoomOut(int delta = -120);
     void bgoAttributesChanged(int flags);
-    void bgoTriggerChanged(int trigId, int trigOrientation);
+    void bgoTriggerChanged(const QString &trigId, const QString &trigOrientation);
     void bgiTileChanged(int tile);
     void bgiFlagsChanged(int flags);
-    void bgmClassChanged(int bgmc);
+    void bgmMutableStringChanged(const QString &s);
+    void bgmClassChanged(const QString &bgmc);
     void bgmCustomPayloadChanged(const Platz::MutablePayload &payload);
     void platformStyleChanged(BgPlatform::PlatformStyle style);
     void platformAxisChanged(BgPlatformPath::PlatformAxis axis);

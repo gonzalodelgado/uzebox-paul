@@ -23,6 +23,7 @@
 #include <QVariant>
 #include <QString>
 #include <PlatzGraphicsItem.h>
+#include "WorldItem.h"
 
 class BgOuter : public WorldItem
 {
@@ -56,18 +57,16 @@ public:
     qreal offsetX() const;
     int flags() { return bgFlags; }
     void setFlags(int f) { bgFlags = f; }
-    int trigger() { return trigIndex; }
-    QString triggerStr() const;
-    void setTrigger(int t) { trigIndex = t; }
-    int triggerOrientation() { return trigOrientation; }
-    QString triggerOrientationStr() const;
-    void setTriggerOrientation(int to) { trigOrientation = to; }
+    QString trigger() const { return mTrigger; }
+    void setTrigger(const QString &trig) { mTrigger = trig; }
+    QString triggerOrientation() const { return mTriggerOrientation; }
+    void setTriggerOrientation(const QString &trigOri) { mTriggerOrientation = trigOri; }
     void setGraphicalRepresentation(PlatzGraphicsItem *item);
 private:
     QString bgOuterData;
     int bgFlags;
-    int trigIndex;
-    int trigOrientation;
+    QString mTrigger;
+    QString mTriggerOrientation;
 };
 
 #endif // BGOUTER_H

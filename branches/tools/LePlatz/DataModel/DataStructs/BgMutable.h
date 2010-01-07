@@ -37,7 +37,8 @@ public:
     QString detailData() const;
     QRectF limitRect() const;
     qreal offsetX() const;
-    QString mutableString() const;
+    QString mutableString() const { return mMutableString; }
+    void setMutableString(const QString &mutableString) { mMutableString = mutableString; }
     bool isCustomPayload() { return customPayload; }
     const Platz::MutablePayload& payload() const { return mutablePayload; }
     void setPayload(const QRect &rect) { mutablePayload.fromRect(rect); customPayload = false; }
@@ -45,6 +46,7 @@ public:
     int mutableCount(int index = -1) const;
 private:
     Platz::MutablePayload mutablePayload;
+    QString mMutableString;
     bool customPayload;
 };
 

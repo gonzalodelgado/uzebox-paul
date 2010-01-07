@@ -61,9 +61,8 @@ public:
     virtual void setTile(int t);
     int flags() const { return bgFlags; }
     void setFlags(int f);
-    QString bgmClassString() const;
-    int bgmClass() const { return bgmc; }
-    void setBgmClass(int c) { bgmc = c; }
+    QString bgmClass() const { return bgmc; }
+    void setBgmClass(const QString &c) { bgmc = c; }
     BgInner* mutator() const { return bgMutator; }
     void setMutator(BgInner *mutator);    // Always set through this public interface (see ~BgMutable)
     int mutableCount(int index = -1) const;
@@ -73,7 +72,7 @@ private:
     QString innerData;
     int bgFlags;
     int bgTile; // Doubles as mutable id due to Platz level format
-    int bgmc;
+    QString bgmc;
 };
 
 #endif // BGINNER_H

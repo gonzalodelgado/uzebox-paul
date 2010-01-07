@@ -284,7 +284,7 @@ void WorldCompiler::compileBgOuters(int sliceIndex, ProxyItem *parent, QTextStre
         ts << "\t{" + BgOuter::bgoFlagsToString(bgo->flags()) << ",";
 
         if (bgo->flags()&BgOuter::BGT)
-            ts << bgo->triggerOrientationStr() << "," << bgo->triggerStr();
+            ts << bgo->triggerOrientation() << "," << bgo->trigger();
         else
             ts << bgo->childCount() << "," << bgDir[sliceIndex]->bgiIndex+bgDir[sliceIndex]->bgiCount;
         ts << "," << rectFToString(bgo->relativeBoundingRect(), tileWidth) << "}";
@@ -322,7 +322,7 @@ void WorldCompiler::compileBgInners(int sliceIndex, BgOuter *parent, QTextStream
             if (bgi->flags()&BgInner::BGMC) {
                 QRectF bgmcRect = bgi->relativeBoundingRect().adjusted(bgoRect.left(), 0, bgoRect.left(), 0);
 
-                ts << "\t{" << BgInner::bgiFlagsToString(bgi->flags()) << "," << bgi->bgmClassString() << ",{";
+                ts << "\t{" << BgInner::bgiFlagsToString(bgi->flags()) << "," << bgi->bgmClass() << ",{";
                 ts << ((int)bgmcRect.left() / tileWidth) << "," << ((int)bgmcRect.right() / tileWidth) << ","
                         << ((int)bgmcRect.top() / tileWidth) << "," << bgi->mutableCount() << "}}";
             } else {

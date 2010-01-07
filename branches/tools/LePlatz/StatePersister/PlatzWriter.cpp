@@ -146,9 +146,9 @@ void PlatzWriter::writeItem(WorldItem *item)
             BgOuter *bgo = static_cast<BgOuter*>(item);
             writeStartElement("BgOuter");
             writeAttribute("flags", QString::number(bgo->flags()));
-            writeAttribute("trigIndex", QString::number(bgo->trigger()));
-            writeAttribute("trigOrientation", QString::number(bgo->triggerOrientation()));
             writeTextElement("Title", "BgOuter");
+            writeTextElement("Trigger", bgo->trigger());
+            writeTextElement("TriggerOri", bgo->triggerOrientation());
             writeBounds(bgo->boundingRect());
             foreach(WorldItem *child, *item->children())
                 writeItem(child);
@@ -161,9 +161,9 @@ void PlatzWriter::writeItem(WorldItem *item)
             writeStartElement("BgInner");
             writeAttribute("flags", QString::number(bgi->flags()));
             writeAttribute("tile", QString::number(bgi->tile()));
-            if (bgi->flags()&BgInner::BGMC)
-                writeAttribute("bgmc", QString::number(bgi->bgmClass()));
             writeTextElement("Title", "BgInner");
+            if (bgi->flags()&BgInner::BGMC)
+                writeTextElement("Bgmc", bgi->bgmClass());
             writeBounds(bgi->boundingRect());
             writeEndElement();
             break;
@@ -173,9 +173,11 @@ void PlatzWriter::writeItem(WorldItem *item)
             BgMutable *bgm = static_cast<BgMutable*>(item);
             writeStartElement("BgMutable");
             writeAttribute("flags", QString::number(bgm->flags()));
+            // Redundant (due to mutableString), but no real harm in storing in case it becomes useful
             writeAttribute("tile", QString::number(bgm->tile()));
             writeAttribute("custom", QString::number((bgm->isCustomPayload()?1:0)));
             writeTextElement("Title", "BgMutable");
+            writeTextElement("MutString", bgm->mutableString());
             writeBounds(bgm->boundingRect());
             writeMutablePayload(bgm->payload());
             writeEndElement();
@@ -226,9 +228,9 @@ void PlatzWriter::writeItem(WorldItem *item)
             BgPlatform *platform = static_cast<BgPlatform*>(item);
             writeStartElement("Platform");
             writeAttribute("flags", QString::number(platform->flags()));
-            writeAttribute("clearTile", platform->clearTile());
             writeAttribute("velocity", QString::number(platform->velocity()));
             writeTextElement("Title", "Platform");
+            writeTextElement("ClearTile", platform->clearTile());
             writeBounds(platform->boundingRect());
             writeEndElement();
             break;

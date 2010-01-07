@@ -235,7 +235,7 @@ void PlatzReader::readSlice()
 
     int replica = attributes().value("replica").toString().toInt();
     int locked = attributes().value("locked").toString().toInt();
-    QString title = readTitle();
+    QString title = readString("Title");
     Slice *slice = new Slice(QList<QVariant>() << title, worldPtr.top());
     model->insertRow(worldPtr.top()->childCount(), slice, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
     slice->setBoundingRect(QRectF(sliceCount<<8,0.0,256,200.0));
@@ -274,7 +274,7 @@ void PlatzReader::readBgOuterProxy()
     Q_ASSERT(isStartElement() && name() == "BgOuterProxy");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    QString title = readTitle();
+    QString title = readString("Title");
     ProxyItem *proxy = new ProxyItem(QList<QVariant>() << title, WorldItem::OuterProxy, worldPtr.top());
     proxy->setGraphicalRepresentation(new PlatzGraphicsItem(proxy, Platz::INVISIBLE));
     model->insertRow(worldPtr.top()->childCount(), proxy, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
@@ -304,16 +304,15 @@ void PlatzReader::readBgOuter()
     Q_ASSERT(!worldPtr.isEmpty());
 
     int flags = attributes().value("flags").toString().toInt();
-    int trigIndex = attributes().value("trigIndex").toString().toInt();
-    int trigOrientation = attributes().value("trigOrientation").toString().toInt();
-    QString title = readTitle();
+    QString title = readString("Title");
+    QString trigger = readString("Trigger");
+    QString triggerOrientation = readString("TriggerOri");
     BgOuter *bgo = new BgOuter(QList<QVariant>() << title, worldPtr.top());
     bgo->setBoundingRect(readRect("Bounds"));
     bgo->setGraphicalRepresentation(new PlatzGraphicsItem(bgo, Platz::NORMAL));
-
     bgo->setFlags(flags);
-    bgo->setTrigger(trigIndex);
-    bgo->setTriggerOrientation(trigOrientation);
+    bgo->setTrigger(trigger);
+    bgo->setTriggerOrientation(triggerOrientation);
     model->insertRow(worldPtr.top()->childCount(), bgo, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
     worldPtr.push(bgo);
 
@@ -344,19 +343,15 @@ void PlatzReader::readBgInner()
 
     int flags = attributes().value("flags").toString().toInt();
     int tile = attributes().value("tile").toString().toInt();
-    int bgmClass;
+    QString title = readString("Title");
+    BgInner *bgi = new BgInner(QList<QVariant>() << title, worldPtr.top());
 
     if (flags&BgInner::BGMC)
-        bgmClass = attributes().value("bgmc").toString().toInt();
-    QString title = readTitle();
-    BgInner *bgi = new BgInner(QList<QVariant>() << title, worldPtr.top());
+        bgi->setBgmClass(readString("Bgmc"));
     bgi->setBoundingRect(readRect("Bounds"));
     bgi->setGraphicalRepresentation(new PlatzGraphicsItem(bgi, Platz::NORMAL));
     bgi->setFlags(flags);
     bgi->setTile(tile);
-
-    if (flags&BgInner::BGMC)
-        bgi->setBgmClass(bgmClass);
     prevBgi = bgi;
     model->insertRow(worldPtr.top()->childCount(), bgi, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
 
@@ -381,9 +376,11 @@ void PlatzReader::readBgMutable()
     int flags = attributes().value("flags").toString().toInt();
     int tile = attributes().value("tile").toString().toInt();
     int custom = attributes().value("custom").toString().toInt();
-    QString title = readTitle();
+    QString title = readString("Title");
+    QString mutableString = readString("MutString");
     BgMutable *bgm = new BgMutable(QList<QVariant>() << title, prevBgi, worldPtr.top());
     bgm->setBoundingRect(readRect("Bounds"));
+    bgm->setMutableString(mutableString);
 
     if (custom)
         bgm->setCustomPayload(readMutablePayload("Payload"));
@@ -413,7 +410,7 @@ void PlatzReader::readBgObjectProxy()
     Q_ASSERT(isStartElement() && name() == "BgObjectProxy");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    QString title = readTitle();
+    QString title = readString("Title");
     ProxyItem *proxy = new ProxyItem(QList<QVariant>() << title, WorldItem::ObjectProxy, worldPtr.top());
     proxy->setGraphicalRepresentation(new PlatzGraphicsItem(proxy, Platz::INVISIBLE));
     model->insertRow(worldPtr.top()->childCount(), proxy, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
@@ -443,7 +440,7 @@ void PlatzReader::readBgObject()
     Q_ASSERT(!worldPtr.isEmpty());
 
     int map = attributes().value("map").toString().toInt();
-    QString title = readTitle();
+    QString title = readString("Title");
     BgObject *obj = new BgObject(QList<QVariant>() << title, worldPtr.top());
     obj->setBoundingRect(readRect("Bounds"));
     obj->setGraphicalRepresentation(new PlatzGraphicsItem(obj, Platz::NORMAL));
@@ -467,7 +464,7 @@ void PlatzReader::readPlatformPathProxy()
     Q_ASSERT(isStartElement() && name() == "PlatformPathProxy");
     Q_ASSERT(!worldPtr.isEmpty());
 
-    QString title = readTitle();
+    QString title = readString("Title");
     ProxyItem *proxy = new ProxyItem(QList<QVariant>() << title, WorldItem::PlatformPathProxy, worldPtr.top());
     proxy->setGraphicalRepresentation(new PlatzGraphicsItem(proxy, Platz::INVISIBLE));
     model->insertRow(worldPtr.top()->childCount(), proxy, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
@@ -497,7 +494,7 @@ void PlatzReader::readPlatformPath()
     Q_ASSERT(!worldPtr.isEmpty());
 
     int axis = attributes().value("axis").toString().toInt();
-    QString title = readTitle();
+    QString title = readString("Title");
     BgPlatformPath *platPath = new BgPlatformPath(QList<QVariant>() << title, worldPtr.top());
     platPath->setBoundingRect(readRect("Bounds"));
     platPath->setGraphicalRepresentation(new PlatzGraphicsItem(platPath, Platz::NORMAL));
@@ -530,9 +527,9 @@ void PlatzReader::readPlatform()
     Q_ASSERT(!worldPtr.isEmpty());
 
     int flags = attributes().value("flags").toString().toInt();
-    QString clrTile = attributes().value("clearTile").toString();
     int vel = attributes().value("velocity").toString().toInt();
-    QString title = readTitle();
+    QString title = readString("Title");
+    QString clrTile = readString("ClearTile");
     BgPlatform *plat = new BgPlatform(QList<QVariant>() << title, worldPtr.top());
     plat->setBoundingRect(readRect("Bounds"));
     plat->setGraphicalRepresentation(new PlatzGraphicsItem(plat, Platz::NORMAL));
@@ -567,7 +564,7 @@ void PlatzReader::readUnknownElement()
     }
 }
 
-QString PlatzReader::readTitle()
+QString PlatzReader::readString(const QString &str)
 {
     while (!atEnd()) {
         readNext();
@@ -576,7 +573,7 @@ QString PlatzReader::readTitle()
             break;
 
         if (isStartElement()) {
-            if (name() == "Title")
+            if (name() == str)
                 return(readElementText());
             else
                 readUnknownElement();

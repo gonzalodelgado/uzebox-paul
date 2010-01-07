@@ -72,9 +72,14 @@ public slots:
     void setSliceSize(const QSize &size) { mSliceSize = size; }
     void setBgiFlags(int flags) { bgiFlags = flags; }
     void setBgoFlags(int flags) { bgoFlags = flags; }
-    void setBgoTriggers(int id, int orientation) { trigId = id; trigOrientation = orientation; }
     void setBgiTile(int tile) { bgiTile = tile; }
-    void setBgmClass(int bgmClass) { bgmc = bgmClass; }
+
+    void setBgoTriggers(const QString &id, const QString &orientation) { trigId = id; trigOrientation = orientation; }
+
+    void setBgmMutableString(const QString &s) { mutString = s; }
+
+    void setBgmClass(const QString &bgmClass) { bgmc = bgmClass; }
+
     void setPlatformStyle(BgPlatform::PlatformStyle style) { platformStyle = style; }
     void setPlatformAxis(BgPlatformPath::PlatformAxis axis) { platformAxis = axis; }
     void setPlatformClearTile(const QString &tile) { platformClrTile = tile; }
@@ -116,10 +121,11 @@ private:
     // Bg attributes (connected to main window's toolbox)
     int bgiFlags;
     int bgoFlags;
-    int trigId;
-    int trigOrientation;
-    int bgiTile;    // Doubles as mutable id due to Platz level format
-    int bgmc;
+    QString trigId;
+    QString trigOrientation;
+    int bgiTile;
+    QString mutString;
+    QString bgmc;
     BgPlatform::PlatformStyle platformStyle;
     BgPlatformPath::PlatformAxis platformAxis;
     QString platformClrTile;

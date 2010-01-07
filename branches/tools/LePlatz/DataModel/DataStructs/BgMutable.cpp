@@ -24,7 +24,7 @@ BgMutable::BgMutable()
 }
 
 BgMutable::BgMutable(const QList<QVariant> &data, BgInner *mutableLink, WorldItem *parent)
-    : BgInner(data, parent), customPayload(false)
+    : BgInner(data, parent), mMutableString(Platz::UNDEFINED), customPayload(false)
 {
     setMutator(mutableLink);
     incMutableCount();
@@ -38,6 +38,7 @@ WorldItem* BgMutable::createItem(const QList<QVariant> &data, WorldItem *parent)
         bgm->setFlags(flags());
         bgm->setTile(tile());
         bgm->setRelativeBoundingRect(relativeBoundingRect());
+        bgm->setMutableString(mutableString());
 
         if (customPayload)
             bgm->setCustomPayload(mutablePayload);
@@ -75,14 +76,6 @@ QString BgMutable::detailData() const
             QString::number(mutablePayload.right) + "," +
             QString::number(mutablePayload.top) + "," +
             QString::number(mutablePayload.btm);
-}
-
-QString BgMutable::mutableString() const
-{
-    if (tile() >= 0 && WorldItem::mutableIds.count() > tile())
-        return WorldItem::mutableIds.at(tile());
-    else
-        return Platz::UNDEFINED;
 }
 
 QRectF BgMutable::limitRect() const

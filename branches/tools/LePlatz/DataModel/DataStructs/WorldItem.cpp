@@ -119,6 +119,26 @@ WorldItem* WorldItem::child(int row) const
         return 0;
 }
 
+WorldItem* WorldItem::nextChild(WorldItem *w) const
+{
+    if (!w)
+        return 0;
+    if (w->row() < (childCount()-1))
+        return child(w->row()+1);
+    else
+        return 0;
+}
+
+WorldItem* WorldItem::prevChild(WorldItem *w) const
+{
+    if (!w)
+        return 0;
+    if (w->row() > 0 && w->row() < childCount())
+        return child(w->row()-1);
+    else
+        return 0;
+}
+
 const QList<WorldItem*>* WorldItem::children(void)
 {
     return &childItems;

@@ -167,12 +167,12 @@
     </property>
     <widget class="QMenu" name="menuSnapToX">
      <property name="title">
-      <string>Snap to X...</string>
+      <string>Snap to X</string>
      </property>
     </widget>
     <widget class="QMenu" name="menuSnapToY">
      <property name="title">
-      <string>Snap to Y...</string>
+      <string>Snap to Y</string>
      </property>
     </widget>
     <addaction name="actionUndo"/>
@@ -186,6 +186,8 @@
     <addaction name="separator"/>
     <addaction name="menuSnapToX"/>
     <addaction name="menuSnapToY"/>
+    <addaction name="separator"/>
+    <addaction name="actionFindReplace"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1902,6 +1904,14 @@
    </property>
    <property name="toolTip">
     <string>Lock/Unlock BG Ordering for selected slice</string>
+   </property>
+  </action>
+  <action name="actionFindReplace">
+   <property name="text">
+    <string>Find/Replace...</string>
+   </property>
+   <property name="toolTip">
+    <string>Find/Replace Src Defines</string>
    </property>
   </action>
  </widget>
