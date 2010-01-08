@@ -1,6 +1,9 @@
 
 /***** Change Log *****/
 
+Platz 1.1.0
+- Bg Directory no longer requires begin, common, and end elements.
+
 Platz 1.0.0
 - Demo game created with LePlatz v1.0 available:
 	http://code.google.com/p/uzebox-paul/downloads/list

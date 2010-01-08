@@ -683,13 +683,6 @@ inline u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2) {
 	if ((r1->btm < r2->top) || (r1->right < r2->left) || (r1->left > r2->right) || (r1->top > r2->btm))
 		return 0;
 	return 1;
-/*
-	if (r1->btm < r2->top) return 0;
-	if (r1->right < r2->left) return 0;
-	if (r1->left > r2->right) return 0;
-	if (r1->top > r2->btm) return 0;
-	return 1;
-*/
 }
 
 // Determines if two rect's overlap (8-bit)
@@ -697,14 +690,6 @@ inline u8 PlatzRectsIntersect(const rect *r1, const rect *r2) {
 	if ((r1->btm < r2->top) || (r1->right < r2->left) || (r1->left > r2->right) || (r1->top > r2->btm))
 		return 0;
 	return 1;
-
-/*
-	if (r1->btm < r2->top) return 0;
-	if (r1->right < r2->left) return 0;
-	if (r1->left > r2->right) return 0;
-	if (r1->top > r2->btm) return 0;
-	return 1;
-*/
 }
 
 #if MAX_MOVING_PLATFORMS
@@ -805,7 +790,7 @@ u8 PlatzDetectMovingPlatformCollisions(platzActor *a, char *xDelta) {
 
 
 // Detects collisions between the player and background elements and adjusts their speed to avoid these collisions.
-// Also handles firing event triggers.
+// Also handles firing event triggers and mutable bg callbacks.
 u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	u8 colVal;		// Immediate collision flags
 	u8 retVal = 0;	// Aggregate collision flags
@@ -849,6 +834,7 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	rPost.top = rPre.top+yVel;
 	rPost.btm = rPre.btm+yVel;
 	trigPos = (pt16){rPost.left+a->bbx,rPost.top+a->bby};
+	sp = csp;
 	
 	// i: 0-1 Moving Platforms
 	// i: 2-3 Outer Bgs
@@ -926,16 +912,16 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 				rBg.right = bgo.r.right<<3;
 				rBg.top = bgo.r.top<<3;
 				rBg.btm = bgo.r.btm<<3;
+
+				// Because bgs are ordered left-to-right, we can break early
+				if (a->vx.dir == DIR_RIGHT && rBg.left > rPost.right)
+					break;
 			}
 
 			if (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust)) {
 				rBg.left += SCRL_WID;
 				rBg.right += SCRL_WID;
 			}
-
-			// Because bgs are ordered left-to-right, we can break early
-			if (a->vx.dir == DIR_RIGHT && rBg.left > rPost.right)
-				break;
 
 			if (PlatzRectsIntersect16(&rPost,&rBg)) {
 				// Triggers
@@ -1064,7 +1050,7 @@ void PlatzSetVelocity(velocity *v, char val, u8 *trPos) {
 
 #if MAX_MOVING_PLATFORMS
 
-#define PD_INDEX_OFFSET 11	// Byte offset of pdIndex in bgDirectory
+#define PD_INDEX_OFFSET 8	// Byte offset of pdIndex in bgDirectory
 // Loads all moving platforms for the visible slices. These currently manage their own pointers, but
 // this is expensive - may change to bgDirectory pointing to relevant platforms
 void PlatzLoadMovingPlatforms(u8 sp, char dir) {
@@ -1339,8 +1325,8 @@ void PlatzDrawMovingPlatforms(u8 axis) {
 #if MAX_ANIMATED_BGS
 
 #define BGO_INDEX_OFFSET 	3	// Byte offset of bgoIndex in bgDirectory
-#define AC_INDEX_OFFSET		9	// Byte offset of animCount in bgDirectory
-#define AI_INDEX_OFFSET		10	// Byte offset of animIndex in bgDirectory
+#define AC_INDEX_OFFSET		6	// Byte offset of animCount in bgDirectory
+#define AI_INDEX_OFFSET		7	// Byte offset of animIndex in bgDirectory
 #define BGI_INDEX_OFFSET	2	// Byte offset of bgInner index in bgOuter
 
 // Loads all animated bgs for the visible slices.
