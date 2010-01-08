@@ -186,6 +186,13 @@ int BgOuter::mutableCount(int index) const
     return count;
 }
 
+WorldItem* BgOuter::validateState()
+{
+    if ((flags()&BGT) && (trigger().isEmpty() || triggerOrientation().isEmpty()))
+        return this;
+    return WorldItem::validateState();
+}
+
 BgOuter::~BgOuter()
 {
      WorldItem::worldStats.outerCount--;

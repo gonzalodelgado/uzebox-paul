@@ -63,6 +63,7 @@ private:
     void readPlatformPath();
     void readPlatform();
     void readUnknownElement();
+    void legacySupport_v1_0(int type);
     QString readString(const QString &str);
     QRectF readRect(const QString &eleName);
     Platz::MutablePayload readMutablePayload(const QString &eleName);
@@ -71,6 +72,7 @@ private:
     QStack<WorldItem*> worldPtr;
     int sliceCount;
     BgInner *prevBgi;
+    QString version;
 };
 
 #endif // PLATZREADER_H

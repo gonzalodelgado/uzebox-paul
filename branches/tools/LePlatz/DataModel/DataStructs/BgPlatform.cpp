@@ -117,6 +117,13 @@ qreal BgPlatform::offsetX() const
         return 0.0;
 }
 
+WorldItem* BgPlatform::validateState()
+{
+    if (clearTile().isEmpty())
+        return this;
+    return WorldItem::validateState();
+}
+
 BgPlatform::~BgPlatform()
 {
      WorldItem::worldStats.platformCount--;

@@ -92,21 +92,21 @@ namespace Platz
     };
 
     // File formats
-    const QString SUPPORTED_IMAGE_FORMATS_STR = "LePlatz Image Formats (*.bmp *.jpg *.png)";
+    const QString SUPPORTED_IMAGE_FORMATS_STR = "LePlatz Image Formats (*.bmp *.png)";
     const QString LEPLATZ_SETTINGS_FORMATS_STR = "LePlatz Settings Files (*.xml)";
     const QString PLATZ_INCLUDE_FORMATS_STR = "Platz Include Files (*.inc)";
     const QString SUPPORTED_EXE_FORMATS_STR = "Executable Files (*)";
     const QString INTEL_HEX_FILES_STR = "Intel Hex Files (*.hex)";
     const QString UNDEFINED = "<LEPLATZ_UNDEFINED>";
-    const QStringList SUPPORTED_IMAGE_FORMATS(QStringList() << "*.bmp" << "*.jpg" << "*.png");
-    const QStringList SUPPORTED_IMAGE_FORMATS_EXTS(QStringList() << ".bmp" << ".jpg" << ".png");
+    const QStringList SUPPORTED_IMAGE_FORMATS(QStringList() << "*.bmp" << "*.png");
+    const QStringList SUPPORTED_IMAGE_FORMATS_EXTS(QStringList() << ".bmp" << ".png");
     const QString MUTABLE_IDS_MARKER = "_LePlatz_Mutable_Bg_Ids_";
     const QString MUTABLE_CLASS_IDS_MARKER = "_LePlatz_Mutable_Class_Ids_";
     const QString TRIGGER_IDS_MARKER = "_LePlatz_Trigger_Ids_";
     const QString PLATFORM_CLR_TILE_IDS_MARKER = "_LePlatz_Platform_Clear_Tiles_Ids_";
     const QString TRIGGER_NML = "ORI_LRUD";
     const QString TRIGGER_REV = "ORI_RLDU";
-    const QString VERSION_STR = "v1.0";
+    const QStringList LEPLATZ_VERSIONS(QStringList() << "1.0" << "1.1");
     const int MAX_RECENT_PROJECTS = 8;
     const int CLEAR = 65535;
 }

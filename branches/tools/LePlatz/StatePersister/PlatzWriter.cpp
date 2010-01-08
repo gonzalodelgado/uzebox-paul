@@ -47,7 +47,7 @@ bool PlatzWriter::saveWorld(const QString &path)
     writeStartDocument();
     writeDTD("<!DOCTYPE LePlatz>");
     writeStartElement("LePlatz");
-    writeAttribute("version", "1.0");
+    writeAttribute("version", Platz::LEPLATZ_VERSIONS.last());
     writeSettings();
     writeStartElement("World");
 
@@ -69,7 +69,7 @@ bool PlatzWriter::saveLePlatzSettings(const QString &path, const QByteArray &win
     writeStartDocument();
     writeDTD("<!DOCTYPE LePlatzSettings>");
     writeStartElement("LePlatz");
-    writeAttribute("version", "1.0");
+    writeAttribute("version", Platz::LEPLATZ_VERSIONS.last());
     writeStartElement("LePlatzSettings");
     writeTextElement("ScreenLayout", QString(winGeometry.toHex()));
     writeTextElement("WinLayout", QString(winLayout.toHex()));
@@ -100,11 +100,6 @@ void PlatzWriter::writeSettings()
     writeAttribute("width", QString::number(settings->sliceSize().width()));
     writeAttribute("height", QString::number(settings->sliceSize().height()));
     writeEndElement();  // SliceSize
-    writeStartElement("SpriteSize");
-    writeAttribute("width", QString::number(settings->spriteSize().width()));
-    writeAttribute("height", QString::number(settings->spriteSize().height()));
-    writeEndElement();  // SpriteSize
-    writeTextElement("ImageFormat", settings->imageFormat());
     writeTextElement("SlicePath", settings->slicePath());
     writeTextElement("TilePath", settings->tilePath());
     writeTextElement("MapPath", settings->mapPath());
@@ -147,8 +142,11 @@ void PlatzWriter::writeItem(WorldItem *item)
             writeStartElement("BgOuter");
             writeAttribute("flags", QString::number(bgo->flags()));
             writeTextElement("Title", "BgOuter");
-            writeTextElement("Trigger", bgo->trigger());
-            writeTextElement("TriggerOri", bgo->triggerOrientation());
+
+            if (bgo->flags()&BgOuter::BGT) {
+                writeTextElement("Trigger", bgo->trigger());
+                writeTextElement("TriggerOri", bgo->triggerOrientation());
+            }
             writeBounds(bgo->boundingRect());
             foreach(WorldItem *child, *item->children())
                 writeItem(child);

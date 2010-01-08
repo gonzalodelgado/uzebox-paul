@@ -54,7 +54,7 @@ WorldItem* BgMutable::createItem(const QList<QVariant> &data, WorldItem *parent)
 WorldItem* BgMutable::validateState()
 {
     // BgMutables must follow a BgInner and be linked to it
-    if (!parent() || !row() || !mutator() || mutator() != parent()->child(row()-1))
+    if (!parent() || !row() || !mutator() || mutator() != parent()->child(row()-1) || mutableString().isEmpty())
         return this;
     return 0;
 }

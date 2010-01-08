@@ -48,6 +48,7 @@ class Settings : public QObject
         int maxRecentProjects() { return mMaxRecentProjects; }
 
         // Project - get
+        QString resolvePath(const QString &path);
         QString projectName();
         const QString& projectPath() { return mProjectPath; }
         const QString& imageFormat() { return mImageFormat; }
@@ -123,7 +124,6 @@ class Settings : public QObject
         int showNewProjectDialog(QWidget *parent);
         int showEditSettingsDialog(QWidget *parent);
     private:
-        QString resolvePath(const QString &path);
         // General
         int mMaxRecentProjects;
         // Project

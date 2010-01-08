@@ -357,7 +357,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(settings, SIGNAL(videoModeChanged(int)), this, SLOT(setVideoMode(int)));
     connect(settings, SIGNAL(tileWidthChanged(int)), ui->graphicsView, SLOT(setTileWidth(int)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), this, SLOT(setSliceSize(QSize)));
-    connect(settings, SIGNAL(spriteSizeChanged(QSize)), this, SLOT(setSpriteSize(QSize)));
+    //connect(settings, SIGNAL(spriteSizeChanged(QSize)), this, SLOT(setSpriteSize(QSize)));
 
     // Restore window state
     QByteArray winGeometry, winLayout;
@@ -391,13 +391,13 @@ void PlatzWin::aboutLePlatz()
 {
     QPointer<About> about = new About(this);
     about->setWindowTitle("About LePlatz");
-    about->setTitle("LePlatz " + VERSION_STR);
+    about->setTitle("LePlatz v" + LEPLATZ_VERSIONS.last());
     about->setText("LePlatz is a Level Editor for the Platz Toolset. It allows developers to define, through a graphical interface, "
                    "the display of their Platz levels and how their characters interact within them. \n\nThis process was previously "
                    "done by hand in a text editor. LePlatz affords much a more efficient and iterative development cycle by significantly "
                    "reducing the overhead associated with Platz level design.");
     about->setUrl("URL: <a href=\"http://uzebox.org/wiki/index.php?title=LePlatz_Level_Editor\">LePlatz: Platz Level Editor</a>");
-    about->setPixmap(QPixmap(":/misc/LePlatzLogo_sml.png"));
+    about->setPixmap(QPixmap(":/misc/LePlatzLogo.png"));
     about->exec();
     delete about;
 }
@@ -419,7 +419,7 @@ void PlatzWin::aboutPlatz()
                     "traditional maps. This affords huge levels with the potential for up to 255 unique screens (world slices in Platz "
                     "terminology) of level data, any of which may be repeated multiple times for no extra flash outlay.");
     about->setUrl("URL: <a href=\"http://uzebox.org/wiki/index.php?title=Platz_Toolset\">Platz Toolset</a>");
-    about->setPixmap(QPixmap(":/misc/PlatzLogo_sml.png"));
+    about->setPixmap(QPixmap(":/misc/PlatzLogo.png"));
     about->exec();
     delete about;
 }
@@ -985,7 +985,6 @@ void PlatzWin::loadResources(QString &msg)
     if (!dir.exists()) {
         msg += ((msg.isEmpty())?"":", ");
         msg += "Src defines";
-
     } else {
         SourceParser parser;
         WorldItem::mutableIds = parser.parseForStrings(srcFolder, MUTABLE_IDS_MARKER);
@@ -1043,7 +1042,7 @@ void PlatzWin::compileWorld()
     QApplication::setOverrideCursor(Qt::WaitCursor);
     WorldCompiler wc(model->root());
     wc.setSliceSize(sliceSize);
-    wc.setSpriteSize(spriteSize);
+    //wc.setSpriteSize(spriteSize);
     wc.setTileWidth(settings->tileWidth());
 
     if (wc.compileWorld(&file, projectName))

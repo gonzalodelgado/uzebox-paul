@@ -62,6 +62,7 @@ public:
     QString triggerOrientation() const { return mTriggerOrientation; }
     void setTriggerOrientation(const QString &trigOri) { mTriggerOrientation = trigOri; }
     void setGraphicalRepresentation(PlatzGraphicsItem *item);
+    WorldItem* validateState();
 private:
     QString bgOuterData;
     int bgFlags;

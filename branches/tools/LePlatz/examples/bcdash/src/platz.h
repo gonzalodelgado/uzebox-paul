@@ -206,9 +206,6 @@ typedef struct bgDirectory {
 	u8 objCount;				// The # of objects in the slice
 	u16 bgoIndex;				// Index into pgmBgs flash array
 	u8 bgoCount;				// The # of background elements in the slice
-	u8 bgoBeginCount;			// The # of left-to-right seam collision bgs
-	u8 bgoCommonCount;			// The # of right-to-left seam collision bgs common to begin/end
-	u8 bgoEndIndex;				// Points to right-to-left seam collision bgs specific to end. Combined with bgoCommonIndex, prevents repeating bgs.
 	u8 animCount;				// The # of animated background elements in the slice (always the first elements in the slice for easy loading)	
 	u8 animIndex;				// Index into pgmAnimDir
 	u8 pdIndex;					// Index into platforms directory (PF_ZERO if none)

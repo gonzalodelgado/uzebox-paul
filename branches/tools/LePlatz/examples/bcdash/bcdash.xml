@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE LePlatz>
-<LePlatz version="1.0">
+<LePlatz version="1.1">
     <ProjectSettings>
         <VideoMode mode="3"/>
         <SliceSize width="256" height="200"/>
-        <SpriteSize width="24" height="16"/>
-        <ImageFormat>.png</ImageFormat>
         <SlicePath>./art/slices/</SlicePath>
         <TilePath>./art/tiles.png</TilePath>
         <MapPath>./art/maps.png</MapPath>
@@ -28,8 +26,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>0</Left>
                         <Top>80</Top>
@@ -57,8 +53,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>88</Left>
                         <Top>16</Top>
@@ -77,8 +71,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>128</Left>
                         <Top>16</Top>
@@ -97,8 +89,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>152</Left>
                         <Top>16</Top>
@@ -128,8 +118,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>224</Left>
                         <Top>0</Top>
@@ -312,8 +300,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>256</Left>
                         <Top>80</Top>
@@ -350,8 +336,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>328</Left>
                         <Top>0</Top>
@@ -370,8 +354,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>336</Left>
                         <Top>0</Top>
@@ -390,8 +372,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>336</Left>
                         <Top>8</Top>
@@ -439,8 +419,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>464</Left>
                         <Top>184</Top>
@@ -459,8 +437,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>464</Left>
                         <Top>0</Top>
@@ -479,8 +455,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>464</Left>
                         <Top>80</Top>
@@ -571,8 +545,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>512</Left>
                         <Top>184</Top>
@@ -591,8 +563,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>512</Left>
                         <Top>80</Top>
@@ -640,8 +610,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>608</Left>
                         <Top>80</Top>
@@ -660,8 +628,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>608</Left>
                         <Top>96</Top>
@@ -707,8 +673,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_2</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>672</Left>
                         <Top>136</Top>
@@ -763,8 +727,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>672</Left>
                         <Top>96</Top>
@@ -783,8 +745,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>712</Left>
                         <Top>112</Top>
@@ -848,8 +808,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>768</Left>
                         <Top>136</Top>
@@ -904,8 +862,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>800</Left>
                         <Top>104</Top>
@@ -940,8 +896,6 @@
                 </BgOuter>
                 <BgOuter flags="9">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>800</Left>
                         <Top>120</Top>
@@ -976,8 +930,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>928</Left>
                         <Top>96</Top>
@@ -996,8 +948,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>944</Left>
                         <Top>80</Top>
@@ -1107,8 +1057,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1024</Left>
                         <Top>136</Top>
@@ -1163,8 +1111,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1056</Left>
                         <Top>88</Top>
@@ -1183,8 +1129,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1184</Left>
                         <Top>184</Top>
@@ -1203,8 +1147,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>1184</Left>
                         <Top>168</Top>
@@ -1224,8 +1166,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1200</Left>
                         <Top>80</Top>
@@ -1289,8 +1229,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>1280</Left>
                         <Top>136</Top>
@@ -1345,8 +1283,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1328</Left>
                         <Top>72</Top>
@@ -1365,8 +1301,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1344</Left>
                         <Top>56</Top>
@@ -1386,8 +1320,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1408</Left>
                         <Top>56</Top>
@@ -1406,8 +1338,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1496</Left>
                         <Top>48</Top>
@@ -1426,8 +1356,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1504</Left>
                         <Top>48</Top>
@@ -1455,8 +1383,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1504</Left>
                         <Top>152</Top>
@@ -1475,8 +1401,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1504</Left>
                         <Top>152</Top>
@@ -1556,8 +1480,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>1536</Left>
                         <Top>152</Top>
@@ -1576,8 +1498,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1536</Left>
                         <Top>48</Top>
@@ -1623,8 +1543,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1576</Left>
                         <Top>184</Top>
@@ -1643,8 +1561,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1576</Left>
                         <Top>176</Top>
@@ -1664,8 +1580,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1656</Left>
                         <Top>32</Top>
@@ -1775,8 +1689,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1792</Left>
                         <Top>96</Top>
@@ -1831,8 +1743,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>1792</Left>
                         <Top>48</Top>
@@ -1851,8 +1761,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1848</Left>
                         <Top>32</Top>
@@ -1887,8 +1795,6 @@
                 </BgOuter>
                 <BgOuter flags="9">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>1824</Left>
                         <Top>48</Top>
@@ -1923,8 +1829,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1888</Left>
                         <Top>48</Top>
@@ -1943,8 +1847,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>1960</Left>
                         <Top>32</Top>
@@ -1979,8 +1881,6 @@
                 </BgOuter>
                 <BgOuter flags="9">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>1936</Left>
                         <Top>48</Top>
@@ -2015,8 +1915,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>2000</Left>
                         <Top>48</Top>
@@ -2062,8 +1960,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2048</Left>
                         <Top>48</Top>
@@ -2118,8 +2014,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>2048</Left>
                         <Top>168</Top>
@@ -2174,8 +2068,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2048</Left>
                         <Top>136</Top>
@@ -2194,8 +2086,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2112</Left>
                         <Top>48</Top>
@@ -2214,8 +2104,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2112</Left>
                         <Top>96</Top>
@@ -2325,8 +2213,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>2304</Left>
                         <Top>96</Top>
@@ -2381,8 +2267,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2456</Left>
                         <Top>32</Top>
@@ -2402,8 +2286,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>2552</Left>
                         <Top>64</Top>
@@ -2496,8 +2378,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2560</Left>
                         <Top>64</Top>
@@ -2543,8 +2423,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2560</Left>
                         <Top>152</Top>
@@ -2563,8 +2441,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2632</Left>
                         <Top>136</Top>
@@ -2608,8 +2484,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2632</Left>
                         <Top>64</Top>
@@ -2639,8 +2513,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>2680</Left>
                         <Top>128</Top>
@@ -2668,8 +2540,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2696</Left>
                         <Top>112</Top>
@@ -2689,8 +2559,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2744</Left>
                         <Top>128</Top>
@@ -2709,8 +2577,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2744</Left>
                         <Top>144</Top>
@@ -2738,8 +2604,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2776</Left>
                         <Top>144</Top>
@@ -2758,8 +2622,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2776</Left>
                         <Top>160</Top>
@@ -2823,8 +2685,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2816</Left>
                         <Top>160</Top>
@@ -2852,8 +2712,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2840</Left>
                         <Top>160</Top>
@@ -2872,8 +2730,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2840</Left>
                         <Top>176</Top>
@@ -2901,8 +2757,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2896</Left>
                         <Top>160</Top>
@@ -2922,8 +2776,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2928</Left>
                         <Top>16</Top>
@@ -2943,8 +2795,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2944</Left>
                         <Top>112</Top>
@@ -2963,8 +2813,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2952</Left>
                         <Top>112</Top>
@@ -2992,8 +2840,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>2984</Left>
                         <Top>96</Top>
@@ -3013,8 +2859,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3000</Left>
                         <Top>64</Top>
@@ -3033,8 +2877,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3008</Left>
                         <Top>152</Top>
@@ -3053,8 +2895,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3008</Left>
                         <Top>72</Top>
@@ -3073,8 +2913,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3008</Left>
                         <Top>64</Top>
@@ -3093,8 +2931,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3024</Left>
                         <Top>72</Top>
@@ -3122,8 +2958,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3032</Left>
                         <Top>144</Top>
@@ -3189,8 +3023,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3072</Left>
                         <Top>152</Top>
@@ -3209,8 +3041,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3072</Left>
                         <Top>72</Top>
@@ -3247,8 +3077,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3072</Left>
                         <Top>56</Top>
@@ -3283,8 +3111,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3104</Left>
                         <Top>160</Top>
@@ -3328,8 +3154,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3104</Left>
                         <Top>184</Top>
@@ -3359,8 +3183,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3104</Left>
                         <Top>168</Top>
@@ -3380,8 +3202,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3184</Left>
                         <Top>48</Top>
@@ -3416,8 +3236,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3184</Left>
                         <Top>64</Top>
@@ -3445,8 +3263,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3184</Left>
                         <Top>152</Top>
@@ -3465,8 +3281,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3184</Left>
                         <Top>168</Top>
@@ -3485,8 +3299,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3248</Left>
                         <Top>136</Top>
@@ -3506,8 +3318,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3272</Left>
                         <Top>136</Top>
@@ -3527,8 +3337,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3296</Left>
                         <Top>112</Top>
@@ -3612,8 +3420,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3328</Left>
                         <Top>112</Top>
@@ -3632,8 +3438,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3328</Left>
                         <Top>168</Top>
@@ -3652,8 +3456,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3344</Left>
                         <Top>136</Top>
@@ -3690,8 +3492,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3328</Left>
                         <Top>56</Top>
@@ -3719,8 +3519,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3344</Left>
                         <Top>120</Top>
@@ -3755,8 +3553,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3432</Left>
                         <Top>136</Top>
@@ -3811,8 +3607,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3472</Left>
                         <Top>136</Top>
@@ -3831,8 +3625,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3472</Left>
                         <Top>152</Top>
@@ -3851,8 +3643,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3472</Left>
                         <Top>152</Top>
@@ -3950,8 +3740,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3584</Left>
                         <Top>152</Top>
@@ -3970,8 +3758,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3584</Left>
                         <Top>136</Top>
@@ -3990,8 +3776,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3584</Left>
                         <Top>56</Top>
@@ -4037,8 +3821,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3664</Left>
                         <Top>152</Top>
@@ -4057,8 +3839,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3696</Left>
                         <Top>120</Top>
@@ -4078,8 +3858,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3704</Left>
                         <Top>48</Top>
@@ -4098,8 +3876,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3712</Left>
                         <Top>48</Top>
@@ -4127,8 +3903,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3744</Left>
                         <Top>176</Top>
@@ -4147,8 +3921,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3816</Left>
                         <Top>152</Top>
@@ -4231,8 +4003,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3840</Left>
                         <Top>152</Top>
@@ -4251,8 +4021,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3840</Left>
                         <Top>48</Top>
@@ -4291,8 +4059,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3872</Left>
                         <Top>136</Top>
@@ -4311,8 +4077,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3872</Left>
                         <Top>72</Top>
@@ -4331,8 +4095,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3880</Left>
                         <Top>192</Top>
@@ -4351,8 +4113,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3880</Left>
                         <Top>176</Top>
@@ -4372,8 +4132,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3896</Left>
                         <Top>32</Top>
@@ -4408,8 +4166,6 @@
                 </BgOuter>
                 <BgOuter flags="9">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3872</Left>
                         <Top>48</Top>
@@ -4444,8 +4200,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3872</Left>
                         <Top>64</Top>
@@ -4480,8 +4234,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3920</Left>
                         <Top>128</Top>
@@ -4501,8 +4253,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3936</Left>
                         <Top>120</Top>
@@ -4522,8 +4272,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3944</Left>
                         <Top>152</Top>
@@ -4542,8 +4290,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3952</Left>
                         <Top>48</Top>
@@ -4571,8 +4317,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>3968</Left>
                         <Top>48</Top>
@@ -4591,8 +4335,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>3968</Left>
                         <Top>64</Top>
@@ -4647,8 +4389,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>4008</Left>
                         <Top>48</Top>
@@ -4676,8 +4416,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4008</Left>
                         <Top>32</Top>
@@ -4697,8 +4435,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4024</Left>
                         <Top>176</Top>
@@ -4717,8 +4453,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4040</Left>
                         <Top>48</Top>
@@ -4738,8 +4472,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>4056</Left>
                         <Top>0</Top>
@@ -4758,8 +4490,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4064</Left>
                         <Top>96</Top>
@@ -4778,8 +4508,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>4064</Left>
                         <Top>0</Top>
@@ -4843,8 +4571,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4096</Left>
                         <Top>24</Top>
@@ -4863,8 +4589,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>4096</Left>
                         <Top>0</Top>
@@ -4964,8 +4688,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4096</Left>
                         <Top>184</Top>
@@ -4984,8 +4706,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4128</Left>
                         <Top>24</Top>
@@ -5013,8 +4733,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4176</Left>
                         <Top>24</Top>
@@ -5042,8 +4760,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4200</Left>
                         <Top>120</Top>
@@ -5071,8 +4787,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4248</Left>
                         <Top>120</Top>
@@ -5100,8 +4814,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4272</Left>
                         <Top>24</Top>
@@ -5129,8 +4841,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4320</Left>
                         <Top>24</Top>
@@ -5233,8 +4943,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4352</Left>
                         <Top>184</Top>
@@ -5253,8 +4961,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>4352</Left>
                         <Top>0</Top>
@@ -5354,8 +5060,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4352</Left>
                         <Top>24</Top>
@@ -5374,8 +5078,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4384</Left>
                         <Top>24</Top>
@@ -5403,8 +5105,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4432</Left>
                         <Top>24</Top>
@@ -5432,8 +5132,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4456</Left>
                         <Top>120</Top>
@@ -5461,8 +5159,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4504</Left>
                         <Top>120</Top>
@@ -5490,8 +5186,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4528</Left>
                         <Top>24</Top>
@@ -5519,8 +5213,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4576</Left>
                         <Top>24</Top>
@@ -5623,8 +5315,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>4608</Left>
                         <Top>24</Top>
@@ -5643,8 +5333,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4608</Left>
                         <Top>0</Top>
@@ -5672,8 +5360,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4608</Left>
                         <Top>144</Top>
@@ -5710,8 +5396,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4640</Left>
                         <Top>0</Top>
@@ -5757,8 +5441,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4680</Left>
                         <Top>0</Top>
@@ -5804,8 +5486,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4720</Left>
                         <Top>0</Top>
@@ -5842,8 +5522,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4720</Left>
                         <Top>112</Top>
@@ -5880,8 +5558,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4736</Left>
                         <Top>0</Top>
@@ -5900,8 +5576,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4736</Left>
                         <Top>64</Top>
@@ -5956,8 +5630,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4776</Left>
                         <Top>48</Top>
@@ -5976,8 +5648,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4784</Left>
                         <Top>48</Top>
@@ -6052,8 +5722,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4864</Left>
                         <Top>48</Top>
@@ -6090,8 +5758,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>4888</Left>
                         <Top>184</Top>
@@ -6110,8 +5776,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5000</Left>
                         <Top>56</Top>
@@ -6203,8 +5867,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>5120</Left>
                         <Top>184</Top>
@@ -6223,8 +5885,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5192</Left>
                         <Top>112</Top>
@@ -6243,8 +5903,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5288</Left>
                         <Top>16</Top>
@@ -6264,8 +5922,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>5328</Left>
                         <Top>112</Top>
@@ -6284,8 +5940,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5336</Left>
                         <Top>112</Top>
@@ -6386,8 +6040,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5376</Left>
                         <Top>112</Top>
@@ -6415,8 +6067,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>5488</Left>
                         <Top>56</Top>
@@ -6436,8 +6086,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5488</Left>
                         <Top>96</Top>
@@ -6538,8 +6186,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5632</Left>
                         <Top>112</Top>
@@ -6567,8 +6213,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5752</Left>
                         <Top>24</Top>
@@ -6660,8 +6304,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>5888</Left>
                         <Top>112</Top>
@@ -6689,8 +6331,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>6056</Left>
                         <Top>24</Top>
@@ -6791,8 +6431,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6144</Left>
                         <Top>112</Top>
@@ -6820,8 +6458,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6192</Left>
                         <Top>112</Top>
@@ -6840,8 +6476,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6192</Left>
                         <Top>128</Top>
@@ -6896,8 +6530,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6264</Left>
                         <Top>104</Top>
@@ -6916,8 +6548,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6344</Left>
                         <Top>72</Top>
@@ -7000,8 +6630,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6400</Left>
                         <Top>104</Top>
@@ -7020,8 +6648,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6400</Left>
                         <Top>128</Top>
@@ -7076,8 +6702,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6488</Left>
                         <Top>72</Top>
@@ -7097,8 +6721,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6544</Left>
                         <Top>104</Top>
@@ -7117,8 +6739,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6632</Left>
                         <Top>72</Top>
@@ -7183,8 +6803,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6656</Left>
                         <Top>128</Top>
@@ -7239,8 +6857,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>6688</Left>
                         <Top>104</Top>
@@ -7259,8 +6875,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>6784</Left>
                         <Top>72</Top>
@@ -7280,8 +6894,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6832</Left>
                         <Top>104</Top>
@@ -7354,8 +6966,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6912</Left>
                         <Top>128</Top>
@@ -7410,8 +7020,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6936</Left>
                         <Top>96</Top>
@@ -7430,8 +7038,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>6944</Left>
                         <Top>80</Top>
@@ -7451,8 +7057,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7032</Left>
                         <Top>88</Top>
@@ -7471,8 +7075,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7128</Left>
                         <Top>80</Top>
@@ -7545,8 +7147,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7168</Left>
                         <Top>128</Top>
@@ -7601,8 +7201,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7224</Left>
                         <Top>72</Top>
@@ -7621,8 +7219,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7264</Left>
                         <Top>56</Top>
@@ -7657,8 +7253,6 @@
                 </BgOuter>
                 <BgOuter flags="25">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7256</Left>
                         <Top>72</Top>
@@ -7693,8 +7287,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7296</Left>
                         <Top>176</Top>
@@ -7713,8 +7305,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7344</Left>
                         <Top>64</Top>
@@ -7733,8 +7323,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7352</Left>
                         <Top>64</Top>
@@ -7762,8 +7350,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7296</Left>
                         <Top>160</Top>
@@ -7783,8 +7369,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7232</Left>
                         <Top>56</Top>
@@ -7804,8 +7388,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7384</Left>
                         <Top>56</Top>
@@ -7870,8 +7452,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7424</Left>
                         <Top>64</Top>
@@ -7899,8 +7479,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7480</Left>
                         <Top>64</Top>
@@ -7919,8 +7497,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7480</Left>
                         <Top>104</Top>
@@ -7948,8 +7524,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7488</Left>
                         <Top>88</Top>
@@ -7969,8 +7543,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7528</Left>
                         <Top>96</Top>
@@ -8005,8 +7577,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7576</Left>
                         <Top>40</Top>
@@ -8025,8 +7595,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7584</Left>
                         <Top>24</Top>
@@ -8046,8 +7614,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7608</Left>
                         <Top>104</Top>
@@ -8066,8 +7632,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7608</Left>
                         <Top>136</Top>
@@ -8095,8 +7659,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7656</Left>
                         <Top>120</Top>
@@ -8116,8 +7678,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7664</Left>
                         <Top>0</Top>
@@ -8136,8 +7696,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7672</Left>
                         <Top>0</Top>
@@ -8219,8 +7777,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7680</Left>
                         <Top>0</Top>
@@ -8257,8 +7813,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7680</Left>
                         <Top>136</Top>
@@ -8286,8 +7840,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>7696</Left>
                         <Top>120</Top>
@@ -8333,8 +7885,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7704</Left>
                         <Top>136</Top>
@@ -8353,8 +7903,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7808</Left>
                         <Top>136</Top>
@@ -8382,8 +7930,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7816</Left>
                         <Top>0</Top>
@@ -8456,8 +8002,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7936</Left>
                         <Top>136</Top>
@@ -8485,8 +8029,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7936</Left>
                         <Top>0</Top>
@@ -8523,8 +8065,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>7952</Left>
                         <Top>120</Top>
@@ -8570,8 +8110,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>7960</Left>
                         <Top>136</Top>
@@ -8590,8 +8128,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8064</Left>
                         <Top>136</Top>
@@ -8619,8 +8155,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8072</Left>
                         <Top>0</Top>
@@ -8693,8 +8227,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8192</Left>
                         <Top>136</Top>
@@ -8722,8 +8254,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8192</Left>
                         <Top>0</Top>
@@ -8760,8 +8290,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>8208</Left>
                         <Top>120</Top>
@@ -8807,8 +8335,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8216</Left>
                         <Top>136</Top>
@@ -8827,8 +8353,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8320</Left>
                         <Top>136</Top>
@@ -8856,8 +8380,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8328</Left>
                         <Top>0</Top>
@@ -8930,8 +8452,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8448</Left>
                         <Top>0</Top>
@@ -8950,8 +8470,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>8448</Left>
                         <Top>0</Top>
@@ -8972,8 +8490,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>8448</Left>
                         <Top>136</Top>
@@ -9001,8 +8517,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8480</Left>
                         <Top>40</Top>
@@ -9021,8 +8535,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8488</Left>
                         <Top>24</Top>
@@ -9042,8 +8554,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8496</Left>
                         <Top>136</Top>
@@ -9062,8 +8572,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>8496</Left>
                         <Top>152</Top>
@@ -9118,8 +8626,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8584</Left>
                         <Top>56</Top>
@@ -9138,8 +8644,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8592</Left>
                         <Top>56</Top>
@@ -9158,8 +8662,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_2</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8592</Left>
                         <Top>64</Top>
@@ -9178,8 +8680,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8592</Left>
                         <Top>152</Top>
@@ -9306,8 +8806,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>8704</Left>
                         <Top>56</Top>
@@ -9326,8 +8824,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>8704</Left>
                         <Top>64</Top>
@@ -9346,8 +8842,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8704</Left>
                         <Top>152</Top>
@@ -9402,8 +8896,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8728</Left>
                         <Top>16</Top>
@@ -9479,8 +8971,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8960</Left>
                         <Top>56</Top>
@@ -9499,8 +8989,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8960</Left>
                         <Top>64</Top>
@@ -9519,8 +9007,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>8960</Left>
                         <Top>152</Top>
@@ -9575,8 +9061,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>8984</Left>
                         <Top>16</Top>
@@ -9596,8 +9080,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>9200</Left>
                         <Top>152</Top>
@@ -9641,8 +9123,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9200</Left>
                         <Top>56</Top>
@@ -9754,8 +9234,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>9216</Left>
                         <Top>152</Top>
@@ -9810,8 +9288,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9256</Left>
                         <Top>112</Top>
@@ -9852,8 +9328,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9384</Left>
                         <Top>112</Top>
@@ -9908,8 +9382,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9472</Left>
                         <Top>152</Top>
@@ -9964,8 +9436,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>9504</Left>
                         <Top>112</Top>
@@ -9984,8 +9454,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9592</Left>
                         <Top>112</Top>
@@ -10004,8 +9472,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9680</Left>
                         <Top>112</Top>
@@ -10071,8 +9537,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9728</Left>
                         <Top>152</Top>
@@ -10116,8 +9580,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>9760</Left>
                         <Top>112</Top>
@@ -10136,8 +9598,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9848</Left>
                         <Top>112</Top>
@@ -10156,8 +9616,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9936</Left>
                         <Top>112</Top>
@@ -10223,8 +9681,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>9984</Left>
                         <Top>152</Top>
@@ -10268,8 +9724,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>10016</Left>
                         <Top>112</Top>
@@ -10288,8 +9742,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10104</Left>
                         <Top>112</Top>
@@ -10308,8 +9760,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10192</Left>
                         <Top>112</Top>
@@ -10364,8 +9814,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10240</Left>
                         <Top>152</Top>
@@ -10420,8 +9868,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10264</Left>
                         <Top>128</Top>
@@ -10440,8 +9886,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10288</Left>
                         <Top>104</Top>
@@ -10460,8 +9904,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>10296</Left>
                         <Top>104</Top>
@@ -10489,8 +9931,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10336</Left>
                         <Top>96</Top>
@@ -10525,8 +9965,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10456</Left>
                         <Top>152</Top>
@@ -10581,8 +10019,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10456</Left>
                         <Top>104</Top>
@@ -10675,8 +10111,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10496</Left>
                         <Top>152</Top>
@@ -10720,8 +10154,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10520</Left>
                         <Top>128</Top>
@@ -10740,8 +10172,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10544</Left>
                         <Top>104</Top>
@@ -10760,8 +10190,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>10552</Left>
                         <Top>104</Top>
@@ -10789,8 +10217,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10592</Left>
                         <Top>96</Top>
@@ -10825,8 +10251,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10712</Left>
                         <Top>104</Top>
@@ -10856,8 +10280,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10712</Left>
                         <Top>152</Top>
@@ -10975,8 +10397,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10752</Left>
                         <Top>152</Top>
@@ -11020,8 +10440,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10776</Left>
                         <Top>128</Top>
@@ -11040,8 +10458,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10800</Left>
                         <Top>104</Top>
@@ -11060,8 +10476,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>10808</Left>
                         <Top>104</Top>
@@ -11089,8 +10503,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10848</Left>
                         <Top>96</Top>
@@ -11125,8 +10537,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10968</Left>
                         <Top>104</Top>
@@ -11156,8 +10566,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>10968</Left>
                         <Top>152</Top>
@@ -11264,8 +10672,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>11008</Left>
                         <Top>152</Top>
@@ -11320,8 +10726,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>11072</Left>
                         <Top>88</Top>
@@ -11340,8 +10744,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>11192</Left>
                         <Top>88</Top>
@@ -11425,8 +10827,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>11264</Left>
                         <Top>152</Top>
@@ -11470,8 +10870,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>11328</Left>
                         <Top>88</Top>
@@ -11490,8 +10888,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>11448</Left>
                         <Top>88</Top>
@@ -11575,8 +10971,6 @@
                 </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>11520</Left>
                         <Top>152</Top>
@@ -11620,8 +11014,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>11584</Left>
                         <Top>88</Top>
@@ -11640,8 +11032,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>11704</Left>
                         <Top>88</Top>
@@ -11714,8 +11104,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>11776</Left>
                         <Top>152</Top>
@@ -11770,8 +11158,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>11808</Left>
                         <Top>88</Top>
@@ -11790,8 +11176,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>11816</Left>
                         <Top>88</Top>
@@ -11891,8 +11275,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>12032</Left>
                         <Top>152</Top>
@@ -11936,8 +11318,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>12032</Left>
                         <Top>88</Top>
@@ -11967,8 +11347,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>12088</Left>
                         <Top>88</Top>
@@ -11987,8 +11365,6 @@
                 </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>12200</Left>
                         <Top>88</Top>
@@ -12007,8 +11383,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>12280</Left>
                         <Top>80</Top>
@@ -12128,8 +11502,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>12288</Left>
                         <Top>80</Top>
@@ -12220,8 +11592,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>12544</Left>
                         <Top>80</Top>
@@ -12312,8 +11682,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>12800</Left>
                         <Top>80</Top>
@@ -12404,8 +11772,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13056</Left>
                         <Top>80</Top>
@@ -12496,8 +11862,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger></Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13312</Left>
                         <Top>80</Top>
@@ -12525,8 +11889,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13384</Left>
                         <Top>16</Top>
@@ -12545,8 +11907,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13432</Left>
                         <Top>16</Top>
@@ -12565,8 +11925,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13456</Left>
                         <Top>16</Top>
@@ -12585,8 +11943,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>13480</Left>
                         <Top>16</Top>
@@ -12616,8 +11972,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13536</Left>
                         <Top>0</Top>
@@ -12780,8 +12134,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13568</Left>
                         <Top>168</Top>
@@ -12809,8 +12161,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13600</Left>
                         <Top>0</Top>
@@ -12829,8 +12179,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13608</Left>
                         <Top>0</Top>
@@ -12858,8 +12206,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13608</Left>
                         <Top>16</Top>
@@ -12878,8 +12224,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13608</Left>
                         <Top>72</Top>
@@ -12898,8 +12242,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13624</Left>
                         <Top>64</Top>
@@ -12918,8 +12260,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13624</Left>
                         <Top>40</Top>
@@ -12938,8 +12278,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13632</Left>
                         <Top>160</Top>
@@ -12958,8 +12296,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13672</Left>
                         <Top>72</Top>
@@ -12978,8 +12314,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13704</Left>
                         <Top>0</Top>
@@ -13025,8 +12359,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13704</Left>
                         <Top>16</Top>
@@ -13045,8 +12377,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13704</Left>
                         <Top>72</Top>
@@ -13083,8 +12413,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13720</Left>
                         <Top>56</Top>
@@ -13103,8 +12431,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13752</Left>
                         <Top>56</Top>
@@ -13141,8 +12467,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>13752</Left>
                         <Top>16</Top>
@@ -13188,8 +12512,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13776</Left>
                         <Top>72</Top>
@@ -13352,8 +12674,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_2</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>13824</Left>
                         <Top>104</Top>
@@ -13381,8 +12701,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>13824</Left>
                         <Top>88</Top>
@@ -13410,8 +12728,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>13928</Left>
                         <Top>16</Top>
@@ -13502,8 +12818,6 @@
                 <Title>Outer BGs</Title>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>14080</Left>
                         <Top>152</Top>
@@ -13531,8 +12845,6 @@
                 </BgOuter>
                 <BgOuter flags="5">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>14088</Left>
                         <Top>136</Top>
@@ -13542,8 +12854,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>14104</Left>
                         <Top>8</Top>
@@ -13562,8 +12872,6 @@
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>14168</Left>
                         <Top>152</Top>
@@ -13600,8 +12908,6 @@
                 </BgOuter>
                 <BgOuter flags="5">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_1</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>14224</Left>
                         <Top>136</Top>
@@ -13611,8 +12917,6 @@
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_CHECK_0</Trigger>
-                    <TriggerOri></TriggerOri>
                     <Bounds>
                         <Left>14240</Left>
                         <Top>136</Top>

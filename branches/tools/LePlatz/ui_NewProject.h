@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'NewProject.ui'
 **
-** Created: Thu 7. Jan 11:48:31 2010
+** Created: Fri 8. Jan 10:27:31 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -73,40 +73,36 @@ public:
     FocusSpinBox *spbOverlayLines;
     QSpacerItem *horizontalSpacer_5;
     QSpacerItem *verticalSpacer_10;
-    QLabel *lblLargestSprite;
-    QHBoxLayout *horizontalLayout_8;
-    FocusLineEdit *leSpriteWidth;
-    QLabel *lblSliceSizeX_2;
-    FocusLineEdit *leSpriteHeight;
-    QSpacerItem *horizontalSpacer;
 
     void setupUi(QDialog *NewProject)
     {
         if (NewProject->objectName().isEmpty())
             NewProject->setObjectName(QString::fromUtf8("NewProject"));
-        NewProject->resize(660, 500);
-        NewProject->setMinimumSize(QSize(660, 500));
-        NewProject->setMaximumSize(QSize(660, 500));
+        NewProject->resize(600, 460);
+        NewProject->setMinimumSize(QSize(600, 460));
+        NewProject->setMaximumSize(QSize(600, 460));
         line = new QFrame(NewProject);
         line->setObjectName(QString::fromUtf8("line"));
-        line->setGeometry(QRect(10, 450, 641, 20));
+        line->setGeometry(QRect(10, 412, 581, 20));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         buttonBox = new QDialogButtonBox(NewProject);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(490, 469, 156, 23));
+        buttonBox->setGeometry(QRect(430, 430, 156, 23));
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         lblContextualHelp = new QLabel(NewProject);
         lblContextualHelp->setObjectName(QString::fromUtf8("lblContextualHelp"));
-        lblContextualHelp->setGeometry(QRect(199, 390, 431, 61));
+        lblContextualHelp->setGeometry(QRect(150, 352, 431, 61));
         lblContextualHelp->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         lblContextualHelp->setWordWrap(true);
         lblLogoImg = new QLabel(NewProject);
         lblLogoImg->setObjectName(QString::fromUtf8("lblLogoImg"));
-        lblLogoImg->setGeometry(QRect(10, 12, 164, 371));
+        lblLogoImg->setGeometry(QRect(10, 10, 123, 335));
+        lblLogoImg->setMinimumSize(QSize(123, 335));
+        lblLogoImg->setMaximumSize(QSize(123, 335));
         groupBox = new QGroupBox(NewProject);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(190, 10, 448, 371));
+        groupBox->setGeometry(QRect(141, 10, 448, 335));
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -278,37 +274,6 @@ public:
 
         formLayout->setItem(12, QFormLayout::SpanningRole, verticalSpacer_10);
 
-        lblLargestSprite = new QLabel(groupBox);
-        lblLargestSprite->setObjectName(QString::fromUtf8("lblLargestSprite"));
-
-        formLayout->setWidget(13, QFormLayout::LabelRole, lblLargestSprite);
-
-        horizontalLayout_8 = new QHBoxLayout();
-        horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
-        leSpriteWidth = new FocusLineEdit(groupBox);
-        leSpriteWidth->setObjectName(QString::fromUtf8("leSpriteWidth"));
-        leSpriteWidth->setMaximumSize(QSize(50, 20));
-
-        horizontalLayout_8->addWidget(leSpriteWidth);
-
-        lblSliceSizeX_2 = new QLabel(groupBox);
-        lblSliceSizeX_2->setObjectName(QString::fromUtf8("lblSliceSizeX_2"));
-
-        horizontalLayout_8->addWidget(lblSliceSizeX_2);
-
-        leSpriteHeight = new FocusLineEdit(groupBox);
-        leSpriteHeight->setObjectName(QString::fromUtf8("leSpriteHeight"));
-        leSpriteHeight->setMaximumSize(QSize(50, 20));
-
-        horizontalLayout_8->addWidget(leSpriteHeight);
-
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_8->addItem(horizontalSpacer);
-
-
-        formLayout->setLayout(13, QFormLayout::FieldRole, horizontalLayout_8);
-
 
         retranslateUi(NewProject);
 
@@ -331,8 +296,6 @@ public:
         pbSrcPath->setText(QApplication::translate("NewProject", "...", 0, QApplication::UnicodeUTF8));
         lvlVideoMode->setText(QApplication::translate("NewProject", "Video Mode:", 0, QApplication::UnicodeUTF8));
         lblOverlayLines->setText(QApplication::translate("NewProject", "Overlay Lines:", 0, QApplication::UnicodeUTF8));
-        lblLargestSprite->setText(QApplication::translate("NewProject", "Largest Sprite:", 0, QApplication::UnicodeUTF8));
-        lblSliceSizeX_2->setText(QApplication::translate("NewProject", "x", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

@@ -46,6 +46,7 @@ public:
     bool validChild(const WorldItem::WorldItemType &type) const;
     WorldItem::WorldItemType type() const;
     qreal offsetX() const;
+    WorldItem* validateState();
 
     QString clearTile() { return clrTile; }
     void setClearTile(const QString &tile) { clrTile = tile; }

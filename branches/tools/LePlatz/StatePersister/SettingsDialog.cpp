@@ -35,8 +35,6 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
 
     // Initial settings
     ui->splitter->setSizes(QList<int>() << 140 << 360);
-    ui->lePsSpriteWidth->setValidator(new QIntValidator(0, 128, ui->lePsSpriteWidth));
-    ui->lePsSpriteHeight->setValidator(new QIntValidator(0, 128, ui->lePsSpriteHeight));
 
     if (settings->videoMode() == 2)
         maxOverlayLines = settings->VMODE2_SCREEN_TILES_V;
@@ -50,6 +48,7 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     projectSettings->setText(0, "Project Settings");
     QTreeWidgetItem *lePlatzSettings = new QTreeWidgetItem(ui->treeWidget);
     lePlatzSettings->setText(0, "LePlatz Settings");
+    ui->treeWidget->setHeaderLabel("");
     ui->twPs->setHeaderLabels(QStringList() << QString("Name") << QString("Value"));
     ui->twPs->header()->resizeSection(0, 140);
     ui->twLps->setHeaderLabels(QStringList() << QString("Name") << QString("Value"));
@@ -59,8 +58,6 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
             << QString("%1\tOverlay Lines: %2").arg(settings->videoMode()).arg(ui->spbOverlayLines->value()))
             << new QTreeWidgetItem(QStringList() << QString("Slice Size") << QString("Width: %1\tHeight: %2").arg(
             settings->sliceSize().width()).arg(settings->sliceSize().height()))
-            << new QTreeWidgetItem(QStringList() << QString("Largest Sprite") << QString("Width: %1\tHeight: %2").arg(
-            settings->spriteSize().width()).arg(settings->spriteSize().height()))
             << new QTreeWidgetItem(QStringList() << QString("Slice Path") << settings->slicePath())
             << new QTreeWidgetItem(QStringList() << QString("Tile Path") << settings->tilePath())
             << new QTreeWidgetItem(QStringList() << QString("Map Path") << settings->mapPath())
@@ -78,8 +75,6 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     ui->twLps->insertTopLevelItems(0, items);
 
     // Populate stacked widgets
-    ui->lePsSpriteWidth->setText(QString::number(settings->spriteSize().width()));
-    ui->lePsSpriteHeight->setText(QString::number(settings->spriteSize().height()));
     ui->leSlicePath->setText(settings->slicePath());
     ui->leTilePath->setText(settings->tilePath());
     ui->leMapPath->setText(settings->mapPath());
@@ -92,9 +87,9 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     ui->leEmuExePath->setText(settings->emuExePath());
 
     // Hook everything up
-    connect(ui->pbApply, SIGNAL(pressed()), this, SLOT(applySettings()));
-    connect(ui->pbOk, SIGNAL(pressed()), this, SLOT(okSettings()));
-    connect(ui->pbCancel, SIGNAL(pressed()), this, SLOT(reject()));
+    connect(ui->pbApply, SIGNAL(clicked()), this, SLOT(applySettings()));
+    connect(ui->pbOk, SIGNAL(clicked()), this, SLOT(okSettings()));
+    connect(ui->pbCancel, SIGNAL(clicked()), this, SLOT(reject()));
     connect(ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
             this, SLOT(settingSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     connect(ui->twPs, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
@@ -103,8 +98,6 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
             this, SLOT(settingLpsItemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     // Tree updates
     connect(ui->spbOverlayLines, SIGNAL(valueChanged(QString)), this, SLOT(updateTrees(QString)));
-    connect(ui->lePsSpriteWidth, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
-    connect(ui->lePsSpriteHeight, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leSlicePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leTilePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leMapPath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
@@ -116,16 +109,16 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     connect(ui->leMakeExePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leEmuExePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     // File dialogs
-    connect(ui->pbSlicePath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbTilePath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbMapPath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbAnimPath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbPlatzPath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbSrcFolder, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbMakefilePath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbHexfilePath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbMakeExePath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
-    connect(ui->pbEmuExePath, SIGNAL(pressed()), this, SLOT(pathFileDialog()));
+    connect(ui->pbSlicePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbTilePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbMapPath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbAnimPath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbPlatzPath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbSrcFolder, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbMakefilePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbHexfilePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbMakeExePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    connect(ui->pbEmuExePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
 }
 
 void SettingsDialog::updateTrees(const QString &text)
@@ -151,8 +144,6 @@ void SettingsDialog::updateTrees(const QString &text)
             item->setText(1, QString("%1\tOverlay Lines: %2").arg(settings->videoMode()).arg(overlayLines));
             item = tree->topLevelItem(itemIndex+1);
             item->setText(1, QString("Width: %1\tHeight: %2").arg(settings->sliceSize().width()).arg((maxOverlayLines-overlayLines)<<3));
-        } else if (twIndex == 0 && itemIndex == 2) {
-            item->setText(1, QString("Width: %1\tHeight: %2").arg(ui->lePsSpriteWidth->text()).arg(ui->lePsSpriteHeight->text()));
         } else {
             item->setText(1, text);
         }
@@ -167,42 +158,42 @@ void SettingsDialog::pathFileDialog()
 
     if (ui->stackedWidget->currentIndex() == 0) {
         switch (ui->swPs->currentIndex()) {
-            case 3:
+            case 2:
                 le = ui->leSlicePath;
                 openPath = settings->slicePath();
                 type = DirPath;
                 break;
-            case 4:
+            case 3:
                 le = ui->leTilePath;
                 openPath = settings->tilePath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 5:
+            case 4:
                 le = ui->leMapPath;
                 openPath = settings->mapPath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 6:
+            case 5:
                 le = ui->leAnimPath;
                 openPath = settings->animPath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 7:
+            case 6:
                 le = ui->lePlatzPath;
                 openPath = settings->platzfilePath();
                 filter = PLATZ_INCLUDE_FORMATS_STR;
                 break;
-            case 8:
+            case 7:
                 le = ui->leSrcFolder;
                 openPath = settings->srcFolder();
                 type = DirPath;
                 break;
-            case 9:
+            case 8:
                 le = ui->leMakefilePath;
                 openPath = settings->makefilePath();
                 filter = "*";
                 break;
-            case 10:
+            case 9:
                 le = ui->leHexfilePath;
                 openPath = settings->hexfilePath();
                 filter = INTEL_HEX_FILES_STR;
@@ -229,7 +220,7 @@ void SettingsDialog::pathFileDialog()
 
     if (le) {
         QString path = le->text();
-        showSettingsDialog(path, openPath, type, filter);
+        showSettingsDialog(path, settings->resolvePath(openPath), type, filter);
         le->setText(path);
     }
 }
@@ -261,7 +252,6 @@ void SettingsDialog::okSettings()
 
 void SettingsDialog::applySettings()
 {
-    bool ok;
     int wid, hgt;
 
     wid = settings->sliceSize().width();
@@ -271,12 +261,6 @@ void SettingsDialog::applySettings()
     else
         hgt = settings->VMODE3_SCREEN_TILES_V-ui->spbOverlayLines->value();
     settings->setSliceSize(wid, hgt<<3);
-
-    wid = ui->lePsSpriteWidth->text().toInt(&ok);
-    if (ok)
-        hgt = ui->lePsSpriteHeight->text().toInt(&ok);
-    if (ok)
-        settings->setSpriteSize(wid, hgt);
     settings->setSlicePath(ui->leSlicePath->text());
     settings->setTilePath(ui->leTilePath->text());
     settings->setMapPath(ui->leMapPath->text());

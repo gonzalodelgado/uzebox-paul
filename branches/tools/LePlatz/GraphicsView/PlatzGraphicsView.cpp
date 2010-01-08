@@ -435,8 +435,10 @@ void PlatzGraphicsView::mousePressEvent(QMouseEvent *event)
 
 void PlatzGraphicsView::updateSliceIndex()
 {
-    mSliceIndex = ((int)mapToScene(mousePos).x() / mSliceSize.width());
-
+    if (mSliceSize.width() == 0)
+        mSliceIndex = 0;
+    else
+        mSliceIndex = ((int)mapToScene(mousePos).x() / mSliceSize.width());
     int index = qMin(qMax(mSliceIndex, 0), sliceCount()-1), count = qMax(sliceCount()-1, 0);
     emit sliceIndexChanged(QString::number(index) + " / " + QString::number(count));
 }
@@ -456,9 +458,9 @@ void PlatzGraphicsView::mouseMoveEvent(QMouseEvent *event)
     mx = qMax(mx, 0);
     my = qMax(my, 0);
 
-    int xmod = mx%tileWidth;
+    int xmod = (tileWidth) ? mx%tileWidth : 0;
 
-    if ((xmod) != x) {
+    if ((xmod) != x && mSliceSize.width()) {
         x = (mx%mSliceSize.width())-xmod;
         signal = true;
     }

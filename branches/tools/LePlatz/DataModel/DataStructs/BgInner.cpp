@@ -89,9 +89,7 @@ void BgInner::setFlags(int f)
 
 WorldItem* BgInner::validateState()
 {
-    if (!parent())
-        return this;
-    if (bgTile == -1)
+    if (!parent() || bgTile == -1 || ((bgFlags&BGMC) && bgmClass().isEmpty()))
         return this;
     if (bgFlags&BGM)    // BgInners with BGM set must be followed by and linked to a BgMutable
         if (row() == (parent()->childCount()-1) || !mutator() || mutator() != parent()->child(row()+1))

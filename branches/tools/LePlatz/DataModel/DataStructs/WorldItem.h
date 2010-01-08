@@ -57,6 +57,13 @@ public:
     static QStringList mutableClassIds;
     static QStringList triggerIds;
     static QStringList platClrTileIds;
+    static const QString emptyString;
+
+    static const QString& mutableIdAt(int index);
+    static const QString& mutableClassIdAt(int index);
+    static const QString& triggerIdAt(int index);
+    static const QString& platClrTileIdAt(int index);
+    static const QString& stringDefineAt(int index, const QStringList &defs);
 
     static const int SLICE_BYTES = 12;
     static const int OUTER_BYTES = 8;

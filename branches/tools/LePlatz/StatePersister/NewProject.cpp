@@ -41,16 +41,6 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
     connect(ui->cboVideoMode, SIGNAL(currentIndexChanged(int)), this, SLOT(setOverlayRange(int)));
     ui->cboVideoMode->setCurrentIndex(1);
 
-    if (!settings->spriteSize().isEmpty() && settings->spriteSize().isValid()) {
-        ui->leSpriteWidth->setText(QString::number(settings->spriteSize().width()));
-        ui->leSpriteHeight->setText(QString::number(settings->spriteSize().height()));
-    } else {
-        ui->leSpriteWidth->setText("24");
-        ui->leSpriteHeight->setText("24");
-    }
-
-    ui->leSpriteWidth->setValidator(new QIntValidator(0, 128, ui->leSpriteWidth));
-    ui->leSpriteHeight->setValidator(new QIntValidator(0, 128, ui->leSpriteHeight));
     ui->cboImageFormat->addItems(Platz::SUPPORTED_IMAGE_FORMATS_EXTS);
     ui->cboImageFormat->setCurrentIndex(ui->cboImageFormat->count()-1);
     displayDefaultHelp();
@@ -74,10 +64,6 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
     connect(ui->spbOverlayLines, SIGNAL(valueChanged(int)), this, SLOT(setVideoModeRes(int)));
     connect(ui->spbOverlayLines, SIGNAL(receivedFocus()), this, SLOT(displayOverlayLinesHelp()));
     connect(ui->spbOverlayLines, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
-    connect(ui->leSpriteWidth, SIGNAL(receivedFocus()), this, SLOT(displaySpriteWidthHelp()));
-    connect(ui->leSpriteWidth, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
-    connect(ui->leSpriteHeight, SIGNAL(receivedFocus()), this, SLOT(displaySpriteHeightHelp()));
-    connect(ui->leSpriteHeight, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
     ui->leProjectName->setFocus();
 }
 
@@ -154,18 +140,6 @@ void NewProject::displayOverlayLinesHelp()
 {
     ui->lblContextualHelp->setText("Overlay lines are static horizontal sections of the screen used to display status information. "
                                    "Increasing this value will reduce the height of your slices.");
-}
-
-void NewProject::displaySpriteWidthHelp()
-{
-    ui->lblContextualHelp->setText("The width (in pixels) of the largest sprite for which collision detection is required. This "
-                                   "value is used to minimize collision detection overhead when crossing slice boundaries.");
-}
-
-void NewProject::displaySpriteHeightHelp()
-{
-    ui->lblContextualHelp->setText("The height (in pixels) of the largest sprite for which collision detection is required. This "
-                                   "value is used to minimize collision detection overhead when crossing slice boundaries.");
 }
 
 QString NewProject::folderFileDialog(const QString &initPath, const QString &title)
@@ -270,7 +244,6 @@ void NewProject::createNewProject()
     settings->setArtFolder(ui->leArtFolder->text());
     settings->setRelativeSrcFolder(ui->leSrcFolder->text());
     settings->setSliceSize(sliceSize);
-    settings->setSpriteSize(ui->leSpriteWidth->text().toInt(), ui->leSpriteHeight->text().toInt());
     accept();
 }
 

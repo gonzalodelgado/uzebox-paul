@@ -43,8 +43,6 @@ public slots:
     void displaySrcFolderHelp();
     void displayVideoModeHelp();
     void displayOverlayLinesHelp();
-    void displaySpriteWidthHelp();
-    void displaySpriteHeightHelp();
     void setOverlayRange(int index);
     void setVideoModeRes(int overlayLines);
 protected:

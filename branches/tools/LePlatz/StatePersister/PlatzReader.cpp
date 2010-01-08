@@ -17,7 +17,9 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QDir>
 #include <QFile>
+#include <SourceParser.h>
 #include <PlatzDataModel.h>
 #include <WorldItem.h>
 #include <Slice.h>
@@ -53,12 +55,15 @@ bool PlatzReader::loadProject(const QString &path, const ReadType &type)
         readNext();
 
         if (isStartElement()) {
-            if (name() == "LePlatz" && attributes().value("version") == "1.0") {
-                readLePlatzProject(type);
-                break;
-            } else {
-                raiseError(QObject::tr("File is not a valid Platz version 1.0 World Save file"));   // Makes atEnd() true
+            if (name() == "LePlatz") {
+                version = attributes().value("version").toString();
+
+                if (Platz::LEPLATZ_VERSIONS.contains(version)) {
+                    readLePlatzProject(type);
+                    break;
+                }
             }
+            raiseError(QObject::tr("File is not a valid Platz World Save file"));   // Makes atEnd() true
         }
     }
     file.close();
@@ -86,7 +91,7 @@ bool PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeomet
         if (isStartElement()) {
             switch (i++) {
                 case Version:
-                    ok = name() == "LePlatz" && attributes().value("version") == "1.0";
+                ok = name() == "LePlatz" && Platz::LEPLATZ_VERSIONS.contains(attributes().value("version").toString());
                     break;
                 case ScrnLayout:
                     winGeometry = readElementText().toLatin1();
@@ -140,6 +145,8 @@ void PlatzReader::readLePlatzProject(const ReadType &type)
             if (name() == "ProjectSettings") {
                 readSettings();
 
+                if (version == Platz::LEPLATZ_VERSIONS.first())
+                    legacySupport_v1_0(0);
                 if (type == ReadSettings)
                     break;
                 continue;
@@ -200,12 +207,12 @@ void PlatzReader::readSettings()
                 int height = attributes().value("height").toString().toInt();
                 settings->setSliceSize(width, height);
                 readElementText();
-            } else if (s == "SpriteSize") {
+            } else if (s == "SpriteSize") {     // v1.0 remnant
                 int width = attributes().value("width").toString().toInt();
                 int height = attributes().value("height").toString().toInt();
                 settings->setSpriteSize(width, height);
                 readElementText();
-            } else if (s == "ImageFormat") {
+            } else if (s == "ImageFormat") {    // v1.0 remnant
                 settings->setImageFormat(readElementText());
             } else if (s == "SlicePath") {
                 settings->setSlicePath(readElementText());
@@ -304,9 +311,28 @@ void PlatzReader::readBgOuter()
     Q_ASSERT(!worldPtr.isEmpty());
 
     int flags = attributes().value("flags").toString().toInt();
-    QString title = readString("Title");
-    QString trigger = readString("Trigger");
-    QString triggerOrientation = readString("TriggerOri");
+    QString title, trigger, triggerOrientation;
+
+    if ((version == Platz::LEPLATZ_VERSIONS.first()) && (flags&BgOuter::BGT)) {
+        int trigIndex = attributes().value("trigIndex").toString().toInt();
+        int trigOrientation = attributes().value("trigOrientation").toString().toInt();
+
+        trigger = WorldItem::triggerIdAt(trigIndex);
+
+        if (trigOrientation == 1)
+            triggerOrientation = Platz::TRIGGER_NML;
+        else if (trigOrientation == -1)
+            triggerOrientation = Platz::TRIGGER_REV;
+        else
+            triggerOrientation = "";
+    }
+    title = readString("Title");
+
+    if (version != Platz::LEPLATZ_VERSIONS.first() && (flags&BgOuter::BGT)) {
+        trigger = readString("Trigger");
+        triggerOrientation = readString("TriggerOri");
+    }
+
     BgOuter *bgo = new BgOuter(QList<QVariant>() << title, worldPtr.top());
     bgo->setBoundingRect(readRect("Bounds"));
     bgo->setGraphicalRepresentation(new PlatzGraphicsItem(bgo, Platz::NORMAL));
@@ -376,8 +402,16 @@ void PlatzReader::readBgMutable()
     int flags = attributes().value("flags").toString().toInt();
     int tile = attributes().value("tile").toString().toInt();
     int custom = attributes().value("custom").toString().toInt();
-    QString title = readString("Title");
-    QString mutableString = readString("MutString");
+    QString mutableString, title;
+
+    if (version == Platz::LEPLATZ_VERSIONS.first()) {
+        mutableString = attributes().value("mutableString").toString();
+        title = readString("Title");
+    } else {
+        title = readString("Title");
+        mutableString = readString("MutString");
+    }
+
     BgMutable *bgm = new BgMutable(QList<QVariant>() << title, prevBgi, worldPtr.top());
     bgm->setBoundingRect(readRect("Bounds"));
     bgm->setMutableString(mutableString);
@@ -528,8 +562,16 @@ void PlatzReader::readPlatform()
 
     int flags = attributes().value("flags").toString().toInt();
     int vel = attributes().value("velocity").toString().toInt();
-    QString title = readString("Title");
-    QString clrTile = readString("ClearTile");
+    QString clrTile, title;
+
+    if (version == Platz::LEPLATZ_VERSIONS.first()) {
+        clrTile = attributes().value("clearTile").toString();
+        title = readString("Title");
+    } else {
+        title = readString("Title");
+        clrTile = readString("ClearTile");
+    }
+
     BgPlatform *plat = new BgPlatform(QList<QVariant>() << title, worldPtr.top());
     plat->setBoundingRect(readRect("Bounds"));
     plat->setGraphicalRepresentation(new PlatzGraphicsItem(plat, Platz::NORMAL));
@@ -640,6 +682,25 @@ Platz::MutablePayload PlatzReader::readMutablePayload(const QString &eleName)
         }
     }
     return payload;
+}
+
+void PlatzReader::legacySupport_v1_0(int type)
+{
+    switch (type) {
+        case 0:
+            // LePlatz project file format stored src define strings as indexes into loaded src defines. This
+            // was intended to allow source code naming updates to reflect within LePlatz, but it broke in
+            // cases where the order of defines was rearranged. v1.1 onwards stores the strings as strings
+            // and provides a tool for users to update naming changes.
+            QString srcFolder = settings->resolvePath(settings->srcFolder());
+            QDir dir(srcFolder);
+
+            if (!dir.exists())
+                return;
+            SourceParser parser;
+            WorldItem::triggerIds = parser.parseForStrings(srcFolder, Platz::TRIGGER_IDS_MARKER);
+            break;
+    }
 }
 
 

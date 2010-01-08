@@ -690,6 +690,9 @@ void PlatzGraphicsScene::clampToScene(QPointF &p) {
 
 // Clamp to 8x8-pixel grid
 void PlatzGraphicsScene::clampToGrid(QPointF &p) {
+    snapToResolutionX = qMax(snapToResolutionX, 1);
+    snapToResolutionY = qMax(snapToResolutionY, 1);
+
     int x = (int)p.x(), y = (int)p.y();
     int xMod = x%snapToResolutionX, yMod = y%snapToResolutionY;
 

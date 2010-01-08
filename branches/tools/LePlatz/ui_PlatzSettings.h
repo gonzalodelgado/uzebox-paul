@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzSettings.ui'
 **
-** Created: Thu 7. Jan 11:48:31 2010
+** Created: Fri 8. Jan 11:57:51 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -54,16 +54,6 @@ public:
     QSpinBox *spbOverlayLines;
     QSpacerItem *horizontalSpacer;
     QWidget *page;
-    QWidget *page_4;
-    QHBoxLayout *horizontalLayout_13;
-    QVBoxLayout *verticalLayout_3;
-    QHBoxLayout *horizontalLayout_11;
-    QLabel *lblProjectMaxSpriteWidth;
-    QLineEdit *lePsSpriteWidth;
-    QHBoxLayout *horizontalLayout_12;
-    QLabel *lblProjectMaxHeight;
-    QLineEdit *lePsSpriteHeight;
-    QSpacerItem *horizontalSpacer_2;
     QWidget *page_11;
     QHBoxLayout *horizontalLayout_21;
     QLabel *lblSlicePath;
@@ -160,6 +150,7 @@ public:
         treeWidget->setSizePolicy(sizePolicy);
         treeWidget->setAutoExpandDelay(-1);
         splitter->addWidget(treeWidget);
+        treeWidget->header()->setVisible(false);
         frameSettings = new QFrame(splitter);
         frameSettings->setObjectName(QString::fromUtf8("frameSettings"));
         sizePolicy.setHeightForWidth(frameSettings->sizePolicy().hasHeightForWidth());
@@ -193,6 +184,7 @@ public:
         twPs->setObjectName(QString::fromUtf8("twPs"));
         twPs->setItemsExpandable(false);
         twPs->setColumnCount(1);
+        twPs->header()->setVisible(true);
 
         verticalLayout_5->addWidget(twPs);
 
@@ -227,59 +219,6 @@ public:
         page = new QWidget();
         page->setObjectName(QString::fromUtf8("page"));
         swPs->addWidget(page);
-        page_4 = new QWidget();
-        page_4->setObjectName(QString::fromUtf8("page_4"));
-        horizontalLayout_13 = new QHBoxLayout(page_4);
-        horizontalLayout_13->setObjectName(QString::fromUtf8("horizontalLayout_13"));
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        horizontalLayout_11 = new QHBoxLayout();
-        horizontalLayout_11->setObjectName(QString::fromUtf8("horizontalLayout_11"));
-        lblProjectMaxSpriteWidth = new QLabel(page_4);
-        lblProjectMaxSpriteWidth->setObjectName(QString::fromUtf8("lblProjectMaxSpriteWidth"));
-
-        horizontalLayout_11->addWidget(lblProjectMaxSpriteWidth);
-
-        lePsSpriteWidth = new QLineEdit(page_4);
-        lePsSpriteWidth->setObjectName(QString::fromUtf8("lePsSpriteWidth"));
-        QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(lePsSpriteWidth->sizePolicy().hasHeightForWidth());
-        lePsSpriteWidth->setSizePolicy(sizePolicy3);
-        lePsSpriteWidth->setMaximumSize(QSize(75, 16777215));
-
-        horizontalLayout_11->addWidget(lePsSpriteWidth);
-
-
-        verticalLayout_3->addLayout(horizontalLayout_11);
-
-        horizontalLayout_12 = new QHBoxLayout();
-        horizontalLayout_12->setObjectName(QString::fromUtf8("horizontalLayout_12"));
-        lblProjectMaxHeight = new QLabel(page_4);
-        lblProjectMaxHeight->setObjectName(QString::fromUtf8("lblProjectMaxHeight"));
-
-        horizontalLayout_12->addWidget(lblProjectMaxHeight);
-
-        lePsSpriteHeight = new QLineEdit(page_4);
-        lePsSpriteHeight->setObjectName(QString::fromUtf8("lePsSpriteHeight"));
-        sizePolicy3.setHeightForWidth(lePsSpriteHeight->sizePolicy().hasHeightForWidth());
-        lePsSpriteHeight->setSizePolicy(sizePolicy3);
-        lePsSpriteHeight->setMaximumSize(QSize(75, 16777215));
-
-        horizontalLayout_12->addWidget(lePsSpriteHeight);
-
-
-        verticalLayout_3->addLayout(horizontalLayout_12);
-
-
-        horizontalLayout_13->addLayout(verticalLayout_3);
-
-        horizontalSpacer_2 = new QSpacerItem(180, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_13->addItem(horizontalSpacer_2);
-
-        swPs->addWidget(page_4);
         page_11 = new QWidget();
         page_11->setObjectName(QString::fromUtf8("page_11"));
         horizontalLayout_21 = new QHBoxLayout(page_11);
@@ -550,11 +489,11 @@ public:
 
         frame = new QFrame(SettingsDialog);
         frame->setObjectName(QString::fromUtf8("frame"));
-        QSizePolicy sizePolicy4(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
-        frame->setSizePolicy(sizePolicy4);
+        QSizePolicy sizePolicy3(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(frame->sizePolicy().hasHeightForWidth());
+        frame->setSizePolicy(sizePolicy3);
         frame->setFrameShape(QFrame::NoFrame);
         frame->setFrameShadow(QFrame::Plain);
         frame->setLineWidth(0);
@@ -606,8 +545,6 @@ public:
 #endif // QT_NO_WHATSTHIS
         groupBox->setTitle(QApplication::translate("SettingsDialog", "Project Settings", 0, QApplication::UnicodeUTF8));
         lblOverlayLines->setText(QApplication::translate("SettingsDialog", "Overlay Lines:", 0, QApplication::UnicodeUTF8));
-        lblProjectMaxSpriteWidth->setText(QApplication::translate("SettingsDialog", "Max Sprite Width: ", 0, QApplication::UnicodeUTF8));
-        lblProjectMaxHeight->setText(QApplication::translate("SettingsDialog", "Max Sprite Height:", 0, QApplication::UnicodeUTF8));
         lblSlicePath->setText(QApplication::translate("SettingsDialog", "Slice Path:", 0, QApplication::UnicodeUTF8));
         pbSlicePath->setText(QApplication::translate("SettingsDialog", "...", 0, QApplication::UnicodeUTF8));
         lblTilePath->setText(QApplication::translate("SettingsDialog", "Tile path:", 0, QApplication::UnicodeUTF8));

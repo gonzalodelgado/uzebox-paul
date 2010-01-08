@@ -30,6 +30,34 @@ QStringList WorldItem::mutableIds;
 QStringList WorldItem::mutableClassIds;
 QStringList WorldItem::triggerIds;
 QStringList WorldItem::platClrTileIds;
+const QString WorldItem::emptyString = "";
+
+const QString& WorldItem::mutableIdAt(int index)
+{
+    return stringDefineAt(index, mutableIds);
+}
+
+const QString& WorldItem::mutableClassIdAt(int index)
+{
+    return stringDefineAt(index, mutableClassIds);
+}
+
+const QString& WorldItem::triggerIdAt(int index)
+{
+    return stringDefineAt(index, triggerIds);
+}
+
+const QString& WorldItem::platClrTileIdAt(int index)
+{
+    return stringDefineAt(index, platClrTileIds);
+}
+
+const QString& WorldItem::stringDefineAt(int index, const QStringList &defs)
+{
+    if (index >= 0 && index < defs.count())
+        return defs.at(index);
+    return emptyString;
+}
 
 void WorldItem::loadWorldItemIcons()
 {
