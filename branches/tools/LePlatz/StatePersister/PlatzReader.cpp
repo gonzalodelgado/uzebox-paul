@@ -245,7 +245,7 @@ void PlatzReader::readSlice()
     QString title = readString("Title");
     Slice *slice = new Slice(QList<QVariant>() << title, worldPtr.top());
     model->insertRow(worldPtr.top()->childCount(), slice, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
-    slice->setBoundingRect(QRectF(sliceCount<<8,0.0,256,200.0));
+    slice->setBoundingRect(QRectF(sliceCount*settings->sliceSize().width(),0.0,settings->sliceSize().width(),settings->sliceSize().height()));
     slice->setGraphicalRepresentation(new PlatzGraphicsItem(slice, Platz::INVISIBLE));
     slice->setLockedOrdering(locked);
     worldPtr.push(slice);
