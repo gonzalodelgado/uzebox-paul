@@ -22,6 +22,7 @@
 
 #include <QIcon>
 #include <QRectF>
+#include <QSize>
 #include <QList>
 #include <PlatzGraphicsItem.h>
 #include <PlatzEnums.h>
@@ -58,6 +59,7 @@ public:
     static QStringList triggerIds;
     static QStringList platClrTileIds;
     static const QString emptyString;
+    static QSize SliceSize;
 
     static const QString& mutableIdAt(int index);
     static const QString& mutableClassIdAt(int index);

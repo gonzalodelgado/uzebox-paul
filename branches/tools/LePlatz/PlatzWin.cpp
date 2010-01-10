@@ -20,6 +20,7 @@
 #include <QStringList>
 #include <QFile>
 #include <QFileDialog>
+#include <QColorDialog>
 #include <QMessageBox>
 #include <QPointer>
 #include <QActionGroup>
@@ -81,6 +82,8 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->actionCopy->setIcon(QIcon(":/icons/128x128/copy.png"));
     ui->actionPaste->setIcon(QIcon(":/icons/128x128/paste.png"));
     ui->actionSelectAll->setIcon(QIcon(":/icons/128x128/selectAll.png"));
+    ui->actionFindReplace->setIcon(QIcon(":/icons/128x128/search.png"));
+    ui->actionCanvasBgColor->setIcon(QIcon(":/icons/128x128/colorSettings.png"));
     ui->actionAboutLePlatz->setIcon(QIcon(":/icons/128x128/mp.png"));
     ui->actionAboutPlatz->setIcon(QIcon(":/icons/128x128/aboutPlatz.png"));
     ui->actionAboutUzebox->setIcon(QIcon(":/misc/uzebox.png"));
@@ -167,6 +170,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->menuSnapToX->addActions(snapToXGrpVMode3->actions());
     ui->menuSnapToY->addActions(snapToYGrp->actions());
     connect(ui->actionFindReplace, SIGNAL(triggered()), this, SLOT(findReplaceSrcDefines()));
+    connect(ui->actionCanvasBgColor, SIGNAL(triggered()), this, SLOT(selectCanvasBgColor()));
 
     // Init external process comms slots
     connect(procMake, SIGNAL(readyReadStandardOutput()), this, SLOT(makeOutputReady()));
@@ -224,8 +228,6 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->tileListWidget->setType(BgInner::BG0);
     ui->mapListWidget->setType(BgInner::BGP);
     ui->animListWidget->setType(BgInner::BGA);
-    ui->mapListWidget->setDelimiterTile(QImage(":/misc/pixDelim.png"));
-    ui->animListWidget->setDelimiterTile(QImage(":/misc/pixDelim.png"));
     connect(ui->graphicsView, SIGNAL(tileDrawn(WorldItem*, const QImage&)), ui->tileListWidget, SLOT(imageToMapIndex(WorldItem*, const QImage&)));
     connect(ui->graphicsView, SIGNAL(mapDrawn(WorldItem*, const QImage&)), ui->mapListWidget, SLOT(imageToMapIndex(WorldItem*, const QImage&)));
     connect(ui->graphicsView, SIGNAL(animDrawn(WorldItem*, const QImage&)), ui->animListWidget, SLOT(imageToMapIndex(WorldItem*, const QImage&)));
@@ -353,9 +355,11 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(settings, SIGNAL(platzfilePathChanged(QString)), this, SLOT(setPlatzfilePath(QString)));
     connect(settings, SIGNAL(makeExePathChanged(QString)), this, SLOT(setMakeExePath(QString)));
     connect(settings, SIGNAL(emuExePathChanged(QString)), this, SLOT(setEmuExePath(QString)));
+    connect(settings, SIGNAL(canvasColorChanged(QColor)), ui->graphicsView, SLOT(setCanvasColor(QColor)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), ui->graphicsView, SLOT(setSliceSize(QSize)));
     connect(settings, SIGNAL(videoModeChanged(int)), this, SLOT(setVideoMode(int)));
-    connect(settings, SIGNAL(tileWidthChanged(int)), ui->graphicsView, SLOT(setTileWidth(int)));
+    connect(settings, SIGNAL(tileSizeChanged(QSize)), ui->graphicsView, SLOT(setTileSize(QSize)));
+    connect(settings, SIGNAL(tileSizeChanged(QSize)), this, SLOT(setTileSize(QSize)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), this, SLOT(setSliceSize(QSize)));
     //connect(settings, SIGNAL(spriteSizeChanged(QSize)), this, SLOT(setSpriteSize(QSize)));
 
@@ -442,6 +446,11 @@ void PlatzWin::aboutUzebox()
     delete about;
 }
 
+void PlatzWin::selectCanvasBgColor()
+{
+    settings->setCanvasColor(QColorDialog::getColor(ui->graphicsView->backgroundBrush().color(), this));
+}
+
 int PlatzWin::findReplaceSrcDefines()
 {
     QPointer<FindReplace> fr = new FindReplace(model, this);
@@ -479,16 +488,31 @@ void PlatzWin::setSnapToResolutionY(QAction* action)
         scene->setSnapToResolutionY(resolution);
 }
 
+void PlatzWin::setSliceSize(const QSize &size) {
+    sliceSize = size;
+    WorldItem::SliceSize = size;
+}
+
 void PlatzWin::setVideoMode(int vmode)
 {
     if (vmode != 2 && vmode != 3)
         return;
-     ui->menuSnapToX->clear();
+    QString delim;
 
-    if (vmode == 2)
+    videoMode = vmode;
+    ui->menuSnapToX->clear();
+
+    if (vmode == 2) {
         ui->menuSnapToX->addActions(snapToXGrpVMode2->actions());
-    else if (vmode == 3)
+        delim = ":/misc/pixDelim6x8.png";
+    } else if (vmode == 3) {
         ui->menuSnapToX->addActions(snapToXGrpVMode3->actions());
+        delim = ":/misc/pixDelim8x8.png";
+    }
+
+    ui->mapListWidget->setDelimiterTile(QImage(delim));
+    ui->animListWidget->setDelimiterTile(QImage(delim));
+
     foreach(QAction *action, ui->menuSnapToX->actions()) {
         if (action->isChecked())
             setSnapToResolutionX(action);
@@ -958,21 +982,21 @@ void PlatzWin::loadResources(QString &msg)
         msg += ((msg.isEmpty())?"":", ");
         msg += "Tiles";
     } else {
-        ui->tileListWidget->populate(8,8,32,32,120,QPixmap(tilePath));
+        ui->tileListWidget->populate(tileSize.width(),tileSize.height(),4*tileSize.width(),4*tileSize.height(),120,QPixmap(tilePath));
     }
 
     if (!QFile::exists(mapPath)) {
         msg += ((msg.isEmpty())?"":", ");
         msg += "Maps";
     } else {
-        ui->mapListWidget->populate(64,64,120,QPixmap(mapPath));
+        ui->mapListWidget->populate(8*tileSize.width(),8*tileSize.height(),120,QPixmap(mapPath));
     }
 
     if (!QFile::exists(animPath)) {
         msg += ((msg.isEmpty())?"":", ");
         msg += "Animations";
     } else {
-        ui->animListWidget->populate(64,64,120,QPixmap(animPath));
+        ui->animListWidget->populate(8*tileSize.width(),8*tileSize.height(),120,QPixmap(animPath));
     }
 
     if (!loadBackground()) {
@@ -1043,7 +1067,7 @@ void PlatzWin::compileWorld()
     WorldCompiler wc(model->root());
     wc.setSliceSize(sliceSize);
     //wc.setSpriteSize(spriteSize);
-    wc.setTileWidth(settings->tileWidth());
+    wc.setTileWidth((videoMode == 2) ? 1 : tileSize.width());
 
     if (wc.compileWorld(&file, projectName))
         ui->statusBar->showMessage("World compiled successfully. Output to " + QFileInfo(platzfilePath).absoluteFilePath(), STATUS_DELAY);

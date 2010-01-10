@@ -296,6 +296,7 @@ void WorldCompiler::compileBgOuters(int sliceIndex, ProxyItem *parent, QTextStre
         // Uncommenting the outer conditional would optimize collision detection very slightly, but it
         // also makes building levels more cumbersome for various reasons.
         //if (bgo->flags()&(BgOuter::BGC|BgOuter::BGM|BgOuter::BGQ|BgOuter::BGT)) {
+/*
             if (bgo->relativeBoundingRect().left() <= spriteSize.width()) {
                 bgDir[sliceIndex]->bgoBeginCount++;
 
@@ -305,6 +306,7 @@ void WorldCompiler::compileBgOuters(int sliceIndex, ProxyItem *parent, QTextStre
                 bgDir[sliceIndex]->bgoEndIndex = index;
             }
         //}
+*/
         ++index;
     }
 }

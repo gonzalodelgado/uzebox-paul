@@ -87,8 +87,9 @@ public slots:
     void setMakeExePath(const QString &path) { makeExePath = path; }
     void setEmuExePath(const QString &path) { emuExePath = path; }
     void setVideoMode(int vmode);
-    void setSliceSize(const QSize &size) { sliceSize = size; }
+    void setSliceSize(const QSize &size);
     void setSpriteSize(const QSize &size) { spriteSize = size; }
+    void setTileSize(const QSize &size) { tileSize = size; }
     void clearBgoCheckBoxes();
     void updateBgoToolboxAttributes();
     void updateBgiToolboxAttributes();
@@ -109,6 +110,7 @@ public slots:
     void toggleSelectedSliceLock();
     void setSnapToResolutionX(QAction* action);
     void setSnapToResolutionY(QAction* action);
+    void selectCanvasBgColor();
     int findReplaceSrcDefines();
     void publicKeyPressEvent(QKeyEvent *e);
 signals:
@@ -156,6 +158,7 @@ private:
     int videoMode;
     QSize sliceSize;
     QSize spriteSize;
+    QSize tileSize;
     bool activeProject;
     QMenu *recProjMenu;
     QActionGroup *recProjActionGrp;

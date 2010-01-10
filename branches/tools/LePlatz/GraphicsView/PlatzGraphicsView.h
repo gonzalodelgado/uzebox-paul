@@ -66,11 +66,12 @@ public slots:
     void insertSlice(QPoint pos, int beforeOrAfter);
     void insertSlice(int index, int beforeOrAfter, bool draw = true);
     void setSliceSize(const QSize &size);
-    void setTileWidth(int width) { tileWidth = width; }
+    void setTileSize(const QSize &size) { mTileSize = size; }
     void updateSliceIndex();
     void deleteSelected();
     void synchronizeModelView();
     void frameItem(const QModelIndex &index);
+    void setCanvasColor(const QColor &color) { setBackgroundBrush(QBrush(color)); }
 protected:
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -91,7 +92,7 @@ private:
     PlatzDataModel *dataModel;
     QSize mSliceSize;
     int mSliceIndex;
-    int tileWidth;
+    QSize mTileSize;
     QList<QCursor*> cursors;
     const QCursor *cursorCurrent;
     QPoint mousePos;

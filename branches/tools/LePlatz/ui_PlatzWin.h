@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzWin.ui'
 **
-** Created: Fri 8. Jan 12:44:39 2010
+** Created: Sun 10. Jan 12:55:37 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -85,6 +85,7 @@ public:
     QAction *actionReplicate;
     QAction *actionLock;
     QAction *actionFindReplace;
+    QAction *actionCanvasBgColor;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_7;
     QVBoxLayout *verticalLayout_11;
@@ -429,6 +430,8 @@ public:
         actionLock->setObjectName(QString::fromUtf8("actionLock"));
         actionFindReplace = new QAction(PlatzWin);
         actionFindReplace->setObjectName(QString::fromUtf8("actionFindReplace"));
+        actionCanvasBgColor = new QAction(PlatzWin);
+        actionCanvasBgColor->setObjectName(QString::fromUtf8("actionCanvasBgColor"));
         centralWidget = new QWidget(PlatzWin);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         horizontalLayout_7 = new QHBoxLayout(centralWidget);
@@ -1270,6 +1273,7 @@ public:
         menuEdit->addAction(menuSnapToY->menuAction());
         menuEdit->addSeparator();
         menuEdit->addAction(actionFindReplace);
+        menuEdit->addAction(actionCanvasBgColor);
         menuAbout->addAction(actionAboutLePlatz);
         menuAbout->addAction(actionAboutPlatz);
         menuAbout->addAction(actionAboutUzebox);
@@ -1440,6 +1444,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionFindReplace->setToolTip(QApplication::translate("PlatzWin", "Find/Replace Src Defines", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
+        actionCanvasBgColor->setText(QApplication::translate("PlatzWin", "Canvas Bg Color...", 0, QApplication::UnicodeUTF8));
         lblSelectedDetailsIcon->setText(QString());
         lblSelectedDetails->setText(QString());
         lblSelectedDetailsImg->setText(QString());

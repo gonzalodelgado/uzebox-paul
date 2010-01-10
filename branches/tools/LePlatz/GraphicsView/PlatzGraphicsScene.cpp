@@ -279,7 +279,7 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             clampToGrid(p);
             bgOutline.setTopLeft(p);
             bgOutline.setBottomRight(p);
-            Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()>>8));
+            Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()/mSliceSize.width()));
             WorldItem *proxy = slice->platformProxy();
             //item->setFlags(QGraphicsItem::ItemIsSelectable);
             BgPlatformPath *platPath = new BgPlatformPath(QList<QVariant>() << "PlatformPath", proxy);
@@ -299,7 +299,7 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             clampToGrid(p);
             bgOutline.setTopLeft(p);
             bgOutline.setBottomRight(p);
-            Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()>>8));
+            Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()/mSliceSize.width()));
             WorldItem *proxy = slice->objectProxy();
             //item->setFlags(QGraphicsItem::ItemIsSelectable);
             BgObject *obj = new BgObject(QList<QVariant>() << "BgObject", proxy);
@@ -378,7 +378,7 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
 
             if (!bgo->children()->contains(bgi))
                 return;
-            Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()>>8));
+            Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()/mSliceSize.width()));
 
             if (!slice->boundingRect().contains(bgi->boundingRect()))
                 return;
@@ -412,7 +412,7 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             clampToGrid(p);
             bgOutline.setTopLeft(p);
             bgOutline.setBottomRight(p);
-            Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()>>8));
+            Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()/mSliceSize.width()));
             WorldItem *proxy = slice->outerProxy();
             //item->setFlags(QGraphicsItem::ItemIsSelectable);
             BgOuter *bgo = new BgOuter(QList<QVariant>() << "BgOuter", proxy);
@@ -438,6 +438,7 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             bgOutline.setBottomRight(p);
             sel = new PlatzGraphicsItem(0, Platz::SELECTED);
             sel->setZValue(100);
+            // mSliceSize mutator doesn't allow for empty slices, so no DBZ check needed
             sel->setOffsetX((int)p.x()-((int)p.x()%mSliceSize.width()));
             sel->setBoundingRect(bgOutline);
             addItem(sel);

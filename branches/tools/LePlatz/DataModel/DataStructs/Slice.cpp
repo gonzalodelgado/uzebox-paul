@@ -107,7 +107,7 @@ qreal Slice::offsetX() const
     WorldItem *p = parent();
 
     if (p)
-        return p->offsetX() + row()*256.0;
+        return p->offsetX() + row()*WorldItem::SliceSize.width();
     else
         return 0.0;
 }

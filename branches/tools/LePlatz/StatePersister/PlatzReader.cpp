@@ -91,7 +91,10 @@ bool PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeomet
         if (isStartElement()) {
             switch (i++) {
                 case Version:
-                ok = name() == "LePlatz" && Platz::LEPLATZ_VERSIONS.contains(attributes().value("version").toString());
+                    ok = name() == "LePlatz" && Platz::LEPLATZ_VERSIONS.contains(attributes().value("version").toString());
+                    break;
+                case LePlatzSettings:
+                    ok = name() == "LePlatzSettings";
                     break;
                 case ScrnLayout:
                     winGeometry = readElementText().toLatin1();
@@ -103,9 +106,15 @@ bool PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeomet
                     winLayout = winLayout.fromHex(winLayout);
                     ok = true;
                     break;
-                case LePlatzSettings:
-                    ok = name() == "LePlatzSettings";
+                case CanvasColor:
+                {
+                    unsigned int color = readElementText().toUInt(&ok, 16);
+
+                    if (ok)
+                        settings->setCanvasColor(QColor(QRgb(color)));
+                    ok = true; // Don't let invalid color prevent loading other data
                     break;
+                }
                 case MakeExePath:
                     if ((ok = name() == "MakeExePath"))
                         settings->setMakeExePath(readElementText());

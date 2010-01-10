@@ -73,6 +73,7 @@ bool PlatzWriter::saveLePlatzSettings(const QString &path, const QByteArray &win
     writeStartElement("LePlatzSettings");
     writeTextElement("ScreenLayout", QString(winGeometry.toHex()));
     writeTextElement("WinLayout", QString(winLayout.toHex()));
+    writeTextElement("CanvasColor", QString::number(settings->canvasColor().rgb(), 16));
     writeTextElement("MakeExePath", settings->makeExePath());
     writeTextElement("EmuExePath", settings->emuExePath());
 

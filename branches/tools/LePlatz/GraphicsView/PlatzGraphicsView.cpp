@@ -32,7 +32,7 @@
 #include "PlatzGraphicsView.h"
 
 PlatzGraphicsView::PlatzGraphicsView(QWidget *parent)
-    : QGraphicsView(parent), bgpix(0), dataModel(0), tileWidth(8), mousePos(0,0),
+    : QGraphicsView(parent), bgpix(0), dataModel(0), mTileSize(QSize(8,8)), mousePos(0,0),
         zoom(false), imode(Platz::IM_SELECT)
 {
     platzScene = new PlatzGraphicsScene(this);
@@ -458,9 +458,9 @@ void PlatzGraphicsView::mouseMoveEvent(QMouseEvent *event)
     mx = qMax(mx, 0);
     my = qMax(my, 0);
 
-    int xmod = (tileWidth) ? mx%tileWidth : 0;
+    int xmod = (mTileSize.width()) ? mx%mTileSize.width() : 0;
 
-    if ((xmod) != x && mSliceSize.width()) {
+    if (xmod != x && mSliceSize.width()) {
         x = (mx%mSliceSize.width())-xmod;
         signal = true;
     }

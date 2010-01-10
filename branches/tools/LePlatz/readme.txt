@@ -7,9 +7,10 @@ Created with Qt 4.6.
 
 /***** Change Log *****/
 
-Platz 1.1.0
-- Compatible with v1.0 and v1.1 project files. v1.0 files will be converted to v1.1 files upon
-  saving.
+LePlatz 1.1.0
+- All valid slice sizes now supported.
+- Slice canvas background color configurable through "Edit->Canvas Bg Color" menu.
+- Compatible with v1.0 and v1.1 project files. v1.0 files will be converted to v1.1 files upon saving.
 - Added find/replace dialog. This tool allows you to update previously set
   triggers/platform clear tiles/mutable classes/mutable bgs (src code defines) that
   may have changed their name in your code. v1.0 stored these as indexes into the source
@@ -22,6 +23,7 @@ Platz 1.1.0
 - Numerous UI tweaks
 - Removed need for SliceSize setting due to changes in Platz v1.1 collision handling.
 - JPEG no longer an image format option.
+- TileStudio sample now contains correct relative path to tiles.png
 
 LePlatz 1.0.0
 - Initial release.

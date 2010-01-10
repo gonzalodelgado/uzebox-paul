@@ -65,6 +65,7 @@ class Settings : public QObject
         int tileWidth() const;
         QSize sliceSize() { return mSliceSize; }
         QSize spriteSize() { return mSpriteSize; }
+
         // Project - set
         void setProjectPath(const QString &path);
         void setImageFormat(const QString &format) { mImageFormat = format; }
@@ -88,12 +89,14 @@ class Settings : public QObject
         const QString& makeExePath() { return mMakeExePath; }
         const QString& emuExePath() { return mEmuExePath; }
         const QStringList& recentProjects() { return mRecentProjects; }
+        const QColor& canvasColor() { return mCanvasColor; }
 
         // LePlatz - set
         void setMakeExePath(const QString &path);
         void setEmuExePath(const QString &path);
         void addRecentProject(const QString &project);
         void addRecentProjects(const QStringList &projects);
+        void setCanvasColor(const QColor &color);
     signals:
         // Consumers connect to these. Contributors interact through public interface.
         void projectNameChanged(const QString &name);
@@ -112,7 +115,8 @@ class Settings : public QObject
         void makeExePathChanged(const QString &path);
         void emuExePathChanged(const QString &path);
         void recentProjectsChanged(const QStringList &recentProjects);
-        void tileWidthChanged(int width);
+        void canvasColorChanged(const QColor &color);
+        void tileSizeChanged(const QSize &size);
     public slots:
         void resetProjectSettings();
         bool loadSettings(const QString &path);
@@ -144,6 +148,7 @@ class Settings : public QObject
         QString mMakeExePath;
         QString mEmuExePath;
         QStringList mRecentProjects;
+        QColor mCanvasColor;
 };
 
 #endif

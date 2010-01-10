@@ -39,6 +39,7 @@ public:
         LePlatzSettings,
         ScrnLayout,
         WinLayout,
+        CanvasColor,
         MakeExePath,
         EmuExePath,
         RecentProjects

@@ -102,7 +102,7 @@ void Settings::setVideoMode(int mode)
 {
     mVideoMode = mode;
     emit videoModeChanged(mVideoMode);
-    emit tileWidthChanged((mVideoMode == 2)?6:8);
+    emit tileSizeChanged((mVideoMode == 2)?QSize(6,8):QSize(8,8));
 }
 
 void Settings::setSliceSize(const QSize &size) {
@@ -228,6 +228,14 @@ void Settings::addRecentProjects(const QStringList &projects)
         --addCount;
     }
     emit recentProjectsChanged(mRecentProjects);
+}
+
+void Settings::setCanvasColor(const QColor &color)
+{
+    if (!color.isValid())
+        return;
+    mCanvasColor = color;
+    emit canvasColorChanged(color);
 }
 
 bool Settings::loadLePlatzSettings(QByteArray &winGeometry, QByteArray &winLayout)

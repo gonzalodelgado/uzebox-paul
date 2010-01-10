@@ -69,7 +69,7 @@ public slots:
     void clearOuterJoin();
     void hideSelection();
     void rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end);
-    void setSliceSize(const QSize &size) { mSliceSize = size; }
+    void setSliceSize(const QSize &size) { mSliceSize = (size.isValid() && !size.isEmpty())?size:mSliceSize; }
     void setBgiFlags(int flags) { bgiFlags = flags; }
     void setBgoFlags(int flags) { bgoFlags = flags; }
     void setBgiTile(int tile) { bgiTile = tile; }
