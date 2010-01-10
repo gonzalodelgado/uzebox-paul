@@ -3,6 +3,8 @@
 
 Platz 1.1.0
 - Bg Directory no longer requires begin, common, and end elements.
+- Fixed buffer overflow when declaring MAX_MOVING_PLATFORMS as < 2.
+
 
 Platz 1.0.0
 - Demo game created with LePlatz v1.0 available:

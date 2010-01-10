@@ -53,7 +53,7 @@
 
 typedef struct platforms {
 	u8			slice[MAX_VIS_SLICES];						// World slice pointers
-	u8 			count[MAX_MOVING_PLATFORMS];				// # of platforms in each slice
+	u8 			count[MAX_VIS_SLICES];						// # of platforms in each slice
 	velocity 	v[MAX_VIS_SLICES][MAX_MOVING_PLATFORMS];	// Individual platform velocities
 	platform 	p[MAX_VIS_SLICES][MAX_MOVING_PLATFORMS];	// Platform data
 } platforms;
@@ -626,6 +626,7 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 		}
 	}
 
+#if MAX_MOVING_PLATFORMS
 	// Paint stepped moving platforms
 	i = (mp.slice[0] == wsp)?0:1;
 
@@ -651,6 +652,7 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 			}
 		}
 	}
+#endif
 }
 
 
