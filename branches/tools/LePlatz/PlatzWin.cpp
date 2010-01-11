@@ -359,9 +359,11 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), ui->graphicsView, SLOT(setSliceSize(QSize)));
     connect(settings, SIGNAL(videoModeChanged(int)), this, SLOT(setVideoMode(int)));
     connect(settings, SIGNAL(tileSizeChanged(QSize)), ui->graphicsView, SLOT(setTileSize(QSize)));
+    connect(settings, SIGNAL(offsetYChanged(int)), this, SLOT(setOffsetY(int)));
     connect(settings, SIGNAL(tileSizeChanged(QSize)), this, SLOT(setTileSize(QSize)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), this, SLOT(setSliceSize(QSize)));
     //connect(settings, SIGNAL(spriteSizeChanged(QSize)), this, SLOT(setSpriteSize(QSize)));
+    settings->setCanvasColor(QColor(qRgb(236,233,216)));
 
     // Restore window state
     QByteArray winGeometry, winLayout;
@@ -1067,7 +1069,8 @@ void PlatzWin::compileWorld()
     WorldCompiler wc(model->root());
     wc.setSliceSize(sliceSize);
     //wc.setSpriteSize(spriteSize);
-    wc.setTileWidth((videoMode == 2) ? 1 : tileSize.width());
+    wc.setTileSize(tileSize);
+    wc.setOffsetY(offsetY);
 
     if (wc.compileWorld(&file, projectName))
         ui->statusBar->showMessage("World compiled successfully. Output to " + QFileInfo(platzfilePath).absoluteFilePath(), STATUS_DELAY);

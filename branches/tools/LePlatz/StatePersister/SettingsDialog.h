@@ -57,7 +57,7 @@ private slots:
 private:
     Ui::SettingsDialog *ui;
     Settings *settings;
-    int maxOverlayLines;
+    int maxOffsetY;
 };
 
 #endif // SETTINGSDIALOG_H

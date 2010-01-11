@@ -21,13 +21,13 @@
 #include "WorldCompiler.h"
 
  WorldCompiler::WorldCompiler()
-    : root(0), platformIndex(0), tileWidth(8)
+    : root(0), platformIndex(0), tileSize(QSize(8,8)), offsetY(0)
  {
 
  }
 
 WorldCompiler::WorldCompiler(WorldItem *root)
-    : root(root), platformIndex(0), sliceSize(QSize(0, 0)), spriteSize(QSize(0, 0)), tileWidth(8)
+    : root(root), platformIndex(0), sliceSize(QSize(0, 0)), spriteSize(QSize(0, 0)), tileSize(QSize(8,8))
 {
 }
 
@@ -260,7 +260,7 @@ void WorldCompiler::compilePlatforms(int sliceIndex, ProxyItem *parent, QTextStr
                         :(int)platPath->relativeBoundingRect().bottom()-plat->relativeBoundingRect().height()) << ","
                     << BgPlatformPath::platformPathFlagsToString(platPath->axis()) << ","
                     << plat->velocity() << ","
-                    << rectFToString(plat->relativeBoundingRect().adjusted(pathRect.left(), 0, pathRect.left(), 0)) << "}";
+                    << rectFToString(plat->relativeBoundingRect().adjusted(pathRect.left(), 0, pathRect.left(), 0), offsetY) << "}";
             if (plat->row() != (platPath->childCount()-1))
                 ts << ",\n";
             ++platCount;
@@ -287,7 +287,7 @@ void WorldCompiler::compileBgOuters(int sliceIndex, ProxyItem *parent, QTextStre
             ts << bgo->triggerOrientation() << "," << bgo->trigger();
         else
             ts << bgo->childCount() << "," << bgDir[sliceIndex]->bgiIndex+bgDir[sliceIndex]->bgiCount;
-        ts << "," << rectFToString(bgo->relativeBoundingRect(), tileWidth) << "}";
+        ts << "," << rectFToString(bgo->relativeBoundingRect(), offsetY, tileSize.width(), tileSize.height()) << "}";
 
         if (bgo->row() != (parent->childCount()-1))
             ts << ",\n";
@@ -325,11 +325,11 @@ void WorldCompiler::compileBgInners(int sliceIndex, BgOuter *parent, QTextStream
                 QRectF bgmcRect = bgi->relativeBoundingRect().adjusted(bgoRect.left(), 0, bgoRect.left(), 0);
 
                 ts << "\t{" << BgInner::bgiFlagsToString(bgi->flags()) << "," << bgi->bgmClass() << ",{";
-                ts << ((int)bgmcRect.left() / tileWidth) << "," << ((int)bgmcRect.right() / tileWidth) << ","
-                        << ((int)bgmcRect.top() / tileWidth) << "," << bgi->mutableCount() << "}}";
+                ts << ((int)bgmcRect.left() / tileSize.width()) << "," << ((int)bgmcRect.right() / tileSize.width()) << ","
+                        << (((int)bgmcRect.top()+offsetY) / tileSize.height()) << "," << bgi->mutableCount() << "}}";
             } else {
                 ts << "\t{" << BgInner::bgiFlagsToString(bgi->flags()) << "," << bgi->tile() << "," <<
-                        rectFToString(bgi->relativeBoundingRect().adjusted(bgoRect.left(), 0, bgoRect.left(), 0), tileWidth) << "}";
+                        rectFToString(bgi->relativeBoundingRect().adjusted(bgoRect.left(), 0, bgoRect.left(), 0), offsetY, tileSize.width(), tileSize.height()) << "}";
             }
         } else {    // type() == Mutable
             BgMutable *bgm = static_cast<BgMutable*>(child);
@@ -337,9 +337,9 @@ void WorldCompiler::compileBgInners(int sliceIndex, BgOuter *parent, QTextStream
             ts << "\t{" << bgm->mutableCount() << "," << bgm->mutableString() << ",";
 
             if (bgm->isCustomPayload())
-                ts << bgm->payload().toString() << "}";
+                ts << bgm->payload().toString(0) << "}";
             else
-                ts << bgm->payload().toString(8) << "}";
+                ts << bgm->payload().toString(offsetY, tileSize.width(), tileSize.height()) << "}";
         }
         if (bgi->flags()&BgInner::BGA) {    // Update animations map (we'll print them later)
             if (!animDir.contains(sliceIndex))
@@ -356,8 +356,8 @@ void WorldCompiler::compileBgObjects(int sliceIndex, ProxyItem *parent, QTextStr
 {
     foreach (WorldItem *child, *parent->children()) {
         BgObject *obj = static_cast<BgObject*>(child);
-        ts << "\t{{" << ((int)obj->relativeBoundingRect().left() / tileWidth)
-                << "," << ((int)obj->relativeBoundingRect().top() / tileWidth)
+        ts << "\t{{" << ((int)obj->relativeBoundingRect().left() / tileSize.width())
+                << "," << (((int)obj->relativeBoundingRect().top()+offsetY) / tileSize.height())
                 << "}," << obj->map() << "}";
         if (obj->row() != (parent->childCount()-1))
             ts << ",\n";
@@ -365,12 +365,12 @@ void WorldCompiler::compileBgObjects(int sliceIndex, ProxyItem *parent, QTextStr
     }
 }
 
-QString WorldCompiler::rectFToString(const QRectF &rect, int div)
+QString WorldCompiler::rectFToString(const QRectF &rect, int yOffset, int divX, int divY)
 {
-    if (div <= 0)
+    if (divX <= 0 || divY <= 0)
         return "WorldCompiler::rectFToString - invalid parameters.";
-    return "{" + QString::number((int)rect.left() / div) + "," + QString::number((int)rect.right() / div) + "," +
-            QString::number((int)rect.top() / div) + "," + QString::number((int)rect.bottom() / div) + "}";
+    return "{" + QString::number((int)rect.left() / divX) + "," + QString::number((int)rect.right() / divX) + "," +
+            QString::number(((int)rect.top()+yOffset) / divY) + "," + QString::number(((int)rect.bottom()+yOffset) / divY) + "}";
 }
 
 void WorldCompiler::clearLists()

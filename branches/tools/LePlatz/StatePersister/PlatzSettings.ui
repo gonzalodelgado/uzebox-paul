@@ -52,9 +52,6 @@
         <attribute name="headerVisible">
          <bool>false</bool>
         </attribute>
-        <attribute name="headerVisible">
-         <bool>false</bool>
-        </attribute>
         <column>
          <property name="text">
           <string notr="true">1</string>
@@ -150,14 +147,14 @@
                   <widget class="QWidget" name="page_3">
                    <layout class="QHBoxLayout" name="horizontalLayout_2">
                     <item>
-                     <widget class="QLabel" name="lblOverlayLines">
+                     <widget class="QLabel" name="lblOffsetY">
                       <property name="text">
-                       <string>Overlay Lines:</string>
+                       <string>Y-axis offset (in tiles):</string>
                       </property>
                      </widget>
                     </item>
                     <item>
-                     <widget class="QSpinBox" name="spbOverlayLines">
+                     <widget class="QSpinBox" name="spbOffsetY">
                       <property name="maximum">
                        <number>28</number>
                       </property>

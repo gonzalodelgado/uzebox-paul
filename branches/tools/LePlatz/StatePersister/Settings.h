@@ -50,21 +50,21 @@ class Settings : public QObject
         // Project - get
         QString resolvePath(const QString &path);
         QString projectName();
-        const QString& projectPath() { return mProjectPath; }
-        const QString& imageFormat() { return mImageFormat; }
-        const QString& srcFolder() { return mSrcFolder; }
-        const QString& slicePath() { return mSlicePath; }
-        const QString& tilePath() { return mTilePath; }
-        const QString& mapPath() { return mMapPath; }
-        const QString& animPath() { return mAnimPath; }
-        const QString& makefilePath() { return mMakefilePath; }
-        const QString& hexfilePath() { return mHexfilePath; }
-        const QString& platzfilePath() { return mPlatzfilePath; }
+        const QString& projectPath() const { return mProjectPath; }
+        const QString& imageFormat() const { return mImageFormat; }
+        const QString& srcFolder() const { return mSrcFolder; }
+        const QString& slicePath() const { return mSlicePath; }
+        const QString& tilePath() const { return mTilePath; }
+        const QString& mapPath() const { return mMapPath; }
+        const QString& animPath() const { return mAnimPath; }
+        const QString& makefilePath() const { return mMakefilePath; }
+        const QString& hexfilePath() const { return mHexfilePath; }
+        const QString& platzfilePath() const { return mPlatzfilePath; }
         int videoMode() const { return mVideoMode; }
-        int overlayLines() const;
-        int tileWidth() const;
-        QSize sliceSize() { return mSliceSize; }
-        QSize spriteSize() { return mSpriteSize; }
+        QSize tileSize() const;
+        QSize sliceSize() const { return mSliceSize; }
+        QSize spriteSize() const { return mSpriteSize; }
+        int offsetY() { return mOffsetY; }
 
         // Project - set
         void setProjectPath(const QString &path);
@@ -84,6 +84,7 @@ class Settings : public QObject
         void setSliceSize(int wid, int hgt);
         void setSpriteSize(const QSize &size);
         void setSpriteSize(int wid, int hgt);
+        void setOffsetY(int offset);
 
         // LePlatz - get
         const QString& makeExePath() { return mMakeExePath; }
@@ -117,6 +118,7 @@ class Settings : public QObject
         void recentProjectsChanged(const QStringList &recentProjects);
         void canvasColorChanged(const QColor &color);
         void tileSizeChanged(const QSize &size);
+        void offsetYChanged(int offset);
     public slots:
         void resetProjectSettings();
         bool loadSettings(const QString &path);
@@ -149,6 +151,7 @@ class Settings : public QObject
         QString mEmuExePath;
         QStringList mRecentProjects;
         QColor mCanvasColor;
+        int mOffsetY;
 };
 
 #endif

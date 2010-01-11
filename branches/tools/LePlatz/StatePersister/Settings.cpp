@@ -81,15 +81,9 @@ QString Settings::projectName()
     return name;
 }
 
-int Settings::overlayLines() const
+QSize Settings::tileSize() const
 {
-    int maxHgt = (mVideoMode == 2)?VMODE2_SCREEN_TILES_V<<3:VMODE3_SCREEN_TILES_V<<3;
-    return (maxHgt-mSliceSize.height())>>3;
-}
-
-int Settings::tileWidth() const
-{
-    return (mVideoMode == 2) ? 6 : 8;
+    return (mVideoMode == 2)?QSize(6,8):QSize(8,8);
 }
 
 void Settings::setProjectPath(const QString &path) {
@@ -123,6 +117,11 @@ void Settings::setSpriteSize(const QSize &size) {
 void Settings::setSpriteSize(int wid, int hgt) {
     mSpriteSize = QSize(wid, hgt);
     emit spriteSizeChanged(mSpriteSize);
+}
+
+void Settings::setOffsetY(int offset) {
+    mOffsetY = offset;
+    emit offsetYChanged(offset);
 }
 
 void Settings::setArtFolder(const QString &folder)

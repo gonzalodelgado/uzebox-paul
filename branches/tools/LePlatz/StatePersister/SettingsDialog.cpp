@@ -37,11 +37,11 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     ui->splitter->setSizes(QList<int>() << 140 << 360);
 
     if (settings->videoMode() == 2)
-        maxOverlayLines = settings->VMODE2_SCREEN_TILES_V;
+        maxOffsetY = settings->VMODE2_SCREEN_TILES_V;
     else
-        maxOverlayLines = settings->VMODE3_SCREEN_TILES_V;
-    ui->spbOverlayLines->setRange(0, maxOverlayLines);
-    ui->spbOverlayLines->setValue(qMin(settings->overlayLines(), maxOverlayLines));
+        maxOffsetY = settings->VMODE3_SCREEN_TILES_V;
+    ui->spbOffsetY->setRange(0, maxOffsetY);
+    ui->spbOffsetY->setValue(qMin(settings->offsetY()/settings->tileSize().height(), maxOffsetY));
 
     // Populate trees
     QTreeWidgetItem *projectSettings = new QTreeWidgetItem(ui->treeWidget);
@@ -55,7 +55,7 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     ui->twLps->header()->resizeSection(0, 140);
     QList<QTreeWidgetItem*> items;
     items.append(QList<QTreeWidgetItem*>() << new QTreeWidgetItem(QStringList() << QString("Video Mode")
-            << QString("%1\tOverlay Lines: %2").arg(settings->videoMode()).arg(ui->spbOverlayLines->value()))
+            << QString("%1\tY-axis offset: %2").arg(settings->videoMode()).arg(ui->spbOffsetY->value()))
             << new QTreeWidgetItem(QStringList() << QString("Slice Size") << QString("Width: %1\tHeight: %2").arg(
             settings->sliceSize().width()).arg(settings->sliceSize().height()))
             << new QTreeWidgetItem(QStringList() << QString("Slice Path") << settings->slicePath())
@@ -97,7 +97,7 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     connect(ui->twLps, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
             this, SLOT(settingLpsItemSelected(QTreeWidgetItem*,QTreeWidgetItem*)));
     // Tree updates
-    connect(ui->spbOverlayLines, SIGNAL(valueChanged(QString)), this, SLOT(updateTrees(QString)));
+    connect(ui->spbOffsetY, SIGNAL(valueChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leSlicePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leTilePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leMapPath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
@@ -140,10 +140,10 @@ void SettingsDialog::updateTrees(const QString &text)
 
     if (item) {
         if (twIndex == 0 && itemIndex == 0) {
-            int overlayLines = ui->spbOverlayLines->value();
-            item->setText(1, QString("%1\tOverlay Lines: %2").arg(settings->videoMode()).arg(overlayLines));
+            int offsetY = ui->spbOffsetY->value();
+            item->setText(1, QString("%1\tY-axis offset: %2").arg(settings->videoMode()).arg(offsetY));
             item = tree->topLevelItem(itemIndex+1);
-            item->setText(1, QString("Width: %1\tHeight: %2").arg(settings->sliceSize().width()).arg((maxOverlayLines-overlayLines)<<3));
+            item->setText(1, QString("Width: %1\tHeight: %2").arg(settings->sliceSize().width()).arg((maxOffsetY-offsetY)<<3));
         } else {
             item->setText(1, text);
         }
@@ -257,10 +257,11 @@ void SettingsDialog::applySettings()
     wid = settings->sliceSize().width();
 
     if (settings->videoMode() == 2)
-        hgt = settings->VMODE2_SCREEN_TILES_V-ui->spbOverlayLines->value();
+        hgt = settings->VMODE2_SCREEN_TILES_V-ui->spbOffsetY->value();
     else
-        hgt = settings->VMODE3_SCREEN_TILES_V-ui->spbOverlayLines->value();
+        hgt = settings->VMODE3_SCREEN_TILES_V-ui->spbOffsetY->value();
     settings->setSliceSize(wid, hgt<<3);
+    settings->setOffsetY(ui->spbOffsetY->value()*settings->tileSize().height());
     settings->setSlicePath(ui->leSlicePath->text());
     settings->setTilePath(ui->leTilePath->text());
     settings->setMapPath(ui->leMapPath->text());

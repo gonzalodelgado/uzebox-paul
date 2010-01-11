@@ -80,7 +80,8 @@ public:
     void setRoot(WorldItem *rootItem);
     void setSliceSize(const QSize &size);
     void setSpriteSize(const QSize &size);
-    void setTileWidth(int width) { tileWidth = width; }
+    void setTileSize(const QSize &size) { tileSize = size; }
+    void setOffsetY(int offset) { offsetY = offset; }
 private:
     void clearLists();
     void compileBgObjects(int sliceIndex, ProxyItem *parent, QTextStream &ts);
@@ -91,7 +92,7 @@ private:
     void compilePlatformDirectory(QTextStream &ts);
     void compileAnimations(QTextStream &ts);
     void compileBgDirectory(QTextStream &ts);
-    QString rectFToString(const QRectF &rect, int div = 1);
+    QString rectFToString(const QRectF &rect, int yOffset, int divX = 1, int divY = 1);
     WorldItem *root;
     int platformIndex;
     QList<BgDirectory*> bgDir;
@@ -99,7 +100,8 @@ private:
     QMap<int, PlatformMap*> platformDir;
     QSize sliceSize;
     QSize spriteSize;
-    int tileWidth;
+    QSize tileSize;
+    int offsetY;
 };
 
 #endif // WORLDCOMPILER_H

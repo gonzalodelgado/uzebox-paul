@@ -42,9 +42,12 @@ public slots:
     void displayArtFolderHelp();
     void displaySrcFolderHelp();
     void displayVideoModeHelp();
-    void displayOverlayLinesHelp();
-    void setOverlayRange(int index);
-    void setVideoModeRes(int overlayLines);
+    void displaySliceHeightHelp();
+    void displayOffsetYHelp();
+    void setSpinBoxRanges(int index);
+    void updateVideoModeRes();
+    void syncSliceHeight(int offsetY);
+    void syncOffsetY(int sliceHeight);
 protected:
     QString folderFileDialog(const QString &initPath, const QString &title);
 private slots:

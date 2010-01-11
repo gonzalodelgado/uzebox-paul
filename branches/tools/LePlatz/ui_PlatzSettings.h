@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzSettings.ui'
 **
-** Created: Fri 8. Jan 11:57:51 2010
+** Created: Mon 11. Jan 16:55:34 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -50,8 +50,8 @@ public:
     QStackedWidget *swPs;
     QWidget *page_3;
     QHBoxLayout *horizontalLayout_2;
-    QLabel *lblOverlayLines;
-    QSpinBox *spbOverlayLines;
+    QLabel *lblOffsetY;
+    QSpinBox *spbOffsetY;
     QSpacerItem *horizontalSpacer;
     QWidget *page;
     QWidget *page_11;
@@ -200,16 +200,16 @@ public:
         page_3->setObjectName(QString::fromUtf8("page_3"));
         horizontalLayout_2 = new QHBoxLayout(page_3);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        lblOverlayLines = new QLabel(page_3);
-        lblOverlayLines->setObjectName(QString::fromUtf8("lblOverlayLines"));
+        lblOffsetY = new QLabel(page_3);
+        lblOffsetY->setObjectName(QString::fromUtf8("lblOffsetY"));
 
-        horizontalLayout_2->addWidget(lblOverlayLines);
+        horizontalLayout_2->addWidget(lblOffsetY);
 
-        spbOverlayLines = new QSpinBox(page_3);
-        spbOverlayLines->setObjectName(QString::fromUtf8("spbOverlayLines"));
-        spbOverlayLines->setMaximum(28);
+        spbOffsetY = new QSpinBox(page_3);
+        spbOffsetY->setObjectName(QString::fromUtf8("spbOffsetY"));
+        spbOffsetY->setMaximum(28);
 
-        horizontalLayout_2->addWidget(spbOverlayLines);
+        horizontalLayout_2->addWidget(spbOffsetY);
 
         horizontalSpacer = new QSpacerItem(193, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -544,7 +544,7 @@ public:
         SettingsDialog->setWhatsThis(QString());
 #endif // QT_NO_WHATSTHIS
         groupBox->setTitle(QApplication::translate("SettingsDialog", "Project Settings", 0, QApplication::UnicodeUTF8));
-        lblOverlayLines->setText(QApplication::translate("SettingsDialog", "Overlay Lines:", 0, QApplication::UnicodeUTF8));
+        lblOffsetY->setText(QApplication::translate("SettingsDialog", "Y-axis offset (in tiles):", 0, QApplication::UnicodeUTF8));
         lblSlicePath->setText(QApplication::translate("SettingsDialog", "Slice Path:", 0, QApplication::UnicodeUTF8));
         pbSlicePath->setText(QApplication::translate("SettingsDialog", "...", 0, QApplication::UnicodeUTF8));
         lblTilePath->setText(QApplication::translate("SettingsDialog", "Tile path:", 0, QApplication::UnicodeUTF8));

@@ -38,7 +38,8 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
 
     ui->cboVideoMode->addItem("Mode 2 (192x208)", QVariant(QSize(192, 208)));
     ui->cboVideoMode->addItem("Mode 3 (256x224)", QVariant(QSize(256, 224)));
-    connect(ui->cboVideoMode, SIGNAL(currentIndexChanged(int)), this, SLOT(setOverlayRange(int)));
+    connect(ui->cboVideoMode, SIGNAL(currentIndexChanged(int)), this, SLOT(setSpinBoxRanges(int)));
+    ui->spbSliceHeight->setValue(Settings::VMODE3_SCREEN_TILES_V);
     ui->cboVideoMode->setCurrentIndex(1);
 
     ui->cboImageFormat->addItems(Platz::SUPPORTED_IMAGE_FORMATS_EXTS);
@@ -61,30 +62,58 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
     connect(ui->leSrcFolder, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
     connect(ui->cboVideoMode, SIGNAL(receivedFocus()), this, SLOT(displayVideoModeHelp()));
     connect(ui->cboVideoMode, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
-    connect(ui->spbOverlayLines, SIGNAL(valueChanged(int)), this, SLOT(setVideoModeRes(int)));
-    connect(ui->spbOverlayLines, SIGNAL(receivedFocus()), this, SLOT(displayOverlayLinesHelp()));
-    connect(ui->spbOverlayLines, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
+    connect(ui->spbOffsetY, SIGNAL(valueChanged(int)), this, SLOT(syncSliceHeight(int)));
+    connect(ui->spbOffsetY, SIGNAL(receivedFocus()), this, SLOT(displayOffsetYHelp()));
+    connect(ui->spbOffsetY, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
+    connect(ui->spbSliceHeight, SIGNAL(valueChanged(int)), this, SLOT(syncOffsetY(int)));
+    connect(ui->spbSliceHeight, SIGNAL(receivedFocus()), this, SLOT(displaySliceHeightHelp()));
+    connect(ui->spbSliceHeight, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
     ui->leProjectName->setFocus();
 }
 
-void NewProject::setVideoModeRes(int overlayLines)
+void NewProject::syncSliceHeight(int offsetY)
 {
-    Q_ASSERT(ui->cboVideoMode->count() > 1);
-    int hgt0 = ui->cboVideoMode->itemData(0, Qt::UserRole).toSize().height();
-    int hgt1 = ui->cboVideoMode->itemData(1, Qt::UserRole).toSize().height();
-    ui->cboVideoMode->setItemText(0, QString("Mode 2 (192x%1)").arg(qMax(0, hgt0-8*overlayLines)));
-    ui->cboVideoMode->setItemText(1, QString("Mode 3 (256x%1)").arg(hgt1-8*overlayLines));
+    int vTiles = (ui->cboVideoMode->currentIndex() == 0) ? Settings::VMODE2_SCREEN_TILES_V : Settings::VMODE3_SCREEN_TILES_V;
+    int sliceHeight = ui->spbSliceHeight->value();
+
+    if ((offsetY + sliceHeight) > vTiles)
+        ui->spbSliceHeight->setValue(vTiles-offsetY);
+    updateVideoModeRes();
 }
 
-void NewProject::setOverlayRange(int index)
+void NewProject::syncOffsetY(int sliceHeight)
+{
+    int vTiles = (ui->cboVideoMode->currentIndex() == 0) ? Settings::VMODE2_SCREEN_TILES_V : Settings::VMODE3_SCREEN_TILES_V;
+    int offsetY = ui->spbOffsetY->value();
+
+    if ((offsetY + sliceHeight) > vTiles)
+        ui->spbOffsetY->setValue(vTiles-sliceHeight);
+    updateVideoModeRes();
+}
+
+void NewProject::updateVideoModeRes()
+{
+    Q_ASSERT(ui->cboVideoMode->count() > 1);
+    int sliceHeight = ui->spbSliceHeight->value();
+    ui->cboVideoMode->setItemText(0, QString("Mode 2 (192x%1)").arg(qMin(208,8*sliceHeight)));
+    ui->cboVideoMode->setItemText(1, QString("Mode 3 (256x%1)").arg(8*sliceHeight));
+}
+
+void NewProject::setSpinBoxRanges(int index)
 {
     if (ui->cboVideoMode->count() > index) {
         if (index == 0) {
-            ui->spbOverlayLines->setValue(qMin(ui->spbOverlayLines->value(), settings->VMODE2_SCREEN_TILES_V));
-            ui->spbOverlayLines->setMaximum(settings->VMODE2_SCREEN_TILES_V);
+            ui->spbOffsetY->setValue(qMin(ui->spbOffsetY->value(), settings->VMODE2_SCREEN_TILES_V));
+            ui->spbOffsetY->setMaximum(settings->VMODE2_SCREEN_TILES_V);
+            ui->spbSliceHeight->setValue(qMin(ui->spbSliceHeight->value(), settings->VMODE2_SCREEN_TILES_V));
+            ui->spbSliceHeight->setMaximum(settings->VMODE2_SCREEN_TILES_V);
+            syncOffsetY(ui->spbSliceHeight->value());   // In case of no value change signal, ensure rules are still enforced
         } else {
-            ui->spbOverlayLines->setValue(qMin(ui->spbOverlayLines->value(), settings->VMODE3_SCREEN_TILES_V));
-            ui->spbOverlayLines->setMaximum(settings->VMODE3_SCREEN_TILES_V);
+            ui->spbOffsetY->setValue(qMin(ui->spbOffsetY->value(), settings->VMODE3_SCREEN_TILES_V));
+            ui->spbOffsetY->setMaximum(settings->VMODE3_SCREEN_TILES_V);
+            ui->spbSliceHeight->setValue(qMin(ui->spbSliceHeight->value(), settings->VMODE3_SCREEN_TILES_V));
+            ui->spbSliceHeight->setMaximum(settings->VMODE3_SCREEN_TILES_V);
+            syncOffsetY(ui->spbSliceHeight->value());   // In case of no value change signal, ensure rules are still enforced
         }
     }
 }
@@ -136,10 +165,16 @@ void NewProject::displayVideoModeHelp()
                                    "This is because only horizontal scrolling is currently supported.");
 }
 
-void NewProject::displayOverlayLinesHelp()
+void NewProject::displaySliceHeightHelp()
 {
-    ui->lblContextualHelp->setText("Overlay lines are static horizontal sections of the screen used to display status information. "
-                                   "Increasing this value will reduce the height of your slices.");
+    ui->lblContextualHelp->setText("Slice height may be less than the maximum if Overlay Lines or other Screen Sections are in use. "
+                                   "This value indicates the vertical region of your slices on which Platz will draw.");
+}
+
+void NewProject::displayOffsetYHelp()
+{
+    ui->lblContextualHelp->setText("Y-axis offset refers to screen regions that appear above your slices (Overlay Lines in Mode 3, and Screen Sections in mode 2). "
+                                   "Increasing this value will reduce the vertical region of your slices on which Platz will draw.");
 }
 
 QString NewProject::folderFileDialog(const QString &initPath, const QString &title)
@@ -237,13 +272,13 @@ void NewProject::createNewProject()
 
     QSize sliceSize = ui->cboVideoMode->itemData(ui->cboVideoMode->currentIndex(), Qt::UserRole).toSize();
 
-    sliceSize.setHeight(sliceSize.height() - 8*ui->spbOverlayLines->value());
-
+    sliceSize.setHeight(ui->spbSliceHeight->value()*8);
     settings->setProjectPath(ui->leProjectFolder->text() + "/" + projectName);
     settings->setImageFormat(ui->cboImageFormat->currentText());
     settings->setArtFolder(ui->leArtFolder->text());
     settings->setRelativeSrcFolder(ui->leSrcFolder->text());
     settings->setSliceSize(sliceSize);
+    settings->setOffsetY(ui->spbOffsetY->value()*sliceSize.height());
     accept();
 }
 

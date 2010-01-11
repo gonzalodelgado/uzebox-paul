@@ -101,6 +101,9 @@ void PlatzWriter::writeSettings()
     writeAttribute("width", QString::number(settings->sliceSize().width()));
     writeAttribute("height", QString::number(settings->sliceSize().height()));
     writeEndElement();  // SliceSize
+    writeStartElement("OffsetY");
+    writeAttribute("offset", QString::number(settings->offsetY()));
+    writeEndElement();  // OffsetY
     writeTextElement("SlicePath", settings->slicePath());
     writeTextElement("TilePath", settings->tilePath());
     writeTextElement("MapPath", settings->mapPath());

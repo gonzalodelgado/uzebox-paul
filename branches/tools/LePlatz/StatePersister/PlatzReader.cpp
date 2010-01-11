@@ -216,6 +216,9 @@ void PlatzReader::readSettings()
                 int height = attributes().value("height").toString().toInt();
                 settings->setSliceSize(width, height);
                 readElementText();
+            } else if (s == "OffsetY") {
+                settings->setOffsetY(attributes().value("offset").toString().toInt());
+                readElementText();
             } else if (s == "SpriteSize") {     // v1.0 remnant
                 int width = attributes().value("width").toString().toInt();
                 int height = attributes().value("height").toString().toInt();

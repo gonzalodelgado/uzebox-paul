@@ -29,7 +29,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>412</y>
+     <y>410</y>
      <width>581</width>
      <height>20</height>
     </rect>
@@ -42,7 +42,7 @@
    <property name="geometry">
     <rect>
      <x>430</x>
-     <y>430</y>
+     <y>429</y>
      <width>156</width>
      <height>23</height>
     </rect>
@@ -55,7 +55,7 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>352</y>
+     <y>350</y>
      <width>431</width>
      <height>61</height>
     </rect>
@@ -280,7 +280,7 @@
       </item>
      </layout>
     </item>
-    <item row="8" column="0" colspan="2">
+    <item row="9" column="0" colspan="2">
      <spacer name="verticalSpacer_8">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -293,14 +293,14 @@
       </property>
      </spacer>
     </item>
-    <item row="9" column="0">
+    <item row="10" column="0">
      <widget class="QLabel" name="lblSrcPath">
       <property name="text">
        <string>Source Folder:</string>
       </property>
      </widget>
     </item>
-    <item row="9" column="1">
+    <item row="10" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
        <widget class="FocusLineEdit" name="leSrcFolder"/>
@@ -320,7 +320,7 @@
       </item>
      </layout>
     </item>
-    <item row="10" column="0" colspan="2">
+    <item row="11" column="0" colspan="2">
      <spacer name="verticalSpacer_9">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
@@ -333,17 +333,30 @@
       </property>
      </spacer>
     </item>
-    <item row="11" column="0">
+    <item row="12" column="0">
      <widget class="QLabel" name="lvlVideoMode">
       <property name="text">
        <string>Video Mode:</string>
       </property>
      </widget>
     </item>
-    <item row="11" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
+    <item row="12" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
-       <widget class="FocusComboBox" name="cboVideoMode"/>
+       <widget class="FocusComboBox" name="cboVideoMode">
+        <property name="minimumSize">
+         <size>
+          <width>140</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>94</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
       </item>
       <item>
        <spacer name="horizontalSpacer_2">
@@ -352,23 +365,47 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>188</width>
           <height>20</height>
          </size>
         </property>
        </spacer>
       </item>
+     </layout>
+    </item>
+    <item row="13" column="1">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>348</width>
+        <height>6</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="14" column="0">
+     <widget class="QLabel" name="lblOffsetY_2">
+      <property name="text">
+       <string>Slice height:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="14" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
-       <widget class="QLabel" name="lblOverlayLines">
-        <property name="text">
-         <string>Overlay Lines:</string>
+       <widget class="FocusSpinBox" name="spbSliceHeight">
+        <property name="maximum">
+         <number>32</number>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="FocusSpinBox" name="spbOverlayLines">
-        <property name="maximum">
-         <number>32</number>
+       <widget class="QLabel" name="lblSliceHeightTiles">
+        <property name="text">
+         <string>tiles</string>
         </property>
        </widget>
       </item>
@@ -379,7 +416,41 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>18</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblOffsetY">
+        <property name="text">
+         <string>Y-axis offset:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="FocusSpinBox" name="spbOffsetY">
+        <property name="maximum">
+         <number>32</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblOffsetYTiles">
+        <property name="text">
+         <string>tiles</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>18</width>
           <height>20</height>
          </size>
         </property>
@@ -387,15 +458,15 @@
       </item>
      </layout>
     </item>
-    <item row="12" column="0" colspan="2">
-     <spacer name="verticalSpacer_10">
+    <item row="15" column="1">
+     <spacer name="verticalSpacer_2">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>428</width>
-        <height>13</height>
+        <width>348</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>

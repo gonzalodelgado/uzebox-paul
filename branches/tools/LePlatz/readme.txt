@@ -19,11 +19,12 @@ LePlatz 1.1.0
   in the source code. However, name changes can be easily filtered throughout your LePlatz
   world through the use of this tool in the "Edit->Find/Replace..." menu.
 - Added support for Mutable Bg Classes (see Platz v1.1 for details).
-- Added support for video mode 2
+- Added support for video mode 2.
+- Added mode 2 example project.
 - Numerous UI tweaks
 - Removed need for SliceSize setting due to changes in Platz v1.1 collision handling.
 - JPEG no longer an image format option.
-- TileStudio sample now contains correct relative path to tiles.png
+- TileStudio sample now contains correct relative path to tiles.png.
 
 LePlatz 1.0.0
 - Initial release.

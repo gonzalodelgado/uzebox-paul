@@ -59,11 +59,11 @@ namespace Platz
             return QRectF(toRect());
         }
 
-        QString toString(int div = 1) const {
-            if (div <= 0)
+        QString toString(int yOffset, int divX = 1, int divY = 1) const {
+            if (divX <= 0 || divY <= 0)
                 return "MutablePayload::toString - invalid parameters.";
-            return "{" + QString::number(left / div) + "," + QString::number(right / div) + "," +
-                QString::number(top / div) + "," + QString::number(btm / div) + "}";
+            return "{" + QString::number(left / divX) + "," + QString::number(right / divX) + "," +
+                QString::number((top+yOffset) / divY) + "," + QString::number((btm+yOffset) / divY) + "}";
         }
     } MutablePayload;
 

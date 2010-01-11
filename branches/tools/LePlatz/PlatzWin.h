@@ -90,6 +90,7 @@ public slots:
     void setSliceSize(const QSize &size);
     void setSpriteSize(const QSize &size) { spriteSize = size; }
     void setTileSize(const QSize &size) { tileSize = size; }
+    void setOffsetY(int offset) { offsetY = offset; }
     void clearBgoCheckBoxes();
     void updateBgoToolboxAttributes();
     void updateBgiToolboxAttributes();
@@ -159,6 +160,7 @@ private:
     QSize sliceSize;
     QSize spriteSize;
     QSize tileSize;
+    int offsetY;
     bool activeProject;
     QMenu *recProjMenu;
     QActionGroup *recProjActionGrp;
