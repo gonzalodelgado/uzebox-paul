@@ -1332,6 +1332,7 @@ int main(void) {
 	//SetSpriteVisibility(true);
 	//Screen.overlayHeight = OVERLAY_LINES;
 	SetSpritesOptions(SPR_OVERFLOW_CLIP);
+	PlatzHideSprite(0,MAX_SPRITES,1);
 
 	// If we only use 2 screenSections, our Platz section repeats 1/3 of the way down???
 	screenSections[0].tileTableAdress = tileset;

@@ -446,8 +446,8 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 				
 				for (k = 0; k < hgt; k++) {
 					for (l = objBegin; l < objEnd; l++) {
-						SetTile(robj.left+l,robj.top+k,pgm_read_byte(&(objMap[k*wid+l+2])));
-						//inline_set_tile(robj.left+l,robj.top+k,pgm_read_byte(&(objMap[k*wid+l+2])));
+						//SetTile(robj.left+l,robj.top+k,pgm_read_byte(&(objMap[k*wid+l+2])));
+						inline_set_tile(robj.left+l,robj.top+k,pgm_read_byte(&(objMap[k*wid+l+2])));
 					}
 				}
 			}
@@ -518,7 +518,7 @@ void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags) {
 void PlatzHideSprite(u8 spriteIndex, u8 wid, u8 hgt) {
 	for (int i = 0; i < (wid*hgt); i++)
 		//MoveSprite(spriteIndex+i,TO_PIXELS_X(SCREEN_TILES_H),0,1,1);
-		MoveSprite(spriteIndex+i,-1,-1,1,1);
+		MoveSprite(spriteIndex+i,0,-TILE_HEIGHT,1,1);
 }
 
 
@@ -528,8 +528,8 @@ void PlatzFill(const rect *r, u8 tileId) {
 
 	for (x = r->left; x < r->right; x++) {
 		for (y = r->top; y < r->btm; y++) {
-			SetTile(x,y,tileId);
-			//inline_set_tile(x,y,tileId);
+			//SetTile(x,y,tileId);
+			inline_set_tile(x,y,tileId);
 		}
 	}
 }
@@ -548,8 +548,8 @@ void PlatzFillPattern(const rect *r, u8 patWid, u8 patHgt, u8 patIndex, u8 patOf
 		for (x = 0,xPat = patOffsetX; x < fillWid; x++,xPat++) {
 			if (xPat == patWid)
 				xPat = 0;
-			SetTile(x+r->left,y+r->top,pgm_read_byte(&(map[patIndex+xPat+yPat*patWid])));
-			//inline_set_tile(x+r->left,y+r->top,pgm_read_byte(&(map[patIndex+xPat+yPat*patWid])));
+			//SetTile(x+r->left,y+r->top,pgm_read_byte(&(map[patIndex+xPat+yPat*patWid])));
+			inline_set_tile(x+r->left,y+r->top,pgm_read_byte(&(map[patIndex+xPat+yPat*patWid])));
 		}
 	}
 }
@@ -579,8 +579,8 @@ void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int da
 			if (yMap == mapHgt)
 				yMap = 0;
 			if (map)
-				SetTile(x+r->left,y+r->top,pgm_read_byte(&(map[xMap+yMap*mapWid+dataOffset])));
-				//inline_set_tile(x+r->left,y+r->top,pgm_read_byte(&(map[xMap+yMap*mapWid+dataOffset])));
+				//SetTile(x+r->left,y+r->top,pgm_read_byte(&(map[xMap+yMap*mapWid+dataOffset])));
+				inline_set_tile(x+r->left,y+r->top,pgm_read_byte(&(map[xMap+yMap*mapWid+dataOffset])));
 		}
 	}
 }
@@ -602,7 +602,7 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 
 	// Paint sky
 #if VIDEO_MODE == 2
-	PlatzFill(&(rect){paintX,paintX+1,SS_OFFSET_Y,TO_TILES_X(ss->height)},0);
+	PlatzFill(&(rect){paintX,paintX+1,SS_OFFSET_Y,SS_OFFSET_Y+TO_TILES_Y(ss->height)},0);
 #elif VIDEO_MODE == 3
 	PlatzFill(&(rect){paintX,paintX+1,0,SCREEN_TILES_V-OVERLAY_LINES},0);
 #endif
@@ -856,18 +856,18 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	// Pre-use rPost to save allocating another variable
 	rPost.left = (int)(a->loc.y)+(int)yVel;
 
-#if VIDEO_MODE == 1
-	if ((rPost.left+a->bby) > (PLATZ_SCRN_HGT-1)) {
+#if VIDEO_MODE == 2
+	if ((rPost.left+a->bby) >= (TO_PIXELS_Y(SS_OFFSET_Y)+ss->height)) {
 		// Collision with bottom of screen
-		yVel = PLATZ_SCRN_HGT-ss->height-a->bby-a->loc.y-1;
+		yVel = (TO_PIXELS_Y(SS_OFFSET_Y)+ss->height)-a->bby-a->loc.y-1;
 		retVal |= T_INTERSECT;
-	} else if ((rPost.left-a->bby) < (PLATZ_SCRN_HGT-ss->height)) {
+	} else if ((rPost.left-a->bby) < TO_PIXELS_Y(SS_OFFSET_Y)) {
 		// Collision with top of screen
-		yVel = -(a->loc.y-a->bby);
+		yVel = -(TO_PIXELS_Y(SS_OFFSET_Y)-(a->loc.y-a->bby));
 		retVal |= B_INTERSECT;
 	}
-#else //VIDEO_MODE == 3
-	if ((rPost.left+a->bby) > (PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))-1)) {
+#elif VIDEO_MODE == 3
+	if ((rPost.left+a->bby) >= (PLATZ_SCRN_HGT-TO_PIXELS_Y(OVERLAY_LINES))) {
 		// Collision with bottom of screen
 		yVel = PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))-a->bby-a->loc.y-1;
 		retVal |= T_INTERSECT;
