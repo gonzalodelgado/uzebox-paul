@@ -32,7 +32,7 @@
 
 // Default slices
 #ifndef SLICE_COUNT
-	#define SLICE_COUNT 5 //53
+	#define SLICE_COUNT 51
 #endif
 
 #define SPRITE_FLIP_X 0
@@ -287,7 +287,7 @@ typedef struct player {
 // Animations
 #include "data/animations.map.inc"
 // Sound
-//#include "data/patches.inc"
+#include "data/patches.inc"
 //#include "data/crazy_caroms.inc"
 // Level data
 #include "data/platz.levels.inc"
@@ -1373,9 +1373,9 @@ int main(void) {
 	// Init platz scene
 	PlatzSetMovingPlatformTiles(194, 194, 194, 194);
 	PlatzInit(&bob.pa,SLICE_COUNT);
-	//PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
+	PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
 
-
+/*
 	PlatzHideSprite(4,2,2);
 	SetForm(FORM_LYNX);
 	bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
@@ -1393,6 +1393,7 @@ int main(void) {
 	prng = MAX(prng,1);		// Don't seed lfsr with zero
 	//StartSong(crazy_caroms_song);
 	gstate = GSTATE_PLAYING;
+*/
 
 	while(1) {
 		if (GetVsyncFlag()) {
@@ -1640,7 +1641,7 @@ int main(void) {
 				PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
 				bob.pa.vx.dir = DIR_RIGHT;
 				ResetGame();
-				StopSong();
+				//StopSong();
 				demotmr = 1;
 				gstate = GSTATE_DEMO;
 				continue;

@@ -11,14 +11,25 @@ CC = avr-gcc
 INFO=../gameinfo.properties
 ## CC Flags: -fverbose-asm -S -fno-inline-small-functions
 
+## Escape spaces in mixer path (due to custom sounds.inc)
+EMPTY:=
+SPACE:= $(EMPTY) $(EMPTY)
+SPACE_ESC:= \\$(SPACE)
+MIX_PATH:= $(realpath ../data/sounds.inc)
+MIX_PATH_ESC:= $(subst $(SPACE),$(SPACE_ESC),$(MIX_PATH))
+
 ## Kernel settings
 KERNEL_DIR = ../kernel
-KERNEL_OPTIONS  = -DVIDEO_MODE=2 -DINTRO_LOGO=0 -DSCREEN_SECTIONS_COUNT=3
+KERNEL_OPTIONS  = -DVIDEO_MODE=2 -DINTRO_LOGO=0 -DSCREEN_SECTIONS_COUNT=3 -DSOUND_CHANNEL_4_ENABLE=1 -DSOUND_CHANNEL_2_ENABLE=1 -DSOUND_CHANNEL_3_ENABLE=1
+KERNEL_OPTIONS  += -DMIXER_WAVES=\"$(MIX_PATH_ESC)\"
 
 ## Platz settings
 	## MAX_MOVING_PLATFORMS and MAX_ANIMATED_BGS are per slice. Set to 0 (or delete) to disable.
 	## VIEWPORT_SLACK should be small enough so as to not allow your player to wander offscreen.
-PLATZ_OPTIONS = -DVIEWPORT_SLACK=0 -DMAX_ANIMATED_BGS=2 -DMAX_MOVING_PLATFORMS=1 -DMUTABLE_BGS -DMP_HACK -DSS_OFFSET_Y=3
+PLATZ_OPTIONS = -DVIEWPORT_SLACK=0 -DMAX_ANIMATED_BGS=5 -DMAX_MOVING_PLATFORMS=3 -DMUTABLE_BGS -DMP_HACK -DSS_OFFSET_Y=3
+
+## B.C. Dash settings
+BC_DASH_OPTIONS = -DSLICE_COUNT=51 -DSTART_Y=40
 
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
@@ -29,6 +40,7 @@ CFLAGS += -Wall -gdwarf-2 -std=gnu99 -DF_CPU=28636360UL -Os -fsigned-char -ffunc
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 CFLAGS += $(KERNEL_OPTIONS)
 CFLAGS += $(PLATZ_OPTIONS)
+CFLAGS += $(BC_DASH_OPTIONS)
 
 ## Assembly specific flags
 ASMFLAGS = $(COMMON)
