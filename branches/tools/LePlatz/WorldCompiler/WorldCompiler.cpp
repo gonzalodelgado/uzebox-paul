@@ -255,9 +255,9 @@ void WorldCompiler::compilePlatforms(int sliceIndex, ProxyItem *parent, QTextStr
             ts << "\t{" << plat->clearTile() << "|"
                     << BgPlatform::platformFlagsToString(plat->flags()) << ","
                     << ((platPath->axis() == BgPlatformPath::AxisX)?(int)platPath->relativeBoundingRect().left()
-                        :(int)platPath->relativeBoundingRect().top()) << ","
+                        :(int)platPath->relativeBoundingRect().top()+offsetY) << ","
                     << ((platPath->axis() == BgPlatformPath::AxisX)?(int)platPath->relativeBoundingRect().right()-plat->relativeBoundingRect().width()
-                        :(int)platPath->relativeBoundingRect().bottom()-plat->relativeBoundingRect().height()) << ","
+                        :((int)platPath->relativeBoundingRect().bottom()+offsetY)-plat->relativeBoundingRect().height()) << ","
                     << BgPlatformPath::platformPathFlagsToString(platPath->axis()) << ","
                     << plat->velocity() << ","
                     << rectFToString(plat->relativeBoundingRect().adjusted(pathRect.left(), 0, pathRect.left(), 0), offsetY) << "}";

@@ -47,8 +47,8 @@ static const int STATUS_DELAY = 10000;
 
 PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::PlatzWin), procMake(new QProcess(this)), procEmu(new QProcess(this)),
-        settings(new Settings(MAX_RECENT_PROJECTS)), projectPath(QDir::currentPath()), activeProject(false),
-        recProjMenu(0), bgoTrigger(false), unsavedChanges(false)
+        settings(new Settings(MAX_RECENT_PROJECTS)), projectPath(QDir::currentPath()), tileSize(QSize(8,8)),
+        offsetY(0), activeProject(false), recProjMenu(0), bgoTrigger(false), unsavedChanges(false)
 {
     ui->setupUi(this);
     setWindowIcon(QIcon(":/icons/128x128/mp.png"));
@@ -328,6 +328,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->leMutTop, SIGNAL(editingFinished()), this, SLOT(updateBgmToolboxAttributes()));
     connect(ui->leMutBottom, SIGNAL(editingFinished()), this, SLOT(updateBgmToolboxAttributes()));
     connect(ui->chkPayload, SIGNAL(toggled(bool)), scene, SLOT(setPayloadToCustom(bool)));
+    connect(this, SIGNAL(bgmMutableStringChanged(QString)), scene, SLOT(setBgmMutableString(QString)));
     connect(this, SIGNAL(bgmClassChanged(QString)), scene, SLOT(setBgmClass(QString)));
     connect(this, SIGNAL(bgmCustomPayloadChanged(Platz::MutablePayload)), scene, SLOT(setCustomPayload(Platz::MutablePayload)));
 
@@ -659,7 +660,7 @@ void PlatzWin::updateBgiToolboxAttributes()
         flags |= BgInner::BGM;
     } else if (ui->chkBgmc->isEnabled() && ui->chkBgmc->isChecked()) {
         flags |= BgInner::BGMC;
-        bgmClass = ui->cboBgmc->currentIndex();
+        bgmClass = ui->cboBgmc->currentText();
     }
 
     if (ui->graphicsView->mode() == Platz::IM_MUTABLE_BG) {

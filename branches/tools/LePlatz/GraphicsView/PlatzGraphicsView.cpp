@@ -104,7 +104,7 @@ void PlatzGraphicsView::dropEvent(QDropEvent *event)
                         if (parent->type() == WorldItem::Inner) {
                             BgInner *bgi = static_cast<BgInner*>(parent);
 
-                            if ((bgi->flags()&type) || (bgi->flags() == BgInner::BG0 && type == BgInner::BG0)) {
+                            if ((bgi->flags()&type) || (((bgi->flags()&(BgInner::BGA|BgInner::BGP)) == 0) && type == BgInner::BG0)) {
                                 bgi->setTile(index);
                                 emit receivedDrop(static_cast<BgInner::BgiFlags>(type), index);
                                 platzScene->emitIndexChanges(parent);

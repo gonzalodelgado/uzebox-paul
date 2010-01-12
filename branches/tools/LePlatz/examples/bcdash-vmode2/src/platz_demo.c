@@ -47,15 +47,26 @@
 #define SPRITE_BOB						1
 #define SPD_MAX_BOB_GND_X				1
 #define SPD_MAX_BOB_GND_Y				2
-#define SPD_MAX_LYNX_GND_X				12
-#define SPD_MAX_LYNX_GND_Y				12
-#define SPD_MAX_DRAGONFLY_X				12
-#define SPD_MAX_DRAGONFLY_Y				8
-#define SPD_MAX_TURTLE_X				12
-#define SPD_MAX_TURTLE_Y				4
+
+#if VIDEO_MODE == 2
+	#define SPD_MAX_LYNX_GND_X			9
+	#define SPD_MAX_LYNX_GND_Y			11
+	#define SPD_MAX_DRAGONFLY_X			9
+	#define SPD_MAX_DRAGONFLY_Y			7
+	#define SPD_MAX_TURTLE_X			9
+	#define SPD_MAX_TURTLE_Y			4
+#elif VIDEO_MODE == 3
+	#define SPD_MAX_LYNX_GND_X			12
+	#define SPD_MAX_LYNX_GND_Y			12
+	#define SPD_MAX_DRAGONFLY_X			12
+	#define SPD_MAX_DRAGONFLY_Y			8
+	#define SPD_MAX_TURTLE_X			12
+	#define SPD_MAX_TURTLE_Y			4
+#endif
+
 #define SPD_MAX_SNAIL_X					2
 #define SPD_MAX_SNAIL_Y					12
-#define LOC_BOB_X						96
+#define LOC_BOB_X						(PLATZ_SCRN_WID/2)
 
 #ifndef START_Y
 	#define LOC_BOB_Y					40
@@ -288,7 +299,7 @@ typedef struct player {
 #include "data/animations.map.inc"
 // Sound
 #include "data/patches.inc"
-//#include "data/crazy_caroms.inc"
+#include "data/crazy_caroms.inc"
 // Level data
 #include "data/platz.levels.inc"
 
@@ -327,8 +338,8 @@ u8 gstate = GSTATE_DEMO;
 //u8 sfxtmr;
 
 // Fonts - probably unnecessary as they are sequential, but allows more freedom in tile layout
-u8 fontNumerals[11] = {155, 156, 157, 158, 159,160, 161, 162, 163, 164, 165};
-u8 fontAlpha[26] = {167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192};
+u8 fontNumerals = 155; //[11] = {155, 156, 157, 158, 159,160, 161, 162, 163, 164, 165};
+u8 fontAlpha = 167; //{167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192};
 
 /****************************************
  *			Function prototypes			*
@@ -474,8 +485,8 @@ u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v) {
 
 					if ((bob.form != FORM_TURTLE) && puptmrs[PUP_BUDDHA]) {
 						// Must test with tile-coordinates. Pixel coordinates will always fail.
-						if (!PlatzRectsIntersect(&bgiInfo->r,&(rect){(bob.pa.loc.x-bob.pa.bbx)>>3,
-								(bob.pa.loc.x+bob.pa.bbx)>>3,(bob.pa.loc.y-bob.pa.bby)>>3,(bob.pa.loc.y+bob.pa.bby)>>3})) {
+						if (!PlatzRectsIntersect(&bgiInfo->r,&(rect){(bob.pa.loc.x-bob.pa.bbx)/6,
+								(bob.pa.loc.x+bob.pa.bbx)/6,(bob.pa.loc.y-bob.pa.bby)>>3,(bob.pa.loc.y+bob.pa.bby)>>3})) {
 							walkOnWater = 1;
 							return 1;
 						}
@@ -590,25 +601,25 @@ int LoadBestTime(void) {
 
 
 void PrintHiScores(void) {
-	u8 x = 11,y = 1,prevX = x;
+	u8 x = 9,y = 4,prevX = x;
 
 	for (u8 i = 0; i < 7; i++) {
-		SetTile(x++,y,fontAlpha[inits[4*i]-'A']);
-		SetTile(x++,y,fontAlpha[inits[4*i+1]-'A']);
-		SetTile(x++,y,fontAlpha[inits[4*i+2]-'A']);
+		SetTile(x++,y,fontAlpha+(inits[4*i]-'A'));
+		SetTile(x++,y,fontAlpha+(inits[4*i+1]-'A'));
+		SetTile(x++,y,fontAlpha+(inits[4*i+2]-'A'));
 		SetTile(x++,y,TILE_SKY);
-		SetTile(x++,y,fontNumerals[(int)tBest[i].min]);
-		SetTile(x++,y,fontNumerals[':'-'0']);
-		SetTile(x++,y,fontNumerals[(int)tBest[i].sec10]);
-		SetTile(x,y,fontNumerals[(int)tBest[i].sec1]);
+		SetTile(x++,y,fontNumerals+tBest[i].min);
+		SetTile(x++,y,fontNumerals+(':'-'0'));
+		SetTile(x++,y,fontNumerals+(tBest[i].sec10));
+		SetTile(x,y,fontNumerals+(tBest[i].sec1));
 		y += 2;
 
 		if (i == 0) {
-			x = prevX = 5;
-			y = 4;
+			x = prevX = 4;
+			y = 7;
 		} else if (i == 3) {
-			x = prevX = 17;
-			y = 4;	
+			x = prevX = 14;
+			y = 7;	
 		} else {
 			x = prevX;
 		}
@@ -629,7 +640,7 @@ void InitHud(void) {
 	SetTile(HUD_PUPS_X+1,HUD_PUPS_Y,TILE_EGG);
 	DrawMap2(HUD_PUPS_X,HUD_PUPS_Y+1,mapBoots);
 	DrawMap2(HUD_PUPS_X+5,HUD_PUPS_Y,mapBuddha);
-	DrawMap2(HUD_PUPS_X+10,HUD_PUPS_Y,animCoins);
+	DrawMap2(HUD_PUPS_X+10,HUD_PUPS_Y,mapCoin);
 }
 
 
@@ -874,7 +885,7 @@ char SetForm(u8 form) {
 	LoadBobAnimations();
 	
 	// Don't call PlatzSetBoundingBoxDimensions before bob has been initialised
-	if (!prevForm || PlatzSetBoundingBoxDimensions(&bob.pa,bob.anim.wid<<3,bob.anim.hgt<<3)) {
+	if (!prevForm || PlatzSetBoundingBoxDimensions(&bob.pa,bob.anim.wid*6,bob.anim.hgt<<3)) {
 		bob.ay.state = TM_YSTATE_IDLE;
 
 		switch (form) {		
@@ -1010,7 +1021,7 @@ void AerialMovement(u16 move) {
 void AerialAnimation(char dir, char prevDir) {
 	// Check for direction change
     if (bob.pa.vx.dir != prevDir)
-    	bob.animFlag |= 2;
+    	bob.animFlag |= 3;
 
 	if (++bob.anim.disp >= bob.anim.dpf) {
 		// Bob has moved far enough to warrant a new frame
@@ -1131,7 +1142,7 @@ void TerrestrialAnimation(char prevDir, u16 move, u8 collMask) {
 
 	// Check for direction change
     if (bob.pa.vx.dir != prevDir)
-    	bob.animFlag |= 2;
+    	bob.animFlag |= 3;
 
 	if (collMask&4) {
 		// Y-Axis collision detected
@@ -1240,7 +1251,7 @@ void AquaticMovement(u16 move) {
 void AquaticAnimation(char prevDir, u16 move) {
 	// Check for direction change
     if (bob.pa.vx.dir != prevDir)
-    	bob.animFlag |= 2;
+    	bob.animFlag |= 3;
 
 	if (bob.form == FORM_TURTLE) {
 		if (bob.pa.vx.vel == 0) {
@@ -1314,8 +1325,8 @@ int main(void) {
 	strcpy(initsCurr,inits);
 
 	// Init kernel
-	//InitMusicPlayer(patches);
-	//SetMasterVolume(0xb0);
+	InitMusicPlayer(patches);
+	SetMasterVolume(0xb0);
 	//SetTileTable(tileset);
 	SetSpritesTileTable(spriteset);
 	//SetSpriteVisibility(true);
@@ -1364,36 +1375,14 @@ int main(void) {
 	// Init platz actor
 	bob.pa.bbx = bob.anim.wid*3;	// Set to half of animation's wid in pixels
 	bob.pa.bby = bob.anim.hgt<<2;	// Set to half of animation's hgt in pixels
-	bob.pa.trLoc = (pt){4,0};		// Trigger loc offset due to dragonfly's smaller size (than lynx). Should be 0,0 for largest sprite.
+	bob.pa.trLoc = (pt){3,0};		// Trigger loc offset due to dragonfly's smaller size (than lynx). Should be 0,0 for largest sprite.
 	bob.pa.vx.dir = DIR_RIGHT;
 	bob.pa.vy.dir = DIR_DOWN;
-	//PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
-	//PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
 
 	// Init platz scene
 	PlatzSetMovingPlatformTiles(194, 194, 194, 194);
 	PlatzInit(&bob.pa,SLICE_COUNT);
 	PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
-
-/*
-	PlatzHideSprite(4,2,2);
-	SetForm(FORM_LYNX);
-	bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
-	bob.pa.sprx = (PLATZ_SCRN_WID>>1)-bob.pa.bbx;	// Center sprite on screen
-	PlatzSetViewport(bob.pa.sprx,0);
-	PlatzMoveToSlice(&bob.pa,0);
-	btnPrev &= BTN_START;
-	btnPressed = 0;
-	PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
-	PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
-	InitHud();
-	ResetGame();
-	ResetGameTime();
-	PrintHudTime();
-	prng = MAX(prng,1);		// Don't seed lfsr with zero
-	//StartSong(crazy_caroms_song);
-	gstate = GSTATE_PLAYING;
-*/
 
 	while(1) {
 		if (GetVsyncFlag()) {
@@ -1453,10 +1442,11 @@ int main(void) {
 
 				if (demotmr) {
 					if (--demotmr == 0) {
-						PlatzHideSprite(4,1,1);
+						PlatzHideSprite(5,1,1);
+						PlatzSetViewport(78,200);
+						bob.pa.loc = (pt){88,32};
 						PlatzMoveToSlice(&bob.pa,HI_SLICE);
-						bob.pa.loc = (pt){64,8};
-						bob.pa.sprx = 64;
+						bob.pa.sprx = 36;
 						wfalltmr = 15;
 						wfall = 1;
 						demotmr = HISCORE_HZ;
@@ -1468,7 +1458,7 @@ int main(void) {
 				demoY = 5;
 
 				for (u8 i = 0; i < 3; i++)
-					SetTile(demoX+i,demoY,fontAlpha[(int)(initsCurr[i]-'A')]);
+					SetTile(demoX+i,demoY,fontAlpha+(initsCurr[i]-'A'));
 				
 				if (btnPressed&BTN_UP)
 					initsCurr[cursor]++;
@@ -1489,20 +1479,21 @@ int main(void) {
 					if ((demotmr&0xff) == 0) {
 						demoY += 4;
 
-						if (demoY > 20) {
-							demoY = 2;
-							demoX = 19;
+						if (demoY > 24) {
+							demoY = 5;
+							demoX = 14;
 						}
 					}					
 
 					if (--demotmr == 0) {
 						SetForm(FORM_DRAGONFLY);
-						bob.pa.loc = (pt){168,32};
-						PlatzSetViewport(156,120);
-						PlatzMapSprite(4,1,1,animSnailRt,0);
-						MoveSprite(4,44,32,1,1);
-						PlatzFill(&(rect){0,32,VRAM_TILES_V,31},TILE_SKY);
+						PlatzSetViewport(102,96);
+						bob.pa.loc = (pt){126,64};
+						PlatzMapSprite(5,1,1,animSnailRt,0);
+						MoveSprite(5,24,64,1,1);
+						PlatzFill(&(rect){0,32,0,3},TILE_SKY);
 						PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
+						bob.pa.sprx = 96;
 						demotmr = TITLE_HZ;
 						gstate = GSTATE_INTRO;
 					} else {
@@ -1562,7 +1553,7 @@ int main(void) {
 								break;
 							case (DEMO_HZ-24*HZ):	// bomb
 								TRIGGER_NOTE(SFX_CHAN,SFX_BOMB,0,SFX_VOL_BOMB,33);
-								explRect = (rect){20,23,4,7};
+								explRect = (rect){15,18,7,10};
 								PlatzFillMap(&explRect,0,0,mapExplosion,2);
 								expltmr = HZ>>2;
 								break;
@@ -1579,14 +1570,14 @@ int main(void) {
 			} else if (gstate == GSTATE_HISCORE) {
 				if (demotmr) {
 					if (--demotmr == 0) {
-						bob.pa.loc = (pt){126,100};
-						PlatzSetViewport(112,120);
+						bob.pa.loc = (pt){76,84};
+						PlatzSetViewport(64,104);
 						PlatzMoveToSlice(&bob.pa,DEMO_SLICE);
 						ResetGame();
 						ResetGameTime();
 						InitHud();
 						demoX = 2;
-						demoY = 2;
+						demoY = 5;
 						demotmr = DEMO_HZ-1;
 						gstate = GSTATE_DEMO;
 					} else if (demotmr == (HISCORE_HZ-1)) {
@@ -1613,7 +1604,7 @@ int main(void) {
 					ResetGameTime();
 					PrintHudTime();
 					prng = MAX(prng,1);		// Don't seed lfsr with zero
-					//StartSong(crazy_caroms_song);
+					StartSong(crazy_caroms_song);
 					gstate = GSTATE_PLAYING;
 					continue;
 				} else if (gstate == GSTATE_INITIALS) {
@@ -1641,7 +1632,7 @@ int main(void) {
 				PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
 				bob.pa.vx.dir = DIR_RIGHT;
 				ResetGame();
-				//StopSong();
+				StopSong();
 				demotmr = 1;
 				gstate = GSTATE_DEMO;
 				continue;
@@ -1731,11 +1722,11 @@ int main(void) {
 					AquaticAnimation(prevDir,fmove); break;
 			}
 			
-			
 			if (bob.animFlag&1) LoadBobAnimations();
 			if (bob.animFlag&2) PlatzMapSprite(bob.sprite,bob.anim.wid,bob.anim.hgt,
 					bob.anim.frames+bob.anim.currFrame*bob.anim.size,(bob.pa.vx.dir != 1)?SPRITE_FLIP_X:0);
-			MoveSprite(bob.sprite,bob.pa.sprx,bob.pa.loc.y+1,bob.anim.wid,bob.anim.hgt);
+			// Add 6 and 8 below due to mode 2's sprite positioning being off-by-one (I think)
+			MoveSprite(bob.sprite,bob.pa.sprx-bob.pa.bbx+6,bob.pa.loc.y-bob.pa.bby+8+1,bob.anim.wid,bob.anim.hgt);
 			
 			if (gstate&(GSTATE_PLAYING|GSTATE_DEMO)) {
 				UpdateTimers();

@@ -830,6 +830,24 @@
                         </Payload>
                     </BgMutable>
                 </BgOuter>
+                <BgOuter flags="17">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>696</Left>
+                        <Top>96</Top>
+                        <Right>732</Right>
+                        <Bottom>112</Bottom>
+                    </Bounds>
+                    <BgInner flags="1" tile="7">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>696</Left>
+                            <Top>96</Top>
+                            <Right>732</Right>
+                            <Bottom>112</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
                     <Bounds>
@@ -1011,6 +1029,24 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
+                <BgOuter flags="1">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>888</Left>
+                        <Top>176</Top>
+                        <Right>900</Right>
+                        <Bottom>184</Bottom>
+                    </Bounds>
+                    <BgInner flags="1" tile="11">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>888</Left>
+                            <Top>176</Top>
+                            <Right>900</Right>
+                            <Bottom>184</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
                 <BgOuter flags="8">
                     <Title>BgOuter</Title>
                     <Bounds>
@@ -1027,24 +1063,6 @@
                             <Top>160</Top>
                             <Right>900</Right>
                             <Bottom>176</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="1">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>888</Left>
-                        <Top>176</Top>
-                        <Right>900</Right>
-                        <Bottom>184</Bottom>
-                    </Bounds>
-                    <BgInner flags="1" tile="11">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>888</Left>
-                            <Top>176</Top>
-                            <Right>900</Right>
-                            <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
                 </BgOuter>
@@ -1193,7 +1211,7 @@
                     </Bounds>
                     <BgInner flags="10" tile="4">
                         <Title>BgInner</Title>
-                        <Bgmc>MC_POISON_WATER</Bgmc>
+                        <Bgmc>MC_COIN</Bgmc>
                         <Bounds>
                             <Left>1008</Left>
                             <Top>56</Top>
@@ -4823,6 +4841,40 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
+                <BgOuter flags="8">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>3366</Left>
+                        <Top>144</Top>
+                        <Right>3432</Right>
+                        <Bottom>160</Bottom>
+                    </Bounds>
+                    <BgInner flags="6" tile="3">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>3366</Left>
+                            <Top>144</Top>
+                            <Right>3432</Right>
+                            <Bottom>160</Bottom>
+                        </Bounds>
+                    </BgInner>
+                    <BgMutable flags="0" tile="13" custom="0">
+                        <Title>BgMutable</Title>
+                        <MutString>MUT_FIRE</MutString>
+                        <Bounds>
+                            <Left>3366</Left>
+                            <Top>144</Top>
+                            <Right>3432</Right>
+                            <Bottom>160</Bottom>
+                        </Bounds>
+                        <Payload>
+                            <Left>102</Left>
+                            <Right>168</Right>
+                            <Top>144</Top>
+                            <Bottom>160</Bottom>
+                        </Payload>
+                    </BgMutable>
+                </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
                 <Title>BG Objects</Title>
@@ -7709,7 +7761,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8">
+                <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>6060</Left>
@@ -7717,13 +7769,40 @@
                         <Right>6144</Right>
                         <Bottom>184</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="1">
+                    <BgInner flags="2" tile="1">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6060</Left>
                             <Top>144</Top>
                             <Right>6144</Right>
-                            <Bottom>168</Bottom>
+                            <Bottom>176</Bottom>
+                        </Bounds>
+                    </BgInner>
+                    <BgInner flags="0" tile="1">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>6060</Left>
+                            <Top>176</Top>
+                            <Right>6144</Right>
+                            <Bottom>184</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="12">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>6060</Left>
+                        <Top>152</Top>
+                        <Right>6144</Right>
+                        <Bottom>160</Bottom>
+                    </Bounds>
+                    <BgInner flags="4" tile="125">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>6060</Left>
+                            <Top>152</Top>
+                            <Right>6144</Right>
+                            <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgMutable flags="0" tile="10" custom="0">
@@ -7742,15 +7821,6 @@
                             <Bottom>160</Bottom>
                         </Payload>
                     </BgMutable>
-                    <BgInner flags="0" tile="1">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>6060</Left>
-                            <Top>168</Top>
-                            <Right>6144</Right>
-                            <Bottom>184</Bottom>
-                        </Bounds>
-                    </BgInner>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>
@@ -7871,7 +7941,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8">
+                <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>6144</Left>
@@ -7879,13 +7949,40 @@
                         <Right>6336</Right>
                         <Bottom>184</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="1">
+                    <BgInner flags="2" tile="1">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6144</Left>
                             <Top>144</Top>
                             <Right>6336</Right>
-                            <Bottom>168</Bottom>
+                            <Bottom>176</Bottom>
+                        </Bounds>
+                    </BgInner>
+                    <BgInner flags="0" tile="1">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>6144</Left>
+                            <Top>176</Top>
+                            <Right>6336</Right>
+                            <Bottom>184</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="12">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>6144</Left>
+                        <Top>152</Top>
+                        <Right>6336</Right>
+                        <Bottom>160</Bottom>
+                    </Bounds>
+                    <BgInner flags="4" tile="125">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>6144</Left>
+                            <Top>152</Top>
+                            <Right>6336</Right>
+                            <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgMutable flags="0" tile="10" custom="0">
@@ -7904,15 +8001,6 @@
                             <Bottom>160</Bottom>
                         </Payload>
                     </BgMutable>
-                    <BgInner flags="0" tile="1">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>6144</Left>
-                            <Top>168</Top>
-                            <Right>6336</Right>
-                            <Bottom>184</Bottom>
-                        </Bounds>
-                    </BgInner>
                 </BgOuter>
                 <BgOuter flags="2">
                     <Title>BgOuter</Title>
@@ -8036,7 +8124,7 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="8">
+                <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>6336</Left>
@@ -8044,13 +8132,40 @@
                         <Right>6516</Right>
                         <Bottom>184</Bottom>
                     </Bounds>
-                    <BgInner flags="6" tile="1">
+                    <BgInner flags="2" tile="1">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>6336</Left>
                             <Top>144</Top>
                             <Right>6516</Right>
-                            <Bottom>168</Bottom>
+                            <Bottom>176</Bottom>
+                        </Bounds>
+                    </BgInner>
+                    <BgInner flags="0" tile="1">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>6336</Left>
+                            <Top>176</Top>
+                            <Right>6516</Right>
+                            <Bottom>184</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="12">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>6336</Left>
+                        <Top>152</Top>
+                        <Right>6516</Right>
+                        <Bottom>160</Bottom>
+                    </Bounds>
+                    <BgInner flags="4" tile="125">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>6336</Left>
+                            <Top>152</Top>
+                            <Right>6516</Right>
+                            <Bottom>160</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgMutable flags="0" tile="10" custom="0">
@@ -8069,15 +8184,6 @@
                             <Bottom>160</Bottom>
                         </Payload>
                     </BgMutable>
-                    <BgInner flags="0" tile="1">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>6336</Left>
-                            <Top>168</Top>
-                            <Right>6516</Right>
-                            <Bottom>184</Bottom>
-                        </Bounds>
-                    </BgInner>
                 </BgOuter>
                 <BgOuter flags="2">
                     <Title>BgOuter</Title>
@@ -10365,6 +10471,17 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
+                <BgOuter flags="2">
+                    <Title>BgOuter</Title>
+                    <Trigger>TRIG_WATER</Trigger>
+                    <TriggerOri>ORI_LRUD</TriggerOri>
+                    <Bounds>
+                        <Left>8640</Left>
+                        <Top>144</Top>
+                        <Right>8832</Right>
+                        <Bottom>168</Bottom>
+                    </Bounds>
+                </BgOuter>
                 <BgOuter flags="17">
                     <Title>BgOuter</Title>
                     <Bounds>
@@ -11263,6 +11380,24 @@
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
+                        <Left>9834</Left>
+                        <Top>40</Top>
+                        <Right>9852</Right>
+                        <Bottom>48</Bottom>
+                    </Bounds>
+                    <BgInner flags="1" tile="3">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>9834</Left>
+                            <Top>40</Top>
+                            <Right>9852</Right>
+                            <Bottom>48</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
                         <Left>9840</Left>
                         <Top>160</Top>
                         <Right>9924</Right>
@@ -11299,44 +11434,44 @@
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>9894</Left>
+                        <Left>9888</Left>
                         <Top>0</Top>
-                        <Right>9942</Right>
+                        <Right>9936</Right>
                         <Bottom>16</Bottom>
                     </Bounds>
                     <BgInner flags="0" tile="8">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9894</Left>
+                            <Left>9888</Left>
                             <Top>0</Top>
-                            <Right>9900</Right>
+                            <Right>9894</Right>
                             <Bottom>8</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="0" tile="9">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9936</Left>
+                            <Left>9930</Left>
                             <Top>0</Top>
-                            <Right>9942</Right>
+                            <Right>9936</Right>
                             <Bottom>8</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="1" tile="1">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9900</Left>
+                            <Left>9894</Left>
                             <Top>0</Top>
-                            <Right>9936</Right>
+                            <Right>9930</Right>
                             <Bottom>8</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="1" tile="3">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9894</Left>
+                            <Left>9888</Left>
                             <Top>8</Top>
-                            <Right>9942</Right>
+                            <Right>9936</Right>
                             <Bottom>16</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11344,17 +11479,17 @@
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>9894</Left>
+                        <Left>9888</Left>
                         <Top>16</Top>
-                        <Right>9906</Right>
+                        <Right>9900</Right>
                         <Bottom>72</Bottom>
                     </Bounds>
                     <BgInner flags="1" tile="17">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9894</Left>
+                            <Left>9888</Left>
                             <Top>16</Top>
-                            <Right>9906</Right>
+                            <Right>9900</Right>
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11362,35 +11497,35 @@
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>9894</Left>
+                        <Left>9888</Left>
                         <Top>72</Top>
-                        <Right>9942</Right>
+                        <Right>9936</Right>
                         <Bottom>88</Bottom>
                     </Bounds>
                     <BgInner flags="1" tile="22">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9894</Left>
+                            <Left>9888</Left>
                             <Top>72</Top>
-                            <Right>9900</Right>
+                            <Right>9894</Right>
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="1" tile="49">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9900</Left>
+                            <Left>9894</Left>
                             <Top>72</Top>
-                            <Right>9936</Right>
+                            <Right>9930</Right>
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="1" tile="21">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9936</Left>
+                            <Left>9930</Left>
                             <Top>72</Top>
-                            <Right>9942</Right>
+                            <Right>9936</Right>
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11398,17 +11533,17 @@
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>9906</Left>
+                        <Left>9900</Left>
                         <Top>56</Top>
-                        <Right>9930</Right>
+                        <Right>9924</Right>
                         <Bottom>72</Bottom>
                     </Bounds>
                     <BgInner flags="2" tile="3">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9906</Left>
+                            <Left>9900</Left>
                             <Top>56</Top>
-                            <Right>9930</Right>
+                            <Right>9924</Right>
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11416,71 +11551,35 @@
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>9930</Left>
-                        <Top>16</Top>
-                        <Right>9942</Right>
-                        <Bottom>32</Bottom>
-                    </Bounds>
-                    <BgInner flags="1" tile="22">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>9930</Left>
-                            <Top>16</Top>
-                            <Right>9942</Right>
-                            <Bottom>32</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgInner flags="1" tile="22">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>9930</Left>
-                            <Top>16</Top>
-                            <Right>9936</Right>
-                            <Bottom>32</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgInner flags="1" tile="21">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>9936</Left>
-                            <Top>16</Top>
-                            <Right>9942</Right>
-                            <Bottom>32</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>9930</Left>
+                        <Left>9924</Left>
                         <Top>56</Top>
-                        <Right>9942</Right>
+                        <Right>9936</Right>
                         <Bottom>72</Bottom>
                     </Bounds>
                     <BgInner flags="0" tile="8">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9930</Left>
+                            <Left>9924</Left>
                             <Top>56</Top>
-                            <Right>9936</Right>
+                            <Right>9930</Right>
                             <Bottom>64</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="0" tile="9">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9936</Left>
+                            <Left>9930</Left>
                             <Top>56</Top>
-                            <Right>9942</Right>
+                            <Right>9936</Right>
                             <Bottom>64</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="1" tile="15">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9930</Left>
+                            <Left>9924</Left>
                             <Top>64</Top>
-                            <Right>9942</Right>
+                            <Right>9936</Right>
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11488,17 +11587,44 @@
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>9948</Left>
+                        <Left>9924</Left>
+                        <Top>16</Top>
+                        <Right>9936</Right>
+                        <Bottom>32</Bottom>
+                    </Bounds>
+                    <BgInner flags="1" tile="22">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>9924</Left>
+                            <Top>16</Top>
+                            <Right>9930</Right>
+                            <Bottom>32</Bottom>
+                        </Bounds>
+                    </BgInner>
+                    <BgInner flags="1" tile="21">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>9930</Left>
+                            <Top>16</Top>
+                            <Right>9936</Right>
+                            <Bottom>32</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>9936</Left>
                         <Top>72</Top>
-                        <Right>9960</Right>
+                        <Right>9948</Right>
                         <Bottom>88</Bottom>
                     </Bounds>
                     <BgInner flags="2" tile="4">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>9948</Left>
+                            <Left>9936</Left>
                             <Top>72</Top>
-                            <Right>9960</Right>
+                            <Right>9948</Right>
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11509,46 +11635,10 @@
                 <BgObject map="52">
                     <Title>BgObject</Title>
                     <Bounds>
-                        <Left>9804</Left>
-                        <Top>16</Top>
-                        <Right>9810</Right>
-                        <Bottom>24</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="52">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>9810</Left>
-                        <Top>48</Top>
-                        <Right>9816</Right>
-                        <Bottom>56</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="52">
-                    <Title>BgObject</Title>
-                    <Bounds>
                         <Left>9876</Left>
                         <Top>32</Top>
                         <Right>9882</Right>
                         <Bottom>40</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="55">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>9954</Left>
-                        <Top>16</Top>
-                        <Right>9966</Right>
-                        <Bottom>32</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="52">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>9960</Left>
-                        <Top>48</Top>
-                        <Right>9966</Right>
-                        <Bottom>56</Bottom>
                     </Bounds>
                 </BgObject>
                 <BgObject map="52">
@@ -11632,6 +11722,15 @@
                         <Bottom>64</Bottom>
                     </Bounds>
                 </BgObject>
+                <BgObject map="55">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>9936</Left>
+                        <Top>24</Top>
+                        <Right>9948</Right>
+                        <Bottom>40</Bottom>
+                    </Bounds>
+                </BgObject>
             </BgObjectProxy>
             <PlatformPathProxy>
                 <Title>Moving Platforms</Title>
@@ -11651,20 +11750,11 @@
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>9984</Left>
-                        <Top>88</Top>
+                        <Top>96</Top>
                         <Right>10176</Right>
-                        <Bottom>104</Bottom>
+                        <Bottom>112</Bottom>
                     </Bounds>
                     <BgInner flags="1" tile="1">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>9984</Left>
-                            <Top>88</Top>
-                            <Right>10176</Right>
-                            <Bottom>96</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgInner flags="1" tile="13">
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>9984</Left>
@@ -11673,12 +11763,21 @@
                             <Bottom>104</Bottom>
                         </Bounds>
                     </BgInner>
+                    <BgInner flags="1" tile="13">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>9984</Left>
+                            <Top>104</Top>
+                            <Right>10176</Right>
+                            <Bottom>112</Bottom>
+                        </Bounds>
+                    </BgInner>
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
                         <Left>9984</Left>
-                        <Top>104</Top>
+                        <Top>112</Top>
                         <Right>10176</Right>
                         <Bottom>184</Bottom>
                     </Bounds>
@@ -11686,7 +11785,7 @@
                         <Title>BgInner</Title>
                         <Bounds>
                             <Left>9984</Left>
-                            <Top>104</Top>
+                            <Top>112</Top>
                             <Right>10176</Right>
                             <Bottom>152</Bottom>
                         </Bounds>
@@ -11697,15 +11796,6 @@
                             <Left>9984</Left>
                             <Top>152</Top>
                             <Right>10176</Right>
-                            <Bottom>176</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgInner flags="0" tile="1">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>9984</Left>
-                            <Top>176</Top>
-                            <Right>10176</Right>
                             <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11713,17 +11803,17 @@
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>10062</Left>
+                        <Left>10044</Left>
                         <Top>16</Top>
-                        <Right>10098</Right>
+                        <Right>10080</Right>
                         <Bottom>32</Bottom>
                     </Bounds>
                     <BgInner flags="1" tile="7">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>10062</Left>
+                            <Left>10044</Left>
                             <Top>16</Top>
-                            <Right>10098</Right>
+                            <Right>10080</Right>
                             <Bottom>32</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11731,15 +11821,6 @@
             </BgOuterProxy>
             <BgObjectProxy>
                 <Title>BG Objects</Title>
-                <BgObject map="56">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10014</Left>
-                        <Top>72</Top>
-                        <Right>10026</Right>
-                        <Bottom>88</Bottom>
-                    </Bounds>
-                </BgObject>
                 <BgObject map="52">
                     <Title>BgObject</Title>
                     <Bounds>
@@ -11779,10 +11860,19 @@
                 <BgObject map="56">
                     <Title>BgObject</Title>
                     <Bounds>
-                        <Left>10134</Left>
-                        <Top>72</Top>
-                        <Right>10146</Right>
-                        <Bottom>88</Bottom>
+                        <Left>10014</Left>
+                        <Top>80</Top>
+                        <Right>10026</Right>
+                        <Bottom>96</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="56">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10098</Left>
+                        <Top>80</Top>
+                        <Right>10110</Right>
+                        <Bottom>96</Bottom>
                     </Bounds>
                 </BgObject>
             </BgObjectProxy>
@@ -11830,7 +11920,7 @@
                 <BgOuter flags="5">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>10182</Left>
+                        <Left>10188</Left>
                         <Top>136</Top>
                         <Right>10194</Right>
                         <Bottom>152</Bottom>
@@ -11884,26 +11974,26 @@
                 <BgOuter flags="5">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>10284</Left>
+                        <Left>10260</Left>
                         <Top>136</Top>
-                        <Right>10296</Right>
+                        <Right>10266</Right>
                         <Bottom>152</Bottom>
                     </Bounds>
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>10296</Left>
+                        <Left>10266</Left>
                         <Top>136</Top>
-                        <Right>10308</Right>
+                        <Right>10278</Right>
                         <Bottom>152</Bottom>
                     </Bounds>
                     <BgInner flags="2" tile="3">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>10296</Left>
+                            <Left>10266</Left>
                             <Top>136</Top>
-                            <Right>10308</Right>
+                            <Right>10278</Right>
                             <Bottom>152</Bottom>
                         </Bounds>
                     </BgInner>
@@ -11920,15 +12010,6 @@
                         <Bottom>24</Bottom>
                     </Bounds>
                 </BgObject>
-                <BgObject map="60">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10212</Left>
-                        <Top>48</Top>
-                        <Right>10278</Right>
-                        <Bottom>56</Bottom>
-                    </Bounds>
-                </BgObject>
                 <BgObject map="61">
                     <Title>BgObject</Title>
                     <Bounds>
@@ -11938,15 +12019,6 @@
                         <Bottom>88</Bottom>
                     </Bounds>
                 </BgObject>
-                <BgObject map="62">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10212</Left>
-                        <Top>112</Top>
-                        <Right>10266</Right>
-                        <Bottom>120</Bottom>
-                    </Bounds>
-                </BgObject>
                 <BgObject map="63">
                     <Title>BgObject</Title>
                     <Bounds>
@@ -11954,87 +12026,6 @@
                         <Top>144</Top>
                         <Right>10242</Right>
                         <Bottom>152</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="64">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10308</Left>
-                        <Top>16</Top>
-                        <Right>10332</Right>
-                        <Bottom>24</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="65">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10308</Left>
-                        <Top>48</Top>
-                        <Right>10344</Right>
-                        <Bottom>56</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="66">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10308</Left>
-                        <Top>80</Top>
-                        <Right>10344</Right>
-                        <Bottom>88</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="67">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10308</Left>
-                        <Top>112</Top>
-                        <Right>10350</Right>
-                        <Bottom>120</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="67">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10308</Left>
-                        <Top>144</Top>
-                        <Right>10350</Right>
-                        <Bottom>152</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="18">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10296</Left>
-                        <Top>8</Top>
-                        <Right>10302</Right>
-                        <Bottom>24</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="8">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10296</Left>
-                        <Top>40</Top>
-                        <Right>10308</Right>
-                        <Bottom>56</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="32">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10296</Left>
-                        <Top>72</Top>
-                        <Right>10308</Right>
-                        <Bottom>88</Bottom>
-                    </Bounds>
-                </BgObject>
-                <BgObject map="58">
-                    <Title>BgObject</Title>
-                    <Bounds>
-                        <Left>10296</Left>
-                        <Top>112</Top>
-                        <Right>10308</Right>
-                        <Bottom>120</Bottom>
                     </Bounds>
                 </BgObject>
                 <BgObject map="53">
@@ -12070,6 +12061,105 @@
                         <Left>10194</Left>
                         <Top>136</Top>
                         <Right>10206</Right>
+                        <Bottom>152</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="60">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10212</Left>
+                        <Top>48</Top>
+                        <Right>10260</Right>
+                        <Bottom>56</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="62">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10212</Left>
+                        <Top>112</Top>
+                        <Right>10236</Right>
+                        <Bottom>120</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="18">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10266</Left>
+                        <Top>8</Top>
+                        <Right>10272</Right>
+                        <Bottom>24</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="8">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10266</Left>
+                        <Top>40</Top>
+                        <Right>10278</Right>
+                        <Bottom>56</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="32">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10266</Left>
+                        <Top>72</Top>
+                        <Right>10278</Right>
+                        <Bottom>88</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="58">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10266</Left>
+                        <Top>112</Top>
+                        <Right>10278</Right>
+                        <Bottom>120</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="64">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10278</Left>
+                        <Top>16</Top>
+                        <Right>10302</Right>
+                        <Bottom>24</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="65">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10278</Left>
+                        <Top>48</Top>
+                        <Right>10314</Right>
+                        <Bottom>56</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="66">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10278</Left>
+                        <Top>80</Top>
+                        <Right>10314</Right>
+                        <Bottom>88</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="67">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10278</Left>
+                        <Top>112</Top>
+                        <Right>10320</Right>
+                        <Bottom>120</Bottom>
+                    </Bounds>
+                </BgObject>
+                <BgObject map="67">
+                    <Title>BgObject</Title>
+                    <Bounds>
+                        <Left>10278</Left>
+                        <Top>144</Top>
+                        <Right>10320</Right>
                         <Bottom>152</Bottom>
                     </Bounds>
                 </BgObject>

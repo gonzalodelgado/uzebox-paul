@@ -489,6 +489,15 @@ const char mapExplosion[3 * 3 + 2] PROGMEM=
   129,128,130
 };
 
+#define mapCoin_Width   (2)
+#define mapCoin_Height  (2)
+
+const char mapCoin[2 * 2 + 2] PROGMEM=
+{mapCoin_Width,mapCoin_Height,
+  56, 57,
+   70, 71
+};
+
 #define animCoins_Width   (2)
 #define animCoins_Height  (8)
 

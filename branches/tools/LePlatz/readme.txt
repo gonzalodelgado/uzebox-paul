@@ -18,6 +18,8 @@ LePlatz 1.1.0
   LePlatz project file format stores the defines as strings and so it not affected by updates
   in the source code. However, name changes can be easily filtered throughout your LePlatz
   world through the use of this tool in the "Edit->Find/Replace..." menu.
+- Fixed an instance where you could not drop a tile onto an appropriate Inner bg to replace its
+  tile index.
 - Added support for Mutable Bg Classes (see Platz v1.1 for details).
 - Added support for video mode 2.
 - Added mode 2 example project.

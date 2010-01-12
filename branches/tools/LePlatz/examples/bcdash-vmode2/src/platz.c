@@ -856,6 +856,17 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	// Pre-use rPost to save allocating another variable
 	rPost.left = (int)(a->loc.y)+(int)yVel;
 
+#if VIDEO_MODE == 1
+	if ((rPost.left+a->bby) > (PLATZ_SCRN_HGT-1)) {
+		// Collision with bottom of screen
+		yVel = PLATZ_SCRN_HGT-ss->height-a->bby-a->loc.y-1;
+		retVal |= T_INTERSECT;
+	} else if ((rPost.left-a->bby) < (PLATZ_SCRN_HGT-ss->height)) {
+		// Collision with top of screen
+		yVel = -(a->loc.y-a->bby);
+		retVal |= B_INTERSECT;
+	}
+#else //VIDEO_MODE == 3
 	if ((rPost.left+a->bby) > (PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))-1)) {
 		// Collision with bottom of screen
 		yVel = PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))-a->bby-a->loc.y-1;
@@ -865,6 +876,7 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 		yVel = -(a->loc.y-a->bby);
 		retVal |= B_INTERSECT;
 	}
+#endif
 	
 	// If csp is the right slice
 	if (((a->vx.dir == DIR_RIGHT) && (csp == wsp)) || ((a->vx.dir == DIR_LEFT) && (csp != wsp)))
@@ -959,8 +971,8 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 				rBg.btm = TO_PIXELS_Y(bgo.r.btm);
 
 				// Because bgs are ordered left-to-right, we can break early
-				if (a->vx.dir == DIR_RIGHT && rBg.left > rPost.right)
-					break;
+				//if (a->vx.dir == DIR_RIGHT && rBg.left > rPost.right)
+				//	break;
 			}
 
 			if (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust)) {

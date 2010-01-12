@@ -666,12 +666,12 @@ void TriggerFx(unsigned char patch,unsigned char volume,bool retrig){
 	//try to steal voice 2 then 1
 	//never steal voice 0, reserve it for lead melodies
 	if(type==1 || type==2){
-		//noise or PCM channel fx
-		channel=3;
+      //noise or PCM channel fx
+        channel=3;
+	}else if(tracks[2].priority==0 || (tracks[2].fxPatchNo==patch && tracks[2].priority>0 && retrig==true)){ //fx already playing                           
+		channel=2;
 	}else if(tracks[1].priority==0 || (tracks[1].fxPatchNo==patch && tracks[1].priority>0 && retrig==true)){ //fx already playing
 		channel=1;
-	}else if(tracks[2].priority==0 || (tracks[2].fxPatchNo==patch && tracks[2].priority>0 && retrig==true)){ //fx already playing				
-		channel=2;
 	}else{
 		//both channels have fx playing, use the oldest one
 		if(tracks[1].patchPlayingTime>tracks[2].patchPlayingTime){
@@ -679,7 +679,7 @@ void TriggerFx(unsigned char patch,unsigned char volume,bool retrig){
 		}else{
 			channel=2;
 		}
-	}				
+	}
 	
 	
 

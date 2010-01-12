@@ -278,7 +278,7 @@ void NewProject::createNewProject()
     settings->setArtFolder(ui->leArtFolder->text());
     settings->setRelativeSrcFolder(ui->leSrcFolder->text());
     settings->setSliceSize(sliceSize);
-    settings->setOffsetY(ui->spbOffsetY->value()*sliceSize.height());
+    settings->setOffsetY(ui->spbOffsetY->value()*8);
     accept();
 }
 
