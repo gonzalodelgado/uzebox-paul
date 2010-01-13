@@ -22,7 +22,7 @@
 #include "Slice.h"
 
 Slice::Slice()
-    : WorldItem(0), replica(0), locked(false)
+    : WorldItem(0), replica(0), locked(false), mBgoOrder(1)
 {
     sliceData = "";
     WorldItem::worldStats.sliceCount++;
@@ -30,7 +30,7 @@ Slice::Slice()
 }
 
 Slice::Slice(const QList<QVariant> &data, WorldItem* parent)
-    : WorldItem(parent), replica(0), locked(false)
+    : WorldItem(parent), replica(0), locked(false), mBgoOrder(1)
 {
     if (data.length() > 0)
         sliceData = data[0].toString();
@@ -47,6 +47,7 @@ WorldItem* Slice::createItem(const QList<QVariant> &data, WorldItem *parent)
     if (slice) {
         slice->setReplica(replica);
         slice->setLockedOrdering(locked);
+        slice->setBgoOrder(mBgoOrder);
 
         if (graphicalRepresentation())
             slice->setGraphicalRepresentation(new PlatzGraphicsItem(slice, graphicalRepresentation()->mode()));
@@ -71,6 +72,8 @@ QVariant Slice::tooltipData(int) const
 {
     return QVariant(data(0).toString() +
             "\nLocked: " + ((locked)?"Yes":"No") +
+            "\nOrder: " + ((mBgoOrder == 1) ? "Left-to-right" : "Right-to-left") +
+            "\nReplica Of: " + ((replica) ? replica->data(0).toString() : "None") +
             "\nBgOuters: " + QString::number(outerProxy()->childCount()) +
             "\nBgObjects: " + QString::number(objectProxy()->childCount()) +
             "\nBgPlatformPaths: " + QString::number(platformProxy()->childCount()));
@@ -79,7 +82,8 @@ QVariant Slice::tooltipData(int) const
 QString Slice::detailData() const
 {
     QString details((locked)?"Locked: Yes":"Locked: No");
-    details += "\nReplica Of: " + ((replica) ? replica->data(0).toString() : "None");
+    details += "\tOrder: " + ((mBgoOrder == 1) ? QString("Left-to-right") : QString("Right-to-left"));
+     details += "\nReplica Of: " + ((replica) ? replica->data(0).toString() : "None");
     return details;
 }
 
@@ -95,6 +99,27 @@ bool Slice::validChild(const WorldItem::WorldItemType&) const
 void Slice::setData(const QVariant &data)
 {
     sliceData = data.toString();
+}
+
+void Slice::toggleBgoOrder()
+{
+    setBgoOrder((mBgoOrder == 1) ? -1 : 1);
+}
+
+int Slice::validateBgoOrdering()
+{
+    ProxyItem *proxy = outerProxy();
+
+    if (!proxy || !proxy->childCount())
+        return 0;
+    qreal it = (mBgoOrder == 1) ? proxy->child(0)->relativeBoundingRect().left() :  proxy->child(0)->relativeBoundingRect().right();
+
+    foreach (WorldItem *child, *proxy->children()) {
+        if ((mBgoOrder == 1 && child->relativeBoundingRect().left() < it) || (mBgoOrder == -1 && child->relativeBoundingRect().right() > it))
+            return 0;
+        it = (mBgoOrder == 1) ? child->relativeBoundingRect().left() : child->relativeBoundingRect().right();
+    }
+    return mBgoOrder;
 }
 
 QRectF Slice::limitRect() const

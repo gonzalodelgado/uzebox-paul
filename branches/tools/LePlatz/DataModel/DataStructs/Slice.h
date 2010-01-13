@@ -49,12 +49,17 @@ public:
     void setReplica(const Slice *slice) { replica = slice; }
     bool lockedOrdering() const { return locked; }
     void setLockedOrdering(bool lockState) { locked = lockState; }
+    int bgoOrder() { return mBgoOrder; }
+    void toggleBgoOrder();
+    void setBgoOrder(int order){  mBgoOrder = order; }  // Don't like how model sorts afterwards
+    int validateBgoOrdering();
     //void setColumnData(int column, int count, const QVariant &data);
 
 private:
     const Slice *replica;
     QString sliceData;
     bool locked;
+    int mBgoOrder;   // 1 = left-to-right; -1 = right-to-left
 };
 
 #endif // SLICE_H

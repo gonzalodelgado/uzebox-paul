@@ -24,6 +24,7 @@
 #include <QModelIndex>
 #include <QVariant>
 #include <WorldItem.h>
+#include <Slice.h>
 #include <PlatzDataStream.h>
 
 class PlatzDataModel : public QAbstractItemModel
@@ -80,6 +81,7 @@ public:
     bool removeRows (int row, int count, const QModelIndex &parent = QModelIndex());
     void setDropState(PlatzDataModel::DropState state);
     bool removeBranch(const QModelIndex &parent);
+    void sortBgOuters(Slice *slice);
 public slots:
     void setSelectedIndex(const QModelIndex &index);
 signals:

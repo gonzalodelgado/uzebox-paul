@@ -22,7 +22,6 @@
 #include <QRectF>
 #include <QStringList>
 #include <WorldItem.h>
-#include <Slice.h>
 #include <Level.h>
 #include <BgOuter.h>
 #include <BgInner.h>
@@ -204,6 +203,25 @@ QModelIndex PlatzDataModel::validateModel()
     if (invalidItem)
         return indexOf(invalidItem->row(), 0, invalidItem);
     return indexOf(-1, -1, 0);
+}
+
+// May be cause for a sort children function for all WorldItems based on specified criteria
+void PlatzDataModel::sortBgOuters(Slice *slice)
+{
+    if (!slice || slice->lockedOrdering())
+        return;
+    int bgoOrder = slice->bgoOrder();
+    ProxyItem *proxy = slice->outerProxy();
+
+    if ((bgoOrder != -1 && bgoOrder != 1) || !proxy || !proxy->childCount())
+        return;
+    QList<WorldItem*> children = *proxy->children();
+
+    foreach (WorldItem *child, children) {
+        attachBranch(child, proxy, child->row());
+        setDropState(Valid);
+        removeRow(child->row(), indexOf(proxy->row(), 0, proxy));
+    }
 }
 
 void PlatzDataModel::updateCurrentIndex(const QModelIndex &parent, int start, int)
@@ -418,7 +436,7 @@ bool PlatzDataModel::insertRow (int row, const QModelIndex &parent)
     return insertRows(row, 1, parent);
 }
 
-bool PlatzDataModel::insertRow (int row, WorldItem *child,  const QModelIndex &parent)
+bool PlatzDataModel::insertRow(int row, WorldItem *child,  const QModelIndex &parent)
 {
     if (!parent.isValid())
         return false;
@@ -589,9 +607,12 @@ WorldItem* PlatzDataModel::attachBranch(WorldItem *branchRoot, WorldItem *trunk,
                 row = 0;
 
                 foreach (WorldItem *child, *w->parent()->children()) {
-                    if (child && w->relativeBoundingRect().left() <= child->relativeBoundingRect().left()) {
-                        row = child->row();
-                        break;
+                    if (child) {
+                        if ((slice->bgoOrder() == 1 && w->relativeBoundingRect().left() <= child->relativeBoundingRect().left()) ||
+                                (slice->bgoOrder() == -1 && w->relativeBoundingRect().right() >= child->relativeBoundingRect().right())) {
+                            row = child->row();
+                            break;
+                        }
                     }
                     ++row;
                 }

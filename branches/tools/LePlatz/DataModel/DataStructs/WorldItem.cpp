@@ -226,6 +226,8 @@ bool WorldItem::removeChild(WorldItem *child)
     return childItems.removeOne(child);
 }
 
+// TODO: rename this to deleteChildRows to distinguish its operation
+// from removeChild, which does not delete.
 bool WorldItem::removeChildRows(int row, int count)
 {
     for (int i = row; i < (row+count); i++) {
@@ -233,12 +235,10 @@ bool WorldItem::removeChildRows(int row, int count)
             WorldItem* del = childItems.at(row);
 
             if (del && del->removeChildRows(0, del->childCount())) {
-                if (childItems.removeOne(del)) {
-                    if (del)
-                        delete del;
-                } else {
+                if (childItems.removeOne(del))
+                    delete del;
+                else
                     return false;
-                }
             } else {
                 return false;
             }

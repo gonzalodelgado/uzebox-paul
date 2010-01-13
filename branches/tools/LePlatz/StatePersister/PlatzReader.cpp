@@ -254,12 +254,17 @@ void PlatzReader::readSlice()
 
     int replica = attributes().value("replica").toString().toInt();
     int locked = attributes().value("locked").toString().toInt();
+    int bgoOrder = 1;
+
+    if (version != Platz::LEPLATZ_VERSIONS.first())
+        bgoOrder =  attributes().value("bgoOrder").toString().toInt();
     QString title = readString("Title");
     Slice *slice = new Slice(QList<QVariant>() << title, worldPtr.top());
     model->insertRow(worldPtr.top()->childCount(), slice, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
     slice->setBoundingRect(QRectF(sliceCount*settings->sliceSize().width(),0.0,settings->sliceSize().width(),settings->sliceSize().height()));
     slice->setGraphicalRepresentation(new PlatzGraphicsItem(slice, Platz::INVISIBLE));
     slice->setLockedOrdering(locked);
+    slice->setBgoOrder(bgoOrder);
     worldPtr.push(slice);
 
     if (replica != -1 && replica < model->root()->childCount())

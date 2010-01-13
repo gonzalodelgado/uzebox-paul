@@ -109,6 +109,7 @@ public slots:
     void flagUnsavedChanges() { unsavedChanges = true; }
     void replicateSlice();
     void toggleSelectedSliceLock();
+    void toggleBgoOrder();
     void setSnapToResolutionX(QAction* action);
     void setSnapToResolutionY(QAction* action);
     void selectCanvasBgColor();

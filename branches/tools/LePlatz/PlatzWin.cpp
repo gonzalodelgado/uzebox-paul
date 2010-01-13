@@ -71,6 +71,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->actionNext->setIcon(QIcon(":/icons/128x128/next.png"));
     ui->actionLock->setIcon(QIcon(":/icons/128x128/lock.png"));
     ui->actionReplicate->setIcon(QIcon(":/icons/128x128/slice.png"));
+    ui->actionBgOrdering->setIcon(QIcon(":/icons/128x128/bgoOrdering.png"));
     ui->actionCompile->setIcon(QIcon(":/icons/128x128/compile.png"));
     ui->actionMake->setIcon(QIcon(":/icons/128x128/build.png"));
     ui->actionEmulator->setIcon(QIcon(":/icons/128x128/emulator.png"));
@@ -258,6 +259,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->actionNext, SIGNAL(triggered()), ui->graphicsView, SLOT(nextSlice()));
     connect(ui->actionLock, SIGNAL(triggered()), this, SLOT(toggleSelectedSliceLock()));
     connect(ui->actionReplicate, SIGNAL(triggered()), this, SLOT(replicateSlice()));
+    connect(ui->actionBgOrdering, SIGNAL(triggered()), this, SLOT(toggleBgoOrder()));
     connect(ui->actionCompile, SIGNAL(triggered()), this, SLOT(compileWorld()));
     connect(ui->actionRemove, SIGNAL(triggered()), this, SLOT(removeSlice()));
     connect(ui->actionAdd, SIGNAL(triggered()), this, SLOT(insertSlice()));
@@ -531,6 +533,39 @@ void PlatzWin::toggleSelectedSliceLock()
     if (w && w->type() == WorldItem::Slice) {
         Slice *slice = static_cast<Slice*>(w);
         slice->setLockedOrdering(!slice->lockedOrdering());
+        updateDetailDataDisplay(slice);
+        unsavedChanges = true;
+    }
+}
+
+void PlatzWin::toggleBgoOrder()
+{
+    if (!model)
+        return;
+    WorldItem *w = model->selectedItem();
+
+    if (w && w->type() == WorldItem::Slice) {
+        Slice *slice = static_cast<Slice*>(w);
+        slice->toggleBgoOrder();
+        model->sortBgOuters(slice);
+
+        QModelIndex sliceIndex = model->indexOf(slice->row(), 0, slice);
+
+        if (sliceIndex.isValid()) {
+            model->setSelectedIndex(sliceIndex);
+
+            if (slice->outerProxy()) {
+                // Have to do this dance so that treeview's [+] will update correctly
+                QModelIndex proxyIndex = model->indexOf(slice->outerProxy()->row(), 0, slice->outerProxy());
+
+                if (proxyIndex.isValid()) {
+                    if (ui->treeView->isExpanded(sliceIndex) && !ui->treeView->isExpanded(proxyIndex)) {
+                        ui->treeView->collapse(sliceIndex);
+                        ui->treeView->expand(sliceIndex);
+                    }
+                }
+            }
+        }
         updateDetailDataDisplay(slice);
         unsavedChanges = true;
     }

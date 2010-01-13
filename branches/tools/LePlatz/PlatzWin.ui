@@ -233,6 +233,7 @@
    <addaction name="separator"/>
    <addaction name="actionLock"/>
    <addaction name="actionReplicate"/>
+   <addaction name="actionBgOrdering"/>
    <addaction name="separator"/>
    <addaction name="actionCompile"/>
    <addaction name="actionMake"/>
@@ -1918,6 +1919,14 @@
   <action name="actionCanvasBgColor">
    <property name="text">
     <string>Canvas Bg Color...</string>
+   </property>
+  </action>
+  <action name="actionBgOrdering">
+   <property name="text">
+    <string>Bg Order</string>
+   </property>
+   <property name="toolTip">
+    <string>Toggle Outer Bg ordering for the selected slice (left-to-right or right-to-left)</string>
    </property>
   </action>
  </widget>

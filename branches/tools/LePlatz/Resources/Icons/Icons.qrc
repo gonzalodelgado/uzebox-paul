@@ -50,5 +50,6 @@
         <file>128x128/lock.png</file>
         <file>128x128/colorSettings.png</file>
         <file>128x128/search.png</file>
+        <file>128x128/bgoOrdering.png</file>
     </qresource>
 </RCC>

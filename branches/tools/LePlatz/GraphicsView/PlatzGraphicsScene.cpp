@@ -525,6 +525,7 @@ void PlatzGraphicsScene::mouseReleaseEvent (QGraphicsSceneMouseEvent *mouseEvent
             } else {
                 WorldItem *p = item->parent();
 
+                // TODO: This functionality should be encapsulated by the model
                 if (p) {
                     // Ensure BgOuters are ordered left-to-right for collision detection simplification
                     if (p->type() == WorldItem::Outer) {
@@ -540,11 +541,14 @@ void PlatzGraphicsScene::mouseReleaseEvent (QGraphicsSceneMouseEvent *mouseEvent
                         const QList<BgOuter*> *bgoChildren = reinterpret_cast<const QList<BgOuter*>*>(proxy->children());
                         const BgOuter *bgoIndex = bgo, *bgoIt = 0;
 
-                        for (int i = bgo->parent()->childCount()-1; i >= 0; i--) {
+                        for (int i = proxy->childCount()-1; i >= 0; i--) {
                             bgoIt = bgoChildren->at(i);
 
-                            if (bgoIt && bgo->relativeBoundingRect().left() < bgoIt->relativeBoundingRect().left())
-                                bgoIndex = bgoIt;
+                            if (bgoIt) {
+                                if ((slice->bgoOrder() == 1 && bgo->relativeBoundingRect().left() < bgoIt->relativeBoundingRect().left()) ||
+                                        (slice->bgoOrder() == -1 && bgo->relativeBoundingRect().right() > bgoIt->relativeBoundingRect().right()))
+                                    bgoIndex = bgoIt;
+                            }
                         }
                         if (bgoIndex && bgoIndex != bgo && proxy->child(bgoIndex->row())) {
                             BgOuter *bgoCopy = static_cast<BgOuter*>(bgo->createItem(QList<QVariant>() << WorldItem::baseData(bgo->type())));

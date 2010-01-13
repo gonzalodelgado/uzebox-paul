@@ -197,9 +197,11 @@ void WorldCompiler::compileBgDirectory(QTextStream &ts)
                 << dir->animCount << ","
                 << dir->animIndex << ",";
         if (dir->platDirIndex != -1)
-            ts << dir->platDirIndex << "}";
+            ts << dir->platDirIndex << ",";
         else
-            ts << "PF_ZERO}";
+            ts << "PF_ZERO,";
+        ts << slice->validateBgoOrdering() << "}";
+
         if (++sliceIndex != bgDir.count())
             ts << ",\n";
     }

@@ -124,6 +124,7 @@ void PlatzWriter::writeItem(WorldItem *item)
             writeStartElement("Slice");
             writeAttribute("replica", QString::number((slice->replicaOf())?slice->replicaOf()->row():-1));
             writeAttribute("locked", QString::number(slice->lockedOrdering()?1:0));
+            writeAttribute("bgoOrder", QString::number(slice->bgoOrder()));
             writeTextElement("Title", "Slice");
             writeBounds(item->limitRect());
             foreach(WorldItem *child, *item->children())
