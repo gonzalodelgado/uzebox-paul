@@ -34,7 +34,7 @@ static const QString UNSET = "";
 
 Settings::Settings(int maxRecentProjects)
     : mMaxRecentProjects(maxRecentProjects), mVideoMode(3),
-        mSliceSize(QSize(0,0)), mSpriteSize(QSize(0,0))
+        mSliceSize(QSize(0,0)), mSpriteSize(QSize(0,0)), mGameFlow(1)
 {
 }
 
@@ -122,6 +122,14 @@ void Settings::setSpriteSize(int wid, int hgt) {
 void Settings::setOffsetY(int offset) {
     mOffsetY = offset;
     emit offsetYChanged(offset);
+}
+
+void Settings::setGameFlow(int flow)
+{
+    if (flow != 1 && flow != -1)
+        return;
+    mGameFlow = flow;
+    emit gameFlowChanged(flow);
 }
 
 void Settings::setArtFolder(const QString &folder)

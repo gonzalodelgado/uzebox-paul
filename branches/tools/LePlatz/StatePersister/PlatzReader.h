@@ -34,17 +34,6 @@ public:
         ReadWorld
     };
 
-    enum LePlatzSettingsXmlOrder {
-        Version,
-        LePlatzSettings,
-        ScrnLayout,
-        WinLayout,
-        CanvasColor,
-        MakeExePath,
-        EmuExePath,
-        RecentProjects
-    };
-
     PlatzReader(Settings *settings, PlatzDataModel *model = 0);
     PlatzReader();
     bool loadProject(const QString &path, const ReadType &type);

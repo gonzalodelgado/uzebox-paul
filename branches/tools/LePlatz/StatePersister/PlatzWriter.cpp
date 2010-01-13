@@ -104,6 +104,9 @@ void PlatzWriter::writeSettings()
     writeStartElement("OffsetY");
     writeAttribute("offset", QString::number(settings->offsetY()));
     writeEndElement();  // OffsetY
+    writeStartElement("GameFlow");
+    writeAttribute("gameFlow", QString::number(settings->gameFlow()));
+    writeEndElement();  // GameFlow
     writeTextElement("SlicePath", settings->slicePath());
     writeTextElement("TilePath", settings->tilePath());
     writeTextElement("MapPath", settings->mapPath());

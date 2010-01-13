@@ -112,8 +112,8 @@ public slots:
     void toggleBgoOrder();
     void setSnapToResolutionX(QAction* action);
     void setSnapToResolutionY(QAction* action);
-    void selectCanvasBgColor();
     int findReplaceSrcDefines();
+    void updateGameFlow(int flow);
     void publicKeyPressEvent(QKeyEvent *e);
 signals:
     void zoomIn(int delta = 120);

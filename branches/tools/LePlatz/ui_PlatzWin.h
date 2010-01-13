@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzWin.ui'
 **
-** Created: Wed 13. Jan 16:23:23 2010
+** Created: Wed 13. Jan 21:01:43 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -85,7 +85,6 @@ public:
     QAction *actionReplicate;
     QAction *actionLock;
     QAction *actionFindReplace;
-    QAction *actionCanvasBgColor;
     QAction *actionBgOrdering;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_7;
@@ -431,8 +430,6 @@ public:
         actionLock->setObjectName(QString::fromUtf8("actionLock"));
         actionFindReplace = new QAction(PlatzWin);
         actionFindReplace->setObjectName(QString::fromUtf8("actionFindReplace"));
-        actionCanvasBgColor = new QAction(PlatzWin);
-        actionCanvasBgColor->setObjectName(QString::fromUtf8("actionCanvasBgColor"));
         actionBgOrdering = new QAction(PlatzWin);
         actionBgOrdering->setObjectName(QString::fromUtf8("actionBgOrdering"));
         centralWidget = new QWidget(PlatzWin);
@@ -1276,7 +1273,6 @@ public:
         menuEdit->addAction(menuSnapToY->menuAction());
         menuEdit->addSeparator();
         menuEdit->addAction(actionFindReplace);
-        menuEdit->addAction(actionCanvasBgColor);
         menuAbout->addAction(actionAboutLePlatz);
         menuAbout->addAction(actionAboutPlatz);
         menuAbout->addAction(actionAboutUzebox);
@@ -1448,7 +1444,6 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionFindReplace->setToolTip(QApplication::translate("PlatzWin", "Find/Replace Src Defines", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
-        actionCanvasBgColor->setText(QApplication::translate("PlatzWin", "Canvas Bg Color...", 0, QApplication::UnicodeUTF8));
         actionBgOrdering->setText(QApplication::translate("PlatzWin", "Bg Order", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         actionBgOrdering->setToolTip(QApplication::translate("PlatzWin", "Toggle Outer Bg ordering for the selected slice (left-to-right or right-to-left)", 0, QApplication::UnicodeUTF8));

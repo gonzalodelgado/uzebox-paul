@@ -20,7 +20,6 @@
 #include <QStringList>
 #include <QFile>
 #include <QFileDialog>
-#include <QColorDialog>
 #include <QMessageBox>
 #include <QPointer>
 #include <QActionGroup>
@@ -84,7 +83,6 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->actionPaste->setIcon(QIcon(":/icons/128x128/paste.png"));
     ui->actionSelectAll->setIcon(QIcon(":/icons/128x128/selectAll.png"));
     ui->actionFindReplace->setIcon(QIcon(":/icons/128x128/search.png"));
-    ui->actionCanvasBgColor->setIcon(QIcon(":/icons/128x128/colorSettings.png"));
     ui->actionAboutLePlatz->setIcon(QIcon(":/icons/128x128/mp.png"));
     ui->actionAboutPlatz->setIcon(QIcon(":/icons/128x128/aboutPlatz.png"));
     ui->actionAboutUzebox->setIcon(QIcon(":/misc/uzebox.png"));
@@ -171,7 +169,6 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->menuSnapToX->addActions(snapToXGrpVMode3->actions());
     ui->menuSnapToY->addActions(snapToYGrp->actions());
     connect(ui->actionFindReplace, SIGNAL(triggered()), this, SLOT(findReplaceSrcDefines()));
-    connect(ui->actionCanvasBgColor, SIGNAL(triggered()), this, SLOT(selectCanvasBgColor()));
 
     // Init external process comms slots
     connect(procMake, SIGNAL(readyReadStandardOutput()), this, SLOT(makeOutputReady()));
@@ -365,6 +362,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(settings, SIGNAL(offsetYChanged(int)), this, SLOT(setOffsetY(int)));
     connect(settings, SIGNAL(tileSizeChanged(QSize)), this, SLOT(setTileSize(QSize)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), this, SLOT(setSliceSize(QSize)));
+    connect(settings, SIGNAL(gameFlowChanged(int)), this, SLOT(updateGameFlow(int)));
     //connect(settings, SIGNAL(spriteSizeChanged(QSize)), this, SLOT(setSpriteSize(QSize)));
     settings->setCanvasColor(QColor(qRgb(236,233,216)));
 
@@ -449,11 +447,6 @@ void PlatzWin::aboutUzebox()
     about->setPixmap(QPixmap(":/misc/UzeboxLogo.png"));
     about->exec();
     delete about;
-}
-
-void PlatzWin::selectCanvasBgColor()
-{
-    settings->setCanvasColor(QColorDialog::getColor(ui->graphicsView->backgroundBrush().color(), this));
 }
 
 int PlatzWin::findReplaceSrcDefines()
@@ -574,6 +567,11 @@ void PlatzWin::toggleBgoOrder()
 void PlatzWin::replicateSlice()
 {
     ui->graphicsView->setMode(Platz::IM_REPLICATE);
+}
+
+void PlatzWin::updateGameFlow(int flow)
+{
+    WorldItem::GameFlow = flow;
 }
 
 void PlatzWin::updateRecentProjects(const QStringList &recentProjects)

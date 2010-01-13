@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'NewProject.ui'
 **
-** Created: Mon 11. Jan 18:19:43 2010
+** Created: Wed 13. Jan 19:51:49 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -68,6 +68,10 @@ public:
     QLabel *lvlVideoMode;
     QHBoxLayout *horizontalLayout_7;
     FocusComboBox *cboVideoMode;
+    QSpacerItem *horizontalSpacer;
+    QLabel *lblGameFlow;
+    QSpacerItem *horizontalSpacer_7;
+    FocusComboBox *cboGameFlow;
     QSpacerItem *horizontalSpacer_2;
     QSpacerItem *verticalSpacer;
     QLabel *lblOffsetY_2;
@@ -252,12 +256,30 @@ public:
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
         cboVideoMode = new FocusComboBox(groupBox);
         cboVideoMode->setObjectName(QString::fromUtf8("cboVideoMode"));
-        cboVideoMode->setMinimumSize(QSize(140, 0));
+        cboVideoMode->setMinimumSize(QSize(135, 0));
         cboVideoMode->setMaximumSize(QSize(94, 16777215));
 
         horizontalLayout_7->addWidget(cboVideoMode);
 
-        horizontalSpacer_2 = new QSpacerItem(188, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer = new QSpacerItem(20, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_7->addItem(horizontalSpacer);
+
+        lblGameFlow = new QLabel(groupBox);
+        lblGameFlow->setObjectName(QString::fromUtf8("lblGameFlow"));
+
+        horizontalLayout_7->addWidget(lblGameFlow);
+
+        horizontalSpacer_7 = new QSpacerItem(11, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_7->addItem(horizontalSpacer_7);
+
+        cboGameFlow = new FocusComboBox(groupBox);
+        cboGameFlow->setObjectName(QString::fromUtf8("cboGameFlow"));
+
+        horizontalLayout_7->addWidget(cboGameFlow);
+
+        horizontalSpacer_2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_7->addItem(horizontalSpacer_2);
 
@@ -286,7 +308,7 @@ public:
 
         horizontalLayout_6->addWidget(lblSliceHeightTiles);
 
-        horizontalSpacer_5 = new QSpacerItem(18, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_5 = new QSpacerItem(89, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_6->addItem(horizontalSpacer_5);
 
@@ -338,6 +360,7 @@ public:
         lblSrcPath->setText(QApplication::translate("NewProject", "Source Folder:", 0, QApplication::UnicodeUTF8));
         pbSrcPath->setText(QApplication::translate("NewProject", "...", 0, QApplication::UnicodeUTF8));
         lvlVideoMode->setText(QApplication::translate("NewProject", "Video Mode:", 0, QApplication::UnicodeUTF8));
+        lblGameFlow->setText(QApplication::translate("NewProject", "Game flow:", 0, QApplication::UnicodeUTF8));
         lblOffsetY_2->setText(QApplication::translate("NewProject", "Slice height:", 0, QApplication::UnicodeUTF8));
         lblSliceHeightTiles->setText(QApplication::translate("NewProject", "tiles", 0, QApplication::UnicodeUTF8));
         lblOffsetY->setText(QApplication::translate("NewProject", "Y-axis offset:", 0, QApplication::UnicodeUTF8));

@@ -21,6 +21,7 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
+#include <QColor>
 #include <QTreeWidgetItem>
 
 namespace Ui
@@ -51,6 +52,8 @@ public slots:
     void settingPsItemSelected(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void settingLpsItemSelected(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     void showSettingsDialog(QString &path, QString openPath, const PathType &type = FilePath, const QString &filter = "*.*");
+    void setCanvasColor();
+    void setCanvasColorButtonIcon(const QColor &c);
 private slots:
     void updateTrees(const QString &text);
     void pathFileDialog();
@@ -58,6 +61,7 @@ private:
     Ui::SettingsDialog *ui;
     Settings *settings;
     int maxOffsetY;
+    QColor color;
 };
 
 #endif // SETTINGSDIALOG_H

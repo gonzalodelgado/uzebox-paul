@@ -32,6 +32,7 @@ QStringList WorldItem::triggerIds;
 QStringList WorldItem::platClrTileIds;
 const QString WorldItem::emptyString = "";
 QSize WorldItem::SliceSize;
+int WorldItem::GameFlow = 1;
 
 const QString& WorldItem::mutableIdAt(int index)
 {

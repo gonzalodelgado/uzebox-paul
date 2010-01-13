@@ -5,6 +5,7 @@
         <VideoMode mode="2"/>
         <SliceSize width="192" height="184"/>
         <OffsetY offset="24"/>
+        <GameFlow gameFlow="1"/>
         <SlicePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/art/slices/</SlicePath>
         <TilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/art/tiles.png</TilePath>
         <MapPath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/art/maps.png</MapPath>

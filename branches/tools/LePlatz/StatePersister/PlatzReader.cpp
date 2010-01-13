@@ -82,59 +82,42 @@ bool PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeomet
         return false;
     setDevice(&file);
 
-    int i = 0;
-    bool ok = true;
+    QString s;
 
     while(!atEnd()) {
         readNext();
 
         if (isStartElement()) {
-            switch (i++) {
-                case Version:
-                    ok = name() == "LePlatz" && Platz::LEPLATZ_VERSIONS.contains(attributes().value("version").toString());
-                    break;
-                case LePlatzSettings:
-                    ok = name() == "LePlatzSettings";
-                    break;
-                case ScrnLayout:
-                    winGeometry = readElementText().toLatin1();
-                    winGeometry = winGeometry.fromHex(winGeometry);
-                    ok = true;
-                    break;
-                case WinLayout:
-                    winLayout = readElementText().toLatin1();
-                    winLayout = winLayout.fromHex(winLayout);
-                    ok = true;
-                    break;
-                case CanvasColor:
-                {
-                    unsigned int color = readElementText().toUInt(&ok, 16);
+            s = name().toString();
 
-                    if (ok)
-                        settings->setCanvasColor(QColor(QRgb(color)));
-                    ok = true; // Don't let invalid color prevent loading other data
+            if (s == "LePlatz") {
+                if (!Platz::LEPLATZ_VERSIONS.contains(attributes().value("version").toString()))
                     break;
-                }
-                case MakeExePath:
-                    if ((ok = name() == "MakeExePath"))
-                        settings->setMakeExePath(readElementText());
-                    break;
-                case EmuExePath:
-                    if ((ok = name() == "EmuExePath"))
-                        settings->setEmuExePath(readElementText());
-                    break;
-                case RecentProjects:
-                    ok = name() == "RecentProjects";
-                    break;
-                default:
-                    if (i > RecentProjects)
-                        if ((ok = name() == "Project"))
-                            settings->addRecentProject(readElementText());
-                    break;
+            } else if (s == "LePlatzSettings") {
+                ; // Do nothing
+            } else if (s == "ScreenLayout") {
+                winGeometry = readElementText().toLatin1();
+                winGeometry = winGeometry.fromHex(winGeometry);
+            } else if (s == "WinLayout") {
+                winLayout = readElementText().toLatin1();
+                winLayout = winLayout.fromHex(winLayout);
+            } else if (s == "CanvasColor") {
+                bool ok;
+                unsigned int color = readElementText().toUInt(&ok, 16);
+
+                if (ok)
+                    settings->setCanvasColor(QColor(QRgb(color)));
+            } else if (s == "MakeExePath") {
+                settings->setMakeExePath(readElementText());
+            } else if (s == "EmuExePath") {
+                settings->setEmuExePath(readElementText());
+            } else if (s == "RecentProjects") {
+                ; // Do nothing
+            } else  if (s == "Project") {
+                settings->addRecentProject(readElementText());
+            } else {
+                readElementText();
             }
-
-            if (!ok)
-                return false;
         }
     }
     file.close();
@@ -223,6 +206,9 @@ void PlatzReader::readSettings()
                 int width = attributes().value("width").toString().toInt();
                 int height = attributes().value("height").toString().toInt();
                 settings->setSpriteSize(width, height);
+                readElementText();
+            } else if (s == "GameFlow") {
+                settings->setGameFlow(attributes().value("gameFlow").toString().toInt());
                 readElementText();
             } else if (s == "ImageFormat") {    // v1.0 remnant
                 settings->setImageFormat(readElementText());

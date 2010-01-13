@@ -60,6 +60,7 @@ public:
     static QStringList platClrTileIds;
     static const QString emptyString;
     static QSize SliceSize;
+    static int GameFlow;
 
     static const QString& mutableIdAt(int index);
     static const QString& mutableClassIdAt(int index);

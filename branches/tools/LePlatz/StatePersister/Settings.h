@@ -64,7 +64,8 @@ class Settings : public QObject
         QSize tileSize() const;
         QSize sliceSize() const { return mSliceSize; }
         QSize spriteSize() const { return mSpriteSize; }
-        int offsetY() { return mOffsetY; }
+        int offsetY() const { return mOffsetY; }
+        int gameFlow() const { return mGameFlow; }
 
         // Project - set
         void setProjectPath(const QString &path);
@@ -85,6 +86,7 @@ class Settings : public QObject
         void setSpriteSize(const QSize &size);
         void setSpriteSize(int wid, int hgt);
         void setOffsetY(int offset);
+        void setGameFlow(int flow);
 
         // LePlatz - get
         const QString& makeExePath() { return mMakeExePath; }
@@ -119,6 +121,7 @@ class Settings : public QObject
         void canvasColorChanged(const QColor &color);
         void tileSizeChanged(const QSize &size);
         void offsetYChanged(int offset);
+        void gameFlowChanged(int flow);
     public slots:
         void resetProjectSettings();
         bool loadSettings(const QString &path);
@@ -152,6 +155,7 @@ class Settings : public QObject
         QStringList mRecentProjects;
         QColor mCanvasColor;
         int mOffsetY;
+        int mGameFlow;
 };
 
 #endif

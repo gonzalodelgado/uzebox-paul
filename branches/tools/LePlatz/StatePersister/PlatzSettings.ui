@@ -118,7 +118,7 @@
                    <number>1</number>
                   </property>
                   <attribute name="headerVisible">
-                   <bool>true</bool>
+                   <bool>false</bool>
                   </attribute>
                   <column>
                    <property name="text">
@@ -176,6 +176,33 @@
                    </layout>
                   </widget>
                   <widget class="QWidget" name="page"/>
+                  <widget class="QWidget" name="page_4">
+                   <layout class="QHBoxLayout" name="horizontalLayout_8">
+                    <item>
+                     <widget class="QLabel" name="lblGameFlow">
+                      <property name="text">
+                       <string>Game flow:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="cboGameFlow"/>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_2">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>178</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </widget>
                   <widget class="QWidget" name="page_11">
                    <layout class="QHBoxLayout" name="horizontalLayout_21">
                     <item>
@@ -505,6 +532,49 @@
                        <string>...</string>
                       </property>
                      </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                  <widget class="QWidget" name="page_5">
+                   <layout class="QHBoxLayout" name="horizontalLayout_9">
+                    <item>
+                     <widget class="QLabel" name="lblCanvasColor">
+                      <property name="text">
+                       <string>Canvas Background Color:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QToolButton" name="tbtnCanvasColor">
+                      <property name="minimumSize">
+                       <size>
+                        <width>32</width>
+                        <height>32</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>32</width>
+                        <height>32</height>
+                       </size>
+                      </property>
+                      <property name="text">
+                       <string>...</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="horizontalSpacer_3">
+                      <property name="orientation">
+                       <enum>Qt::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>143</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
                     </item>
                    </layout>
                   </widget>

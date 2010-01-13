@@ -188,7 +188,6 @@
     <addaction name="menuSnapToY"/>
     <addaction name="separator"/>
     <addaction name="actionFindReplace"/>
-    <addaction name="actionCanvasBgColor"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1914,11 +1913,6 @@
    </property>
    <property name="toolTip">
     <string>Find/Replace Src Defines</string>
-   </property>
-  </action>
-  <action name="actionCanvasBgColor">
-   <property name="text">
-    <string>Canvas Bg Color...</string>
    </property>
   </action>
   <action name="actionBgOrdering">
