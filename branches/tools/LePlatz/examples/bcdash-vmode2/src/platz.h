@@ -24,6 +24,12 @@
  *			  	 Defines				*
  ****************************************/
 
+#define PLATZ_VERSION 11
+
+#ifndef PLATZ_COMPATABILE
+	#define PLATZ_COMPATABILE PLATZ_VERSION
+#endif
+
 #ifndef MAX_ANIMATED_BGS		// Maximum animated bgs per world slice
 	#define MAX_ANIMATED_BGS 0
 #endif
@@ -44,6 +50,18 @@
 
 #ifndef SLICE_SEQ_LEN
 	#define SLICE_SEQ_LEN 0
+#endif
+
+#ifndef SPRITE_FLIP_X
+	#define SPRITE_FLIP_X	0
+#endif
+
+#ifndef OVERLAY_LINES
+	#define OVERLAY_LINES 0
+#endif
+
+#ifndef SS_OFFSET_Y
+	#define SS_OFFSET_Y 0
 #endif
 
 #define GET_VEL(v)	(((v).frames&(v).mod)?(v).disp:(v).modDisp)		// Takes a velocity struct v
@@ -243,6 +261,7 @@ typedef struct bgDirectory {
 	u8 animCount;				// The # of animated background elements in the slice (always the first elements in the slice for easy loading)	
 	u8 animIndex;				// Index into pgmAnimDir
 	u8 pdIndex;					// Index into platforms directory (PF_ZERO if none)
+	char ordered;				// Are bgs ordered left-to-right(1), right-to-left(-1),unordered(0) - note right-to-left not currently supported (v0.0-v1.1)
 } bgDirectory;
 
 typedef struct platform {

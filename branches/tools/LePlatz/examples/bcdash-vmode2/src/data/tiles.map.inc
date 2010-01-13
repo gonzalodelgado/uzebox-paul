@@ -695,12 +695,12 @@ const char mapDucats[6 * 1 + 2] PROGMEM=
   170,187,169,167,186,185
 };
 
-#define mapStitchInTime_Width   (11)
+#define mapStitchInTime_Width   (8)
 #define mapStitchInTime_Height  (1)
 
-const char mapStitchInTime[11 * 1 + 2] PROGMEM=
+const char mapStitchInTime[8 * 1 + 2] PROGMEM=
 {mapStitchInTime_Width,mapStitchInTime_Height,
-  185,186,175,186,169,174,  0,175,180,  0,  3
+  185,186,175,186,169,174,  0,  3
 };
 
 #define mapSpeedy_Width   (6)
@@ -711,12 +711,12 @@ const char mapSpeedy[6 * 1 + 2] PROGMEM=
   185,182,171,171,170,191
 };
 
-#define mapDfly_Width   (9)
+#define mapDfly_Width   (4)
 #define mapDfly_Height  (1)
 
-const char mapDfly[9 * 1 + 2] PROGMEM=
+const char mapDfly[4 * 1 + 2] PROGMEM=
 {mapDfly_Width,mapDfly_Height,
-  170,184,167,173,181,180,172,178,191
+  170,172,178,191
 };
 
 #define mapFloat_Width   (5)

@@ -56,20 +56,8 @@
 	#define MOD_X(x)		((x)&7)
 #endif
 
-#ifndef SPRITE_FLIP_X
-	#define SPRITE_FLIP_X	0
-#endif
-
 // The number of speeds that should be updated each frame (2 for the player's speeds and the remaining for moving platforms)
 #define TICK_COUNT			(2+MAX_VIS_SLICES*MAX_MOVING_PLATFORMS)
-
-#ifndef OVERLAY_LINES
-	#define OVERLAY_LINES 0
-#endif
-
-#ifndef SS_OFFSET_Y
-	#define SS_OFFSET_Y 0
-#endif
 
 /****************************************
  *			Type declarations			*
@@ -611,6 +599,12 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 	for (i = 0; i < bgd.bgoCount; i++) {
 		memcpy_P(&bgo,bgoTbl+bgd.bgoIndex+i,sizeof(bgOuter));
 
+#if PLATZ_COMPATABILE > 10
+		if ((bgd.ordered == DIR_RIGHT && dir == DIR_RIGHT && bgo.r.left > paintX) ||
+						(bgd.ordered == DIR_LEFT && dir == DIR_LEFT && bgo.r.right < paintX))
+			break;
+#endif
+
 		if ((bgo.type&(BGI|BGT)) == 0) {	// Only draw visible bgs
 			if ((bgo.r.left <= paintX) && (bgo.r.right > paintX)) {	// Can skip all inner bgs if outer does not need painting
 				for (j = 0; j < bgo.count; j++) {
@@ -840,11 +834,10 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	u8 colVal;		// Immediate collision flags
 	u8 retVal = 0;	// Aggregate collision flags
 	u8 sp;			// Slice pointer of slice being processed
+	u8 fin;			// Iteration end point
 #if MAX_MOVING_PLATFORMS
 	u8 mpsp = 0;	// Moving platforms slice pointer
 #endif
-	u8 start,fin;	// Loop conditionals
-	char step;		// Loop increment
 	char xVel = GET_VEL(a->vx),yVel = GET_VEL(a->vy); // Actor's velocities
 	int xAdjust = 0;
 	int xDist, yDist; // For calculating collision specifics
@@ -919,9 +912,6 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 		}
 #if MAX_MOVING_PLATFORMS
 		if (i < 2) {
-			start = 0;
-			step = 1;
-			
 			if (mp.slice[0] == sp) {
 				fin = mp.count[0];
 				mpsp = 0;
@@ -936,19 +926,10 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 		if (1) {
 #endif
 			memcpy_P(&bgd, bgDir+sp, sizeof(bgDirectory));
-
-			if (a->vx.dir == DIR_RIGHT) {
-				start = 0;
-				fin = bgd.bgoCount;
-				step = 1;
-			} else {
-				start = bgd.bgoCount-1;
-				fin = 255;
-				step = -1;
-			}
+			fin = bgd.bgoCount;
 		}
 
-		for (u8 j = start; j < fin; j+=step) {
+		for (u8 j = 0; j < fin; j++) {
 			colVal = 0;
 #if MAX_MOVING_PLATFORMS
 			if (i < 2) {
@@ -970,9 +951,12 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 				rBg.top = TO_PIXELS_Y(bgo.r.top);
 				rBg.btm = TO_PIXELS_Y(bgo.r.btm);
 
+#if PLATZ_COMPATABILE > 10
 				// Because bgs are ordered left-to-right, we can break early
-				//if (a->vx.dir == DIR_RIGHT && rBg.left > rPost.right)
-				//	break;
+				if ((bgd.ordered == DIR_RIGHT && a->vx.dir == DIR_RIGHT && rBg.left > rPost.right) ||
+						(bgd.ordered == DIR_LEFT && a->vx.dir == DIR_LEFT && rBg.right < rPost.left))
+					break;
+#endif
 			}
 
 			if (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust)) {
