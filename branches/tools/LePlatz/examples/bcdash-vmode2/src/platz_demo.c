@@ -53,7 +53,7 @@
 	#define SPD_MAX_LYNX_GND_Y			11
 	#define SPD_MAX_DRAGONFLY_X			9
 	#define SPD_MAX_DRAGONFLY_Y			7
-	#define SPD_MAX_TURTLE_X			9
+	#define SPD_MAX_TURTLE_X			6
 	#define SPD_MAX_TURTLE_Y			4
 #elif VIDEO_MODE == 3
 	#define SPD_MAX_LYNX_GND_X			12
@@ -66,7 +66,7 @@
 
 #define SPD_MAX_SNAIL_X					2
 #define SPD_MAX_SNAIL_Y					12
-#define LOC_BOB_X						(PLATZ_SCRN_WID/2)
+#define LOC_BOB_X						(PLATZ_SCRN_WID>>1)
 
 #ifndef START_Y
 	#define LOC_BOB_Y					40
@@ -1382,8 +1382,8 @@ int main(void) {
 
 	// Init platz scene
 	PlatzSetMovingPlatformTiles(194, 194, 194, 194);
-	PlatzInit(&bob.pa,SLICE_COUNT);
-	PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
+	PlatzInit(&bob.pa,SLICE_COUNT+4);
+	//PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
 
 	while(1) {
 		if (GetVsyncFlag()) {
@@ -1595,6 +1595,7 @@ int main(void) {
 					bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
 					bob.pa.sprx = (PLATZ_SCRN_WID>>1)-bob.pa.bbx;	// Center sprite on screen
 					PlatzSetViewport(bob.pa.sprx,0);
+					PlatzInit(&bob.pa,SLICE_COUNT);
 					PlatzMoveToSlice(&bob.pa,0);
 					btnPrev &= BTN_START;
 					btnPressed = 0;
@@ -1628,6 +1629,7 @@ int main(void) {
 					continue;
 				}
 				bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
+				PlatzInit(&bob.pa,SLICE_COUNT+4);
 				PlatzMoveToSlice(&bob.pa,EMPTY_SLICE);	// Ensure SetForms succeed
 				PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
 				PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);

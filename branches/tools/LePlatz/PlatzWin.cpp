@@ -193,6 +193,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->treeView->setUniformRowHeights(true);
     connect(model, SIGNAL(rowsRemoved(const QModelIndex,int,int)), this, SLOT(flagUnsavedChanges()));
     connect(model, SIGNAL(rowsInserted(const QModelIndex,int,int)), this, SLOT(flagUnsavedChanges()));
+    connect(model, SIGNAL(bgoSortComplete(Slice*)), this, SLOT(updateTreeviewPluses(Slice*)));
 
     // Init model/views
     ui->graphicsView->setModel(model);
@@ -541,26 +542,29 @@ void PlatzWin::toggleBgoOrder()
         Slice *slice = static_cast<Slice*>(w);
         slice->toggleBgoOrder();
         model->sortBgOuters(slice);
+        updateDetailDataDisplay(slice);
+        unsavedChanges = true;
+    }
+}
 
-        QModelIndex sliceIndex = model->indexOf(slice->row(), 0, slice);
+void PlatzWin::updateTreeviewPluses(Slice *slice)
+{
+    QModelIndex sliceIndex = model->indexOf(slice->row(), 0, slice);
 
-        if (sliceIndex.isValid()) {
-            model->setSelectedIndex(sliceIndex);
+    if (sliceIndex.isValid()) {
+        model->setSelectedIndex(sliceIndex);
 
-            if (slice->outerProxy()) {
-                // Have to do this dance so that treeview's [+] will update correctly
-                QModelIndex proxyIndex = model->indexOf(slice->outerProxy()->row(), 0, slice->outerProxy());
+        if (slice->outerProxy()) {
+            // Have to do this dance so that treeview's [+] will update correctly
+            QModelIndex proxyIndex = model->indexOf(slice->outerProxy()->row(), 0, slice->outerProxy());
 
-                if (proxyIndex.isValid()) {
-                    if (ui->treeView->isExpanded(sliceIndex) && !ui->treeView->isExpanded(proxyIndex)) {
-                        ui->treeView->collapse(sliceIndex);
-                        ui->treeView->expand(sliceIndex);
-                    }
+            if (proxyIndex.isValid()) {
+                if (ui->treeView->isExpanded(sliceIndex) && !ui->treeView->isExpanded(proxyIndex)) {
+                    ui->treeView->collapse(sliceIndex);
+                    ui->treeView->expand(sliceIndex);
                 }
             }
         }
-        updateDetailDataDisplay(slice);
-        unsavedChanges = true;
     }
 }
 

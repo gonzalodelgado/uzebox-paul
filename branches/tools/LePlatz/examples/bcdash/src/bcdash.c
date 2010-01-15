@@ -1282,6 +1282,7 @@ extern const platformDirectory *platDir;	// Moving platform headers
 extern const platform *platTbl;				// Moving platforms' attributes
 extern const mutableClass *mcTbl;			// Mutable bg class directory - for consolidating similar behavior
 
+extern unsigned char ram_tiles[];
 
 int main(void) {
 	u8 cursor = 0;				// For entering initials
@@ -1316,6 +1317,7 @@ int main(void) {
 	SetSpritesTileTable(spriteset);
 	SetSpriteVisibility(true);
 	Screen.overlayHeight = OVERLAY_LINES;
+	ClearVram();
 
 	// Init platz pointers
 	trigCb = ActivateTrigger;
@@ -1364,7 +1366,7 @@ int main(void) {
 	// Init platz scene
 	PlatzSetMovingPlatformTiles(216,194,216,193);
 	PlatzInit(&bob.pa,SLICE_COUNT);
-	PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
+	//PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
 
 	while(1) {
 		if (GetVsyncFlag()) {
@@ -1723,6 +1725,18 @@ int main(void) {
 					}
 				}
 			}
+			// Sprite curtains
+			//sprites[6].tileIndex = 49;
+			//sprites[6].x = (256-bob.pa.loc.x)&7;
+			//sprites[6].y = 40;
+		
+			//memcpy_P(ram_tiles+13*TILE_HEIGHT*TILE_WIDTH,tileset+216*TILE_HEIGHT*TILE_WIDTH,TILE_HEIGHT*TILE_WIDTH);
+
+			//for (u8 y = 6; y < 16; y++)
+				//for (u8 z = 0; z < VRAM_TILES_H; z++)
+					//SetTile(z,y,fps);
+					//vram[z+y*VRAM_TILES_H] = 15;
+			//memset(vram+3+5*VRAM_TILES_H,15,VRAM_TILES_H-6);
 			PlatzTick();
 		}
 	}

@@ -38,14 +38,26 @@
 #define PT_NOT_IN_RECT(p,r) (((p).x < ((r).left)) || ((p).x >= ((r).right)) || ((p).y < ((r).top)) || ((p).y >= ((r).btm)))
 
 // Constants
-#define SCRL_WID			256
-#define SCRL_WID_SHFT		8		// 2^8 = 256
+#define TO_PIXELS_Y(y)		((y)<<3)
+#define TO_TILES_Y(y)		((y)>>3)
+#define MOD_Y(y)			((y)&7)
+
+#if VIDEO_MODE == 2
+	#define SCRL_WID		192
+	#define TO_PIXELS_X(x)	((x)*6)
+	#define TO_TILES_X(x)	((x)/6)
+	#define SCRL_X			ss->scrollX
+	#define MOD_X(x)		((x)%6)
+#elif VIDEO_MODE == 3
+	#define SCRL_WID		256
+	#define TO_PIXELS_X(x)	((x)<<3)
+	#define TO_TILES_X(x)	((x)>>3)
+	#define SCRL_X			Screen.scrollX
+	#define MOD_X(x)		((x)&7)
+#endif
+
 // The number of speeds that should be updated each frame (2 for the player's speeds and the remaining for moving platforms)
 #define TICK_COUNT			(2+MAX_VIS_SLICES*MAX_MOVING_PLATFORMS)
-
-#ifndef OVERLAY_LINES
-	#define OVERLAY_LINES 0
-#endif
 
 /****************************************
  *			Type declarations			*
@@ -53,7 +65,7 @@
 
 typedef struct platforms {
 	u8			slice[MAX_VIS_SLICES];						// World slice pointers
-	u8 			count[MAX_MOVING_PLATFORMS];				// # of platforms in each slice
+	u8 			count[MAX_VIS_SLICES];						// # of platforms in each slice
 	velocity 	v[MAX_VIS_SLICES][MAX_MOVING_PLATFORMS];	// Individual platform velocities
 	platform 	p[MAX_VIS_SLICES][MAX_MOVING_PLATFORMS];	// Platform data
 } platforms;
@@ -75,7 +87,7 @@ typedef struct animatedBgs {
 	animation 	anims[MAX_VIS_SLICES][MAX_ANIMATED_BGS];
 } animatedBgs;
 
-#if MAX_PROJECTILES&MAX_PROJECTILE_CLASSES
+#if MAX_PROJECTILES && MAX_PROJECTILE_CLASSES
 // Note: Could have an animation to display based on the projectile and the surface it hits. Could
 // also have a tile/map to display at the collision point (like a burn mark for a fireball). Query
 // vram array for the tile that was hit (as Outer BG hides it) so we know how to react/which overlay tile to show.
@@ -114,6 +126,10 @@ const platformDirectory *platDir;	// Moving platform headers
 const platform *platTbl;			// Moving platforms' attributes
 const mutableClass *mcTbl;			// Mutable classes directory to consolidate similar functionality
 
+#if VIDEO_MODE == 2
+	struct ScreenSectionStruct *ss;	// Screen section on which Platz will operate
+#endif
+
 #if MAX_ANIMATED_BGS
 	animatedBgs	animBgs;			// Animated bgs container
 #endif
@@ -142,7 +158,7 @@ u8 scrXMod;							// The current scroll position in tiles
 
 
 /****************************************
- *		Static function prototypes		*
+ *		Static function declarations	*
  ****************************************/
 
 #if MAX_MOVING_PLATFORMS
@@ -162,10 +178,19 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig);
 void PlatzDrawColumn(u8 paintX, char dir);
 void PlatzUpdateCollisionPointer(platzActor *a);
 void PlatzScroll(char xDelta);
+//u8 BinaryFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, const char *flash);
+u8 LinearFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, const char *flash);
 
 /****************************************
  *			Function definitions		*
  ****************************************/
+
+#if VIDEO_MODE == 2
+// Set screen section on which Platz will operate
+void PlatzSetScreenSection(u8 index) {
+	ss = &screenSections[index];
+}
+#endif
 
 // Trigger callback is a user-defined function to handle game logic when triggers fire
 void PlatzSetTriggerCallback(trigCallback tcb) {
@@ -287,82 +312,126 @@ inline void PlatzBuildMutableBgFromClass(bgInner *bgi, bgInner *bgm) {
 
 // Moves the actor to slice sp and centers the viewport on their sprite position
 void PlatzMoveToSlice(platzActor *a, u8 sp) {
-	u8 i,j,k,l,wid,hgt,objBegin,objEnd,xOffset,scrX = a->loc.x-vpAnchor;
+#ifndef PLATZ_SLIM
+	u8 xOffset;
 	bgOuter bgo;
 	bgInner bgi,bgm;
 	object obj;
 	const char *objMap;
 	bgDirectory bgd;
-	rect vp = (rect){0,32,0,28};	// Init to squared viewport
 	rect robj;
+#endif
+	u8 scrX = (a->loc.x >= vpAnchor)?a->loc.x-vpAnchor:SCRL_WID+(a->loc.x-vpAnchor);
+	rect vp = (rect){0,VRAM_TILES_H,0,VRAM_TILES_V};	// Init to squared viewport
 
-	a->sprx = vpAnchor;
-	xPrev = a->loc.x;
-	prevScrDirX = a->vx.dir;
-	scrDirX = a->vx.dir;
-	scrDirAdj = (a->vx.dir == DIR_RIGHT)?0:-TILE_WIDTH;
-	wsp = csp = sp;
+    a->sprx = vpAnchor;
+    xPrev = a->loc.x;
+    prevScrDirX = a->vx.dir;
+    scrDirX = a->vx.dir;
+    scrDirAdj = (a->vx.dir == DIR_RIGHT)?0:-TILE_WIDTH;
+    wsp = csp = sp;
 
-#if MAX_ANIMATED_BGS|MAX_MOVING_PLATFORMS
-	u8 sp2;
-	char dir;
+    u8 sp2;
 
-	if (a->loc.x < vpAnchor) {
-		sp2 = (sp)?sp-1:wspMax;
-		dir = DIR_LEFT;
-	} else {
-		sp2 = (sp < wspMax)?sp+1:0;
-		dir = DIR_RIGHT;
-	}
+#if MAX_ANIMATED_BGS || MAX_MOVING_PLATFORMS
+    char dir;
 
+    if (a->loc.x < vpAnchor) {
+        sp2 = (sp)?sp-1:wspMax;
+        dir = DIR_LEFT;
+    } else {
+        sp2 = (sp < wspMax)?sp+1:0;
+        dir = DIR_RIGHT;
+    }
 	#if MAX_ANIMATED_BGS
-		PlatzLoadAnimatedBgs(sp,dir);
-		PlatzLoadAnimatedBgs(sp2,dir);
+	    PlatzLoadAnimatedBgs(sp,dir);
+	    PlatzLoadAnimatedBgs(sp2,dir);
 	#endif
 
 	#if MAX_MOVING_PLATFORMS
-		PlatzLoadMovingPlatforms(sp,dir);
-		PlatzLoadMovingPlatforms(sp2,dir);
+	    PlatzLoadMovingPlatforms(sp,dir);
+	    PlatzLoadMovingPlatforms(sp2,dir);
 	#endif
+#else
+	if (a->loc.x < vpAnchor)
+        sp2 = (sp)?sp-1:wspMax;
+    else
+        sp2 = (sp < wspMax)?sp+1:0;
 #endif
 
 	// Center viewport on actor
-	Screen.scrollX = prevScrX = scrX;
-	scrXMod = scrX>>3;
+	SCRL_X = prevScrX = scrX;
+	scrXMod = TO_TILES_X(scrX);
+
+#ifdef PLATZ_SLIM
+	u8 spIt = sp;
+
+	for (u8 i = 0; i < MAX_VIS_SLICES; i++) {
+		wsp = spIt;
+
+		if (a->loc.x < vpAnchor) {
+            if (i) {
+                vp.left = scrXMod;
+                vp.right = TO_TILES_X(SCRL_WID);
+            } else {
+                vp.left = 0;
+                vp.right = scrXMod;
+                spIt = (sp)?sp-1:wspMax;
+            }
+        } else {
+            if (i) {
+                vp.left = 0;
+                vp.right = scrXMod;
+            } else {
+                vp.left = scrXMod;
+                vp.right =  TO_TILES_X(SCRL_WID);
+                spIt = (sp < wspMax)?sp+1:0;
+            }
+        }
+
+		for (u8 j = vp.left; j < vp.right; j++)
+			PlatzDrawColumn(j, a->vx.dir);
+	}
+	// Reposition world slice pointer
+	if (a->loc.x < vpAnchor)
+		wsp = (a->vx.dir == DIR_RIGHT)?sp:sp2;
+    else
+		wsp = (a->vx.dir == DIR_RIGHT)?sp2:sp;
+#else
 	// Draw sky
 	ClearVram();
 
-	for (i = 0; i < MAX_VIS_SLICES; i++) {
+	for (u8 i = 0; i < MAX_VIS_SLICES; i++) {
 		memcpy_P(&bgd,bgDir+sp,sizeof(bgDirectory));
 
 		if (a->loc.x < vpAnchor) {
-			if (i) {
-				vp.left = scrX>>3;
-				vp.right = SCRL_WID>>3;
-			} else {
-				vp.left = 0;
-				vp.right = scrX>>3;
-				sp = (sp)?sp-1:wspMax;
-				wsp = (a->vx.dir == DIR_RIGHT)?csp:((csp)?csp-1:wspMax);
-			}
-		} else {
-			if (i) {
-				vp.left = 0;
-				vp.right = scrX>>3;
-			} else {
-				vp.left = scrX>>3;
-				vp.right = SCRL_WID>>3;
-				sp = (sp < wspMax)?sp+1:0;
-				wsp = (a->vx.dir == DIR_RIGHT)?((csp < wspMax)?csp+1:0):csp;
-			}
-		}
+            if (i) {
+                vp.left = scrXMod;
+                vp.right = TO_TILES_X(SCRL_WID);
+            } else {
+                vp.left = 0;
+                vp.right = scrXMod;
+                sp = (sp)?sp-1:wspMax;
+                wsp = (a->vx.dir == DIR_RIGHT)?csp:((csp)?csp-1:wspMax);
+            }
+        } else {
+            if (i) {
+                vp.left = 0;
+                vp.right = scrXMod;
+            } else {
+                vp.left = scrXMod;
+                vp.right =  TO_TILES_X(SCRL_WID);
+                sp = (sp < wspMax)?sp+1:0;
+                wsp = (a->vx.dir == DIR_RIGHT)?((csp < wspMax)?csp+1:0):csp;
+            }
+        }
 
 		// Draw bgs
-		for (j = 0; j < bgd.bgoCount; j++) {
+		for (u8 j = 0; j < bgd.bgoCount; j++) {
 			memcpy_P(&bgo,bgoTbl+bgd.bgoIndex+j,sizeof(bgOuter));
 
 			if ((bgo.type&(BGI|BGT)) == 0) {
-				for (k = 0; k < bgo.count; k++) {
+				for (u8 k = 0; k < bgo.count; k++) {
 					if (PlatzRectsIntersect(&bgo.r,&vp)) {
 						memcpy_P(&bgi,bgiTbl+bgo.index+k,sizeof(bgInner));
 
@@ -382,11 +451,12 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 							bgi.r.left = MAX(bgi.r.left,vp.left);
 							bgi.r.right = MIN(bgi.r.right,vp.right);
 
-							if (bgi.type&BGP) {
+							if (bgi.r.left >= bgi.r.right)
+								continue;
+							if (bgi.type&BGP)
 								PlatzFillMap(&bgi.r,xOffset,0,(const char*)pgm_read_word(&(bgMaps[bgi.tile])),2);
-							} else {
+							else
 								PlatzFill(&bgi.r,bgi.tile);
-							}
 						}
 					}
 				}
@@ -394,30 +464,20 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 		}
 
 		// Draw objects
-		for (j = 0; j < bgd.objCount; j++) {
+		for (u8 j = 0; j < bgd.objCount; j++) {
 			memcpy_P(&obj,objTbl+bgd.objOffset+j,sizeof(object));
 			objMap = (const char*)pgm_read_word(&(bgMaps[obj.map]));
-			wid = pgm_read_byte(&(objMap[0]));
-			hgt = pgm_read_byte(&(objMap[1]));
-			
 			robj.left = obj.begin.x;
 			robj.top = obj.begin.y;
-			robj.right = robj.left+wid;
-			robj.btm = robj.top+hgt;
+			robj.right = robj.left+pgm_read_byte(&(objMap[0]));
+			robj.btm = robj.top+pgm_read_byte(&(objMap[1]));
+			xOffset = MAX(robj.left,vp.left)-robj.left;
 
-			if (PlatzRectsIntersect(&robj,&vp)) {
-				objBegin = MAX(robj.left,vp.left)-robj.left;
-				objEnd = MIN(robj.right,vp.right)-robj.left;
-				
-				for (k = 0; k < hgt; k++) {
-					for (l = objBegin; l < objEnd; l++) {
-						//SetTile(robj.left+l,robj.top+k,pgm_read_byte(&(obj.map[k*wid+l+2])));
-						inline_set_tile(robj.left+l,robj.top+k,pgm_read_byte(&(objMap[k*wid+l+2])));
-					}
-				}
-			}
+			if (PlatzRectsIntersect(&robj,&vp))
+				PlatzFillMap(&robj,xOffset,0,objMap,2);
 		}
 	}
+#endif
 }
 
 
@@ -472,7 +532,9 @@ void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags) {
 	for (y = 0; y < hgt; y++) {
 		for (x = xStart; x < xEnd; x += xStep,index++) {
 			sprites[index].tileIndex = pgm_read_byte(&(map[(y*wid)+x]));
+#if VIDEO_MODE == 3
 			sprites[index].flags = spriteFlags;
+#endif
 		}
 	}
 }
@@ -480,22 +542,33 @@ void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags) {
 // Moves a sprite array's position offscreen so that it is not drawn
 void PlatzHideSprite(u8 spriteIndex, u8 wid, u8 hgt) {
 	for (int i = 0; i < (wid*hgt); i++)
-		MoveSprite(spriteIndex+i,SCREEN_TILES_H<<3,0,1,1);	
-	//MoveSprite(spriteIndex,SCREEN_TILES_H<<3,SCREEN_TILES_V<<3,wid,hgt);
+		//MoveSprite(spriteIndex+i,TO_PIXELS_X(SCREEN_TILES_H),0,1,1);
+#if VIDEO_MODE == 2
+		MoveSprite(spriteIndex+i,0,-TILE_HEIGHT,1,1);
+#elif VIDEO_MODE == 3
+		MoveSprite(spriteIndex+i,-TILE_WIDTH,-TILE_HEIGHT,1,1);
+#endif
 }
 
 
 // Similar to kernel's Fill, but takes a rect
 void PlatzFill(const rect *r, u8 tileId) {
+#if 1
+	u8 x = r->left,wid = r->right-r->left;
+	int yLimit = r->btm*VRAM_TILES_H;
+
+	for (int y = r->top*VRAM_TILES_H; y < yLimit; y+=VRAM_TILES_H)
+		memset(vram+x+y,tileId+RAM_TILES_COUNT,wid);
+#else
 	u8 x,y;
-
-
-	for (x = r->left; x < r->right; x++) {
-		for (y = r->top; y < r->btm; y++) {
-			//SetTile(x,y,tileId);
-			inline_set_tile(x,y,tileId);
-		}
-	}
+	
+    for (x = r->left; x < r->right; x++) {
+        for (y = r->top; y < r->btm; y++) {
+            //SetTile(x,y,tileId);
+        	inline_set_tile(x,y,tileId);
+        }
+    }
+#endif
 }
 
 // Fills a region with a specified pattern. Pattern can be 2-dimensional. Handles partial draws (i.e. when scrolling).
@@ -521,30 +594,43 @@ void PlatzFillPattern(const rect *r, u8 patWid, u8 patHgt, u8 patIndex, u8 patOf
 
 // Draws a rectangular region of a map
 void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int dataOffset) {
-	u8 x,y,wid = r->right-r->left,hgt = r->btm-r->top,mapWid = pgm_read_byte(&(map[0])),mapHgt = pgm_read_byte(&(map[1]));
-	u8 xMap, yMap;
+	static u8 mapRam[MAX_MAP_SIZE];
+    u8 x,yMap,mapWid = pgm_read_byte(&(map[0])),mapHgt = pgm_read_byte(&(map[1]));
 
-	// Don't burden non-repeating maps with possible mod overhead
-	if ((xOffset > mapWid) || (yOffset > mapHgt)) {
-		#ifndef SLOW_BG_PATTERNS
-			xOffset &= mapWid-1;
-			yOffset &= mapHgt-1;
-		#else
-			xOffset %= mapWid;
-			yOffset %= mapHgt;
-		#endif
-	}
+    // Don't burden non-repeating maps with possible mod overhead
+    if ((xOffset > mapWid) || (yOffset > mapHgt)) {
+        #ifndef SLOW_BG_PATTERNS
+                xOffset &= mapWid-1;
+                yOffset &= mapHgt-1;
+        #else
+                xOffset %= mapWid;
+                yOffset %= mapHgt;
+        #endif
+    }
 
-	// Do in vertical strips as this is mostly called by PlatzDrawColumn
-	for (x = 0, xMap = xOffset; x < wid; x++,xMap++) {
-		if (xMap == mapWid)
-			xMap = 0;
-		for (y = 0, yMap = yOffset; y < hgt; y++,yMap++) {
-			if (yMap == mapHgt)
-				yMap = 0;
-			if (map)
-				inline_set_tile(x+r->left,y+r->top,pgm_read_byte(&(map[xMap+yMap*mapWid+dataOffset])));
+	
+	u8 xLimit = r->right, yMapLimit = mapHgt*mapWid;
+	int yLimit = r->btm*VRAM_TILES_H;
+
+	memcpy_P(mapRam,map+dataOffset,yMapLimit);
+
+	for (u8 i = 0; i < yMapLimit; i++)
+		mapRam[i] += RAM_TILES_COUNT;
+
+	yMap = yOffset*mapWid;
+
+	for (int y = r->top*VRAM_TILES_H; y < yLimit; y+=VRAM_TILES_H,yMap+=mapWid) {
+		if (yMap == yMapLimit)
+        	yMap = 0;
+		x = r->left;
+
+		if (xOffset) {
+			memcpy(vram+x+y,mapRam+yMap+xOffset,MIN(xLimit-x,mapWid-xOffset));
+			x += MIN(xLimit-x,mapWid-xOffset);
 		}
+
+		for (; x < xLimit; x+=mapWid)
+			memcpy(vram+x+y,mapRam+yMap,MIN(xLimit-x,mapWid));
 	}
 }
 
@@ -552,9 +638,9 @@ void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int da
 // bgs in case their animation timer is not in sync. Columns can consist of normal, patterned or animated bgs
 // and objects. Usually used at the scrolling edge
 void PlatzDrawColumn(u8 paintX, char dir) {
-	u8 i,j,k,mpTile,mpTop,mpBtm;
+	u8 i,j,start = 0;
 #if MAX_ANIMATED_BGS
-	u8 iAnimBg;
+	u8 k,iAnimBg;
 #endif
 	bgOuter bgo;
 	bgInner bgi,bgm;
@@ -564,11 +650,32 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 	memcpy_P(&bgd,bgDir+wsp,sizeof(bgDirectory));
 
 	// Paint sky
+#if VIDEO_MODE == 2
+	PlatzFill(&(rect){paintX,paintX+1,SS_OFFSET_Y,SS_OFFSET_Y+TO_TILES_Y(ss->height)},0);
+#elif VIDEO_MODE == 3
 	PlatzFill(&(rect){paintX,paintX+1,0,SCREEN_TILES_V-OVERLAY_LINES},0);
+#endif
+
+#if PLATZ_COMPATABILE > 10
+	u8 sampleOffset = 0;
+
+	if (dir == DIR_RIGHT && bgd.ordered == DIR_RIGHT)
+		sampleOffset = 5;
+	else if (dir == DIR_LEFT && bgd.ordered == DIR_LEFT)
+		sampleOffset = 4;
+	if (sampleOffset)
+		start = LinearFlashSample(paintX,0,dir,bgd.bgoCount,sizeof(bgOuter),((const char*)(bgoTbl+bgd.bgoIndex))+sampleOffset);
+#endif
 
 	// Paint bgs
-	for (i = 0; i < bgd.bgoCount; i++) {
+	for (i = start; i < bgd.bgoCount; i++) {
 		memcpy_P(&bgo,bgoTbl+bgd.bgoIndex+i,sizeof(bgOuter));
+
+#if PLATZ_COMPATABILE > 10
+		if ((bgd.ordered == DIR_RIGHT && dir == DIR_RIGHT && bgo.r.left > paintX) ||
+				(bgd.ordered == DIR_LEFT && dir == DIR_LEFT && bgo.r.right < paintX))
+			break;
+#endif
 
 		if ((bgo.type&(BGI|BGT)) == 0) {	// Only draw visible bgs
 			if ((bgo.r.left <= paintX) && (bgo.r.right > paintX)) {	// Can skip all inner bgs if outer does not need painting
@@ -626,14 +733,17 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 		}
 	}
 
+#if MAX_MOVING_PLATFORMS
+	u8 mpTile,mpBtm,mpTop;
+
 	// Paint stepped moving platforms
 	i = (mp.slice[0] == wsp)?0:1;
 
 	for (j = 0; j < mp.count[i]; j++) {
 		if (mp.p[i][j].clrTile&MP_STEPPED) {
-			if (((mp.p[i][j].r.left>>3) <= paintX) && ((mp.p[i][j].r.right>>3) > paintX)) {
-				mpTop = mp.p[i][j].r.top>>3;
-				mpBtm = mp.p[i][j].r.btm>>3;
+			if ((TO_TILES_X(mp.p[i][j].r.left) <= paintX) && (TO_TILES_X(mp.p[i][j].r.right) > paintX)) {
+				mpTop = TO_TILES_Y(mp.p[i][j].r.top);
+				mpBtm = TO_TILES_Y(mp.p[i][j].r.btm);
 
 				if (mp.p[i][j].axis == AXIS_X) {
 					mpTile = cp.hstepped;
@@ -641,7 +751,7 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 					mpTile = cp.vstepped;
 
 					// Negative vel can draw one tile off if not multiple of tile height
-					if ((mp.v[i][j].dir < 0) && (mp.p[i][j].r.top&7)) {
+					if ((mp.v[i][j].dir < 0) && MOD_Y(mp.p[i][j].r.top)) {
 						++mpTop;
 						++mpBtm;
 					}
@@ -651,6 +761,7 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 			}
 		}
 	}
+#endif
 }
 
 
@@ -789,17 +900,73 @@ u8 PlatzDetectMovingPlatformCollisions(platzActor *a, char *xDelta) {
 #endif
 
 
+#if 0 // Doesn't work in all cases. Need to think of another way to order bgs in flash.
+u8 BinaryFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, const char *flash) {
+	u8 it;
+	int sample;
+
+	count >>= 1;
+	it = count;
+
+	while (count >>= 1) {
+		sample = TO_PIXELS_X(pgm_read_byte(flash+((int)it*size)));
+		
+		if (dir == DIR_RIGHT)	// dir == DIR_RIGHT: compare = rPost.left, sample = rBg.right
+			it = (compare > (sample+flashAdj))?it+count:it-count;
+		else					// dir == DIR_LEFT: compare = rPost.right, sample = rBg.left
+			it = (compare < (sample+flashAdj))?it+count:it-count;
+	}
+
+	while (it) {
+		sample = TO_PIXELS_X(pgm_read_byte(flash+((int)(it-1)*size)));
+
+		if (dir == DIR_RIGHT) {
+			if (compare < (sample+flashAdj))
+				--it;
+			else
+				break;
+		} else {
+			if (compare > (sample+flashAdj))
+				--it;
+			else
+				break;
+		}
+	}
+
+	return it;
+}
+#else
+u8 LinearFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, const char *flash) {
+	u8 it = 0;
+	int sample;
+
+	while (it != count) {
+		sample = TO_PIXELS_X(pgm_read_byte(flash+((int)it*size)));
+
+		if (dir == DIR_RIGHT) {	// dir == DIR_RIGHT: compare = rPost.left, sample = rBg.right
+			if (compare <= (sample+flashAdj))
+				break;
+		} else {				// dir == DIR_LEFT: compare = rPost.right, sample = rBg.left
+			if (compare >= (sample+flashAdj))
+				break;
+		}
+		++it;
+	}
+	return it;
+}
+#endif
+
+
 // Detects collisions between the player and background elements and adjusts their speed to avoid these collisions.
 // Also handles firing event triggers and mutable bg callbacks.
 u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
-	u8 colVal;		// Immediate collision flags
-	u8 retVal = 0;	// Aggregate collision flags
-	u8 sp;			// Slice pointer of slice being processed
+	u8 colVal;			// Immediate collision flags
+	u8 retVal = 0;		// Aggregate collision flags
+	u8 sp;				// Slice pointer of slice being processed
+	u8 start,fin,step;	// Iteration range and increment
 #if MAX_MOVING_PLATFORMS
 	u8 mpsp = 0;	// Moving platforms slice pointer
 #endif
-	u8 start,fin;	// Loop conditionals
-	char step;		// Loop increment
 	char xVel = GET_VEL(a->vx),yVel = GET_VEL(a->vy); // Actor's velocities
 	int xAdjust = 0;
 	int xDist, yDist; // For calculating collision specifics
@@ -811,15 +978,27 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	// Pre-use rPost to save allocating another variable
 	rPost.left = (int)(a->loc.y)+(int)yVel;
 
-	if ((rPost.left+a->bby) > (PLATZ_SCRN_HGT-(OVERLAY_LINES<<3)-1)) {
+#if VIDEO_MODE == 2
+	if ((rPost.left+a->bby) >= (TO_PIXELS_Y(SS_OFFSET_Y)+ss->height)) {
 		// Collision with bottom of screen
-		yVel = PLATZ_SCRN_HGT-(OVERLAY_LINES<<3)-a->bby-a->loc.y-1;
+		yVel = (TO_PIXELS_Y(SS_OFFSET_Y)+ss->height)-a->bby-a->loc.y-1;
+		retVal |= T_INTERSECT;
+	} else if ((rPost.left-a->bby) < TO_PIXELS_Y(SS_OFFSET_Y)) {
+		// Collision with top of screen
+		yVel = -(TO_PIXELS_Y(SS_OFFSET_Y)-(a->loc.y-a->bby));
+		retVal |= B_INTERSECT;
+	}
+#elif VIDEO_MODE == 3
+	if ((rPost.left+a->bby) >= (PLATZ_SCRN_HGT-TO_PIXELS_Y(OVERLAY_LINES))) {
+		// Collision with bottom of screen
+		yVel = PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))-a->bby-a->loc.y-1;
 		retVal |= T_INTERSECT;
 	} else if ((rPost.left-a->bby) < 0) {
 		// Collision with top of screen
 		yVel = -(a->loc.y-a->bby);
 		retVal |= B_INTERSECT;
 	}
+#endif
 	
 	// If csp is the right slice
 	if (((a->vx.dir == DIR_RIGHT) && (csp == wsp)) || ((a->vx.dir == DIR_LEFT) && (csp != wsp)))
@@ -836,7 +1015,7 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	trigPos = (pt16){rPost.left+a->bbx,rPost.top+a->bby};
 	sp = csp;
 	
-	// i: 0-1 Moving Platforms
+	// i: 0-1 Moving Platforms (when MAX_MOVING_PLATFORMS != 0)
 	// i: 2-3 Outer Bgs
 	
 #if MAX_MOVING_PLATFORMS
@@ -844,11 +1023,14 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 #else
 	for (u8 i = 0; i < MAX_VIS_SLICES; i++) {
 #endif
+		start = 0;
+		step = 1;
+
 		if (i&1) {	// 1 && 3
 			if (xAdjust)
-				rBg = (rect16){0,SCRL_WID,0,PLATZ_SCRN_HGT-(OVERLAY_LINES<<3)};
+				rBg = (rect16){0,SCRL_WID,0,PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))};
 			else
-				rBg = (rect16){SCRL_WID,SCRL_WID<<1,0,PLATZ_SCRN_HGT-(OVERLAY_LINES<<3)};
+				rBg = (rect16){SCRL_WID,SCRL_WID<<1,0,PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))};
 			if (!PlatzRectsIntersect16(&rPost,&rBg))
 				continue;
 			if (sp != wsp)
@@ -862,9 +1044,6 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 		}
 #if MAX_MOVING_PLATFORMS
 		if (i < 2) {
-			start = 0;
-			step = 1;
-			
 			if (mp.slice[0] == sp) {
 				fin = mp.count[0];
 				mpsp = 0;
@@ -880,18 +1059,35 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 #endif
 			memcpy_P(&bgd, bgDir+sp, sizeof(bgDirectory));
 
-			if (a->vx.dir == DIR_RIGHT) {
-				start = 0;
-				fin = bgd.bgoCount;
-				step = 1;
-			} else {
-				start = bgd.bgoCount-1;
-				fin = 255;
-				step = -1;
+			if (!bgd.ordered || (a->vx.dir == DIR_RIGHT && bgd.ordered == DIR_RIGHT) || (a->vx.dir == DIR_LEFT && bgd.ordered == DIR_LEFT)) {
+                start = 0;
+                fin = bgd.bgoCount;
+                step = 1;
+	        } else {
+                start = bgd.bgoCount-1;
+                fin = 255;
+                step = -1;
+	        }
+
+#if PLATZ_COMPATABILE > 10
+			int compare;
+			u8 flashAdj = (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust))?SCRL_WID:0,sampleOffset = 0;
+
+			if (a->vx.dir == DIR_RIGHT && bgd.ordered == DIR_RIGHT) {
+				sampleOffset = 5;
+				compare = rPost.left;
+			} else if (a->vx.dir == DIR_LEFT && bgd.ordered == DIR_LEFT) {
+				sampleOffset = 4;
+				compare = rPost.right;
 			}
+			if (sampleOffset)
+				start = LinearFlashSample(compare,flashAdj,a->vx.dir,bgd.bgoCount,sizeof(bgOuter),((const char*)(bgoTbl+bgd.bgoIndex))+sampleOffset);
+#endif
 		}
 
 		for (u8 j = start; j < fin; j+=step) {
+			if (xVel == 0 && yVel == 0)
+				break;
 			colVal = 0;
 #if MAX_MOVING_PLATFORMS
 			if (i < 2) {
@@ -908,20 +1104,23 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 
 				if (!(bgo.type&(BGC|BGM|BGT)))
 					continue;
-				rBg.left = bgo.r.left<<3;
-				rBg.right = bgo.r.right<<3;
-				rBg.top = bgo.r.top<<3;
-				rBg.btm = bgo.r.btm<<3;
-
-				// Because bgs are ordered left-to-right, we can break early
-				if (a->vx.dir == DIR_RIGHT && rBg.left > rPost.right)
-					break;
+				rBg.left = TO_PIXELS_X(bgo.r.left);
+				rBg.right = TO_PIXELS_X(bgo.r.right);
+				rBg.top = TO_PIXELS_Y(bgo.r.top);
+				rBg.btm = TO_PIXELS_Y(bgo.r.btm);
 			}
 
 			if (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust)) {
 				rBg.left += SCRL_WID;
 				rBg.right += SCRL_WID;
 			}
+
+#if PLATZ_COMPATABILE > 10
+			// Because bgs are ordered left-to-right, we can break early
+			if ((!MAX_MOVING_PLATFORMS || i > 1) && ((bgd.ordered == DIR_RIGHT && a->vx.dir == DIR_RIGHT && rBg.left > rPost.right) ||
+					(bgd.ordered == DIR_LEFT && a->vx.dir == DIR_LEFT && rBg.right < rPost.left)))
+				break;
+#endif
 
 			if (PlatzRectsIntersect16(&rPost,&rBg)) {
 				// Triggers
@@ -1123,7 +1322,7 @@ void PlatzMoveMovingPlatforms(void) {
 
 // Draws all platforms that should be at least partially visible
 void PlatzDrawMovingPlatforms(u8 axis) {
-	u8 i,j,k,offset,hgt,tile,*near,*far,scrX = Screen.scrollX>>3,tiles = 0,clear = 0,op = 0,len = 0;
+	u8 i,j,k,offset,hgt,tile,*near,*far,scrX = TO_TILES_X(SCRL_X),tiles = 0,clear = 0,op = 0,len = 0;
 	rect r,rc;
 
 	for (i = 0; i < MAX_VIS_SLICES; i++) {
@@ -1132,11 +1331,11 @@ void PlatzDrawMovingPlatforms(u8 axis) {
 			if (mp.p[i][j].axis != axis)	// Note: This and the need for an axis param are a hack fix to the vertical axis visual off-by-one bug
 				continue;
 #endif
-			r.top = mp.p[i][j].r.top>>3;
-			r.btm = mp.p[i][j].r.btm>>3;
-			r.left = mp.p[i][j].r.left>>3;
-			r.right = mp.p[i][j].r.right>>3;
-			offset = (mp.p[i][j].axis == AXIS_X)?mp.p[i][j].r.left&7:mp.p[i][j].r.top&7;
+			r.top = TO_TILES_Y(mp.p[i][j].r.top);
+			r.btm = TO_TILES_Y(mp.p[i][j].r.btm);
+			r.left = TO_TILES_X(mp.p[i][j].r.left);
+			r.right = TO_TILES_X(mp.p[i][j].r.right);
+			offset = (mp.p[i][j].axis == AXIS_X)?MOD_X(mp.p[i][j].r.left):MOD_Y(mp.p[i][j].r.top);
 			clear = 0;
 			op = (offset)?1:0;
 
@@ -1270,7 +1469,7 @@ void PlatzDrawMovingPlatforms(u8 axis) {
 
 			hgt = (*far)-(*near);
 			*far = (*near)+1;
-			len = (mp.p[i][j].r.right>>3)-(mp.p[i][j].r.left>>3)+((offset)?1:0);
+			len = TO_TILES_X(mp.p[i][j].r.right)-TO_TILES_X(mp.p[i][j].r.left)+((offset)?1:0);
 
 			for (k = 0; k < hgt; k++) {
 				if ((mp.p[i][j].axis == AXIS_X) && (hgt < len)) {
@@ -1396,7 +1595,7 @@ void PlatzDrawAnimatedBgs(void) {
 	u8 i,j,patOffsetX;
 	rect r;
 	bool redraw;
-	u8 scrX = Screen.scrollX>>3;
+	u8 scrX = TO_TILES_X(SCRL_X);
 
 	for (i = 0; i < MAX_VIS_SLICES; i++) {
 		for (j = 0; j < animBgs.count[i]; j++) {
@@ -1461,12 +1660,12 @@ void PlatzAnimateBgs(void) {
 // Maintains collision pointer as player moves across slice seams
 void PlatzUpdateCollisionPointer(platzActor *a) {
 	// Update collision slice pointer
-	if ((a->loc.x>>3) == 0) {
-		if ((xPrev>>3) == 31) {
+	if (TO_TILES_X(a->loc.x) == 0) {
+		if (TO_TILES_X(xPrev) == 31) {
 			csp = (csp < wspMax)?csp+1:0;
 		}
-	} else if ((a->loc.x>>3) == 31) {
-		if ((xPrev>>3) == 0) {
+	} else if (TO_TILES_X(a->loc.x) == 31) {
+		if (TO_TILES_X(xPrev) == 0) {
 			csp = (csp)?csp-1:wspMax;
 		}
 	}
@@ -1476,61 +1675,70 @@ void PlatzUpdateCollisionPointer(platzActor *a) {
 // Manages drawing on the scrolling edge
 void PlatzScroll(char xDelta) {
         // Update world slice pointer
-        u8 scrX = Screen.scrollX;
+    u8 scrX = SCRL_X;
 
-        if (scrX != prevScrX) {
-                prevScrX = scrX;
+    if (scrX != prevScrX) {
+        prevScrX = scrX;
 
-                // Direction change
-                if (scrDirX != prevScrDirX) {
-                        prevScrDirX = scrDirX;
+        // Direction change
+        if (scrDirX != prevScrDirX) {
+            prevScrDirX = scrDirX;
 
-                        if (scrDirX == DIR_RIGHT) {
-                                wsp = (wsp < wspMax)?wsp+1:0;
-                                scrDirAdj = 0;
-                        } else if (scrDirX == DIR_LEFT) {
-                                wsp = (wsp)?wsp-1:wspMax;
-                                scrDirAdj = -TILE_WIDTH;
-                        }
-                }
-
-                // Tile column scroll boundary reached
-                if ((scrX>>3) != scrXMod) {
-                        scrXMod = scrX>>3;
-
-                        if ((scrXMod == 31) && (scrDirX == DIR_LEFT)) {
-                                wsp = (wsp)?wsp-1:wspMax;
-#if MAX_ANIMATED_BGS
-                                PlatzLoadAnimatedBgs(wsp,DIR_LEFT);
-#endif
-
-#if MAX_MOVING_PLATFORMS
-                                PlatzLoadMovingPlatforms(wsp,DIR_LEFT);
-#endif
-                        }
-
-                        PlatzDrawColumn((u8)(scrX-xDelta+scrDirAdj)>>3,scrDirX);
-
-                        if ((scrXMod == 0) && (scrDirX == DIR_RIGHT)) {
-                                wsp = (wsp < wspMax)?wsp+1:0;
-#if MAX_ANIMATED_BGS
-                                PlatzLoadAnimatedBgs(wsp,DIR_RIGHT);
-#endif
-
-#if MAX_MOVING_PLATFORMS
-                                PlatzLoadMovingPlatforms(wsp,DIR_RIGHT);
-#endif
-                        }                               
-                }
+            if (scrDirX == DIR_RIGHT) {
+                wsp = (wsp < wspMax)?wsp+1:0;
+                scrDirAdj = 0;
+            } else if (scrDirX == DIR_LEFT) {
+                wsp = (wsp)?wsp-1:wspMax;
+                scrDirAdj = -TILE_WIDTH;
+            }
         }
 
+        // Tile column scroll boundary reached
+        if (TO_TILES_X(scrX) != scrXMod) {
+            scrXMod = TO_TILES_X(scrX);
+
+            if ((scrXMod == 31) && (scrDirX == DIR_LEFT)) {
+                wsp = (wsp)?wsp-1:wspMax;
+#if MAX_ANIMATED_BGS
+                PlatzLoadAnimatedBgs(wsp,DIR_LEFT);
+#endif
+
 #if MAX_MOVING_PLATFORMS
-        PlatzDrawMovingPlatforms(AXIS_X);
+                PlatzLoadMovingPlatforms(wsp,DIR_LEFT);
+#endif
+            }
+
+#if VIDEO_MODE == 2
+			u8 temp = scrX-xDelta+scrDirAdj;
+
+			if (temp > X_SCROLL_WRAP)
+				PlatzDrawColumn(TO_TILES_X((u8)(temp-(256-X_SCROLL_WRAP))),scrDirX);
+			else
+            	PlatzDrawColumn(TO_TILES_X((u8)(scrX-xDelta+scrDirAdj)),scrDirX);
+#elif VIDEO_MODE == 3
+			PlatzDrawColumn(TO_TILES_X((u8)(scrX-xDelta+scrDirAdj)),scrDirX);
+#endif
+
+            if ((scrXMod == 0) && (scrDirX == DIR_RIGHT)) {
+            	wsp = (wsp < wspMax)?wsp+1:0;
+#if MAX_ANIMATED_BGS
+              	PlatzLoadAnimatedBgs(wsp,DIR_RIGHT);
+#endif
+
+#if MAX_MOVING_PLATFORMS
+                PlatzLoadMovingPlatforms(wsp,DIR_RIGHT);
+#endif
+            }
+        }
+    }
+
+#if MAX_MOVING_PLATFORMS
+    PlatzDrawMovingPlatforms(AXIS_X);
 #endif
 
 #if MAX_ANIMATED_BGS
-        PlatzDrawAnimatedBgs();
-        PlatzAnimateBgs();
+    PlatzDrawAnimatedBgs();
+    PlatzAnimateBgs();
 #endif
 }
 
@@ -1570,7 +1778,15 @@ u8 PlatzMove(platzActor *a) {
 		} else if ((xDelta < 0) && ((a->sprx+xDelta) > (vpAnchor-vpSlack))) {
 			a->sprx += xDelta;
 		} else {
-			Screen.scrollX += xDelta;
+			SCRL_X += xDelta;
+#if VIDEO_MODE == 2
+			if (SCRL_X >= X_SCROLL_WRAP) {
+				if (SCRL_X < (X_SCROLL_WRAP+6))
+					SCRL_X -= X_SCROLL_WRAP;
+				else
+					SCRL_X -= 256-X_SCROLL_WRAP;
+			}
+#endif
 		}
 	} else {
 		scrDirX = DIR_NONE;
@@ -1579,6 +1795,15 @@ u8 PlatzMove(platzActor *a) {
 	if (yVel) {
 		a->loc.y += yVel;
 	}
+
+#if VIDEO_MODE == 2
+	if (a->loc.x >= X_SCROLL_WRAP) {
+		if (a->loc.x < (X_SCROLL_WRAP+6))
+			a->loc.x -= X_SCROLL_WRAP;
+		else
+			a->loc.x -= 256-X_SCROLL_WRAP;
+	}
+#endif
 
 	PlatzUpdateCollisionPointer(a);
 	PlatzScroll(xDelta);

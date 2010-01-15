@@ -16,7 +16,7 @@
         <PlatzfilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src/data/platz.levels.inc</PlatzfilePath>
     </ProjectSettings>
     <World>
-        <Slice replica="-1" locked="0" bgoOrder="-1">
+        <Slice replica="-1" locked="0" bgoOrder="1">
             <Title>Slice</Title>
             <Bounds>
                 <Left>0</Left>
@@ -53,6 +53,132 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>66</Left>
+                        <Top>16</Top>
+                        <Right>72</Right>
+                        <Bottom>56</Bottom>
+                    </Bounds>
+                    <BgInner flags="0" tile="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>66</Left>
+                            <Top>16</Top>
+                            <Right>72</Right>
+                            <Bottom>56</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>72</Left>
+                        <Top>48</Top>
+                        <Right>90</Right>
+                        <Bottom>56</Bottom>
+                    </Bounds>
+                    <BgInner flags="0" tile="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>72</Left>
+                            <Top>48</Top>
+                            <Right>90</Right>
+                            <Bottom>56</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>72</Left>
+                        <Top>16</Top>
+                        <Right>90</Right>
+                        <Bottom>24</Bottom>
+                    </Bounds>
+                    <BgInner flags="0" tile="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>72</Left>
+                            <Top>16</Top>
+                            <Right>90</Right>
+                            <Bottom>24</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>96</Left>
+                        <Top>24</Top>
+                        <Right>102</Right>
+                        <Bottom>48</Bottom>
+                    </Bounds>
+                    <BgInner flags="0" tile="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>96</Left>
+                            <Top>24</Top>
+                            <Right>102</Right>
+                            <Bottom>48</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>96</Left>
+                        <Top>16</Top>
+                        <Right>120</Right>
+                        <Bottom>24</Bottom>
+                    </Bounds>
+                    <BgInner flags="0" tile="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>96</Left>
+                            <Top>16</Top>
+                            <Right>120</Right>
+                            <Bottom>24</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>96</Left>
+                        <Top>48</Top>
+                        <Right>120</Right>
+                        <Bottom>56</Bottom>
+                    </Bounds>
+                    <BgInner flags="0" tile="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>96</Left>
+                            <Top>48</Top>
+                            <Right>120</Right>
+                            <Bottom>56</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
+                <BgOuter flags="0">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>114</Left>
+                        <Top>24</Top>
+                        <Right>120</Right>
+                        <Bottom>48</Bottom>
+                    </Bounds>
+                    <BgInner flags="0" tile="2">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>114</Left>
+                            <Top>24</Top>
+                            <Right>120</Right>
+                            <Bottom>48</Bottom>
+                        </Bounds>
+                    </BgInner>
+                </BgOuter>
                 <BgOuter flags="2">
                     <Title>BgOuter</Title>
                     <Trigger>TRIG_CHECK_0</Trigger>
@@ -79,132 +205,6 @@
                             <Top>0</Top>
                             <Right>180</Right>
                             <Bottom>80</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>96</Left>
-                        <Top>48</Top>
-                        <Right>120</Right>
-                        <Bottom>56</Bottom>
-                    </Bounds>
-                    <BgInner flags="0" tile="2">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>96</Left>
-                            <Top>48</Top>
-                            <Right>120</Right>
-                            <Bottom>56</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>96</Left>
-                        <Top>16</Top>
-                        <Right>120</Right>
-                        <Bottom>24</Bottom>
-                    </Bounds>
-                    <BgInner flags="0" tile="2">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>96</Left>
-                            <Top>16</Top>
-                            <Right>120</Right>
-                            <Bottom>24</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>114</Left>
-                        <Top>24</Top>
-                        <Right>120</Right>
-                        <Bottom>48</Bottom>
-                    </Bounds>
-                    <BgInner flags="0" tile="2">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>114</Left>
-                            <Top>24</Top>
-                            <Right>120</Right>
-                            <Bottom>48</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>96</Left>
-                        <Top>24</Top>
-                        <Right>102</Right>
-                        <Bottom>48</Bottom>
-                    </Bounds>
-                    <BgInner flags="0" tile="2">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>96</Left>
-                            <Top>24</Top>
-                            <Right>102</Right>
-                            <Bottom>48</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>72</Left>
-                        <Top>16</Top>
-                        <Right>90</Right>
-                        <Bottom>24</Bottom>
-                    </Bounds>
-                    <BgInner flags="0" tile="2">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>72</Left>
-                            <Top>16</Top>
-                            <Right>90</Right>
-                            <Bottom>24</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>72</Left>
-                        <Top>48</Top>
-                        <Right>90</Right>
-                        <Bottom>56</Bottom>
-                    </Bounds>
-                    <BgInner flags="0" tile="2">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>72</Left>
-                            <Top>48</Top>
-                            <Right>90</Right>
-                            <Bottom>56</Bottom>
-                        </Bounds>
-                    </BgInner>
-                </BgOuter>
-                <BgOuter flags="0">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>66</Left>
-                        <Top>16</Top>
-                        <Right>72</Right>
-                        <Bottom>56</Bottom>
-                    </Bounds>
-                    <BgInner flags="0" tile="2">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>66</Left>
-                            <Top>16</Top>
-                            <Right>72</Right>
-                            <Bottom>56</Bottom>
                         </Bounds>
                     </BgInner>
                 </BgOuter>
@@ -261,7 +261,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0" bgoOrder="-1">
+        <Slice replica="-1" locked="0" bgoOrder="1">
             <Title>Slice</Title>
             <Bounds>
                 <Left>192</Left>
@@ -271,77 +271,81 @@
             </Bounds>
             <BgOuterProxy>
                 <Title>Outer BGs</Title>
+                <BgOuter flags="2">
+                    <Title>BgOuter</Title>
+                    <Trigger>TRIG_WFALL</Trigger>
+                    <TriggerOri>ORI_LRUD</TriggerOri>
+                    <Bounds>
+                        <Left>192</Left>
+                        <Top>0</Top>
+                        <Right>210</Right>
+                        <Bottom>80</Bottom>
+                    </Bounds>
+                </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>348</Left>
+                        <Left>192</Left>
                         <Top>80</Top>
-                        <Right>384</Right>
+                        <Right>252</Right>
                         <Bottom>184</Bottom>
                     </Bounds>
-                    <BgInner flags="0" tile="8">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>348</Left>
-                            <Top>80</Top>
-                            <Right>354</Right>
-                            <Bottom>88</Bottom>
-                        </Bounds>
-                    </BgInner>
                     <BgInner flags="1" tile="1">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>354</Left>
+                            <Left>192</Left>
                             <Top>80</Top>
-                            <Right>384</Right>
+                            <Right>246</Right>
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="1" tile="3">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>348</Left>
+                            <Left>192</Left>
                             <Top>88</Top>
-                            <Right>384</Right>
+                            <Right>252</Right>
                             <Bottom>184</Bottom>
+                        </Bounds>
+                    </BgInner>
+                    <BgInner flags="0" tile="9">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>246</Left>
+                            <Top>80</Top>
+                            <Right>252</Right>
+                            <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>348</Left>
+                        <Left>246</Left>
                         <Top>0</Top>
-                        <Right>354</Right>
+                        <Right>252</Right>
                         <Bottom>16</Bottom>
                     </Bounds>
-                    <BgInner flags="1" tile="2">
+                    <BgInner flags="1" tile="0">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>348</Left>
+                            <Left>246</Left>
                             <Top>0</Top>
-                            <Right>354</Right>
+                            <Right>252</Right>
                             <Bottom>16</Bottom>
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="1">
+                <BgOuter flags="2">
                     <Title>BgOuter</Title>
+                    <Trigger>TRIG_WATER</Trigger>
+                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>252</Left>
-                        <Top>0</Top>
+                        <Top>136</Top>
                         <Right>348</Right>
-                        <Bottom>8</Bottom>
+                        <Bottom>160</Bottom>
                     </Bounds>
-                    <BgInner flags="1" tile="1">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>252</Left>
-                            <Top>0</Top>
-                            <Right>348</Right>
-                            <Bottom>8</Bottom>
-                        </Bounds>
-                    </BgInner>
                 </BgOuter>
                 <BgOuter flags="0">
                     <Title>BgOuter</Title>
@@ -379,31 +383,38 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
-                <BgOuter flags="2">
+                <BgOuter flags="1">
                     <Title>BgOuter</Title>
-                    <Trigger>TRIG_WATER</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
                     <Bounds>
                         <Left>252</Left>
-                        <Top>136</Top>
+                        <Top>0</Top>
                         <Right>348</Right>
-                        <Bottom>160</Bottom>
+                        <Bottom>8</Bottom>
                     </Bounds>
+                    <BgInner flags="1" tile="1">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>252</Left>
+                            <Top>0</Top>
+                            <Right>348</Right>
+                            <Bottom>8</Bottom>
+                        </Bounds>
+                    </BgInner>
                 </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>246</Left>
+                        <Left>348</Left>
                         <Top>0</Top>
-                        <Right>252</Right>
+                        <Right>354</Right>
                         <Bottom>16</Bottom>
                     </Bounds>
-                    <BgInner flags="1" tile="0">
+                    <BgInner flags="1" tile="2">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>246</Left>
+                            <Left>348</Left>
                             <Top>0</Top>
-                            <Right>252</Right>
+                            <Right>354</Right>
                             <Bottom>16</Bottom>
                         </Bounds>
                     </BgInner>
@@ -411,49 +422,38 @@
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
                     <Bounds>
-                        <Left>192</Left>
+                        <Left>348</Left>
                         <Top>80</Top>
-                        <Right>252</Right>
+                        <Right>384</Right>
                         <Bottom>184</Bottom>
                     </Bounds>
-                    <BgInner flags="1" tile="1">
+                    <BgInner flags="0" tile="8">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>192</Left>
+                            <Left>348</Left>
                             <Top>80</Top>
-                            <Right>246</Right>
+                            <Right>354</Right>
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
-                    <BgInner flags="0" tile="9">
+                    <BgInner flags="1" tile="1">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>246</Left>
+                            <Left>354</Left>
                             <Top>80</Top>
-                            <Right>252</Right>
+                            <Right>384</Right>
                             <Bottom>88</Bottom>
                         </Bounds>
                     </BgInner>
                     <BgInner flags="1" tile="3">
                         <Title>BgInner</Title>
                         <Bounds>
-                            <Left>192</Left>
+                            <Left>348</Left>
                             <Top>88</Top>
-                            <Right>252</Right>
+                            <Right>384</Right>
                             <Bottom>184</Bottom>
                         </Bounds>
                     </BgInner>
-                </BgOuter>
-                <BgOuter flags="2">
-                    <Title>BgOuter</Title>
-                    <Trigger>TRIG_WFALL</Trigger>
-                    <TriggerOri>ORI_LRUD</TriggerOri>
-                    <Bounds>
-                        <Left>192</Left>
-                        <Top>0</Top>
-                        <Right>210</Right>
-                        <Bottom>80</Bottom>
-                    </Bounds>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>

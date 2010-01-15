@@ -401,15 +401,21 @@ void PlatzGraphicsView::mousePressEvent(QMouseEvent *event)
                     if (replica && replica == slice && replica->replicaOf()) {
                         replica->setReplica(0); // Unlink self from replica
                     } else if (replica && (!replica->replicaOf() || (event->button()&Qt::LeftButton)) && slice != replica) {
+                        Slice *s = static_cast<Slice*>(slice);
+
+                        // Assign replica if this was not a copy
+                        if (event->button()&Qt::RightButton)
+                            s->setReplica(replica);
+                        // Set these before the insert as they will affect bgo ordering
+                        s->setLockedOrdering(replica->lockedOrdering());
+                        s->setBgoOrder(replica->bgoOrder());
+
                         // Don't allow replicating a replicate or self. Do allow copying of anything except self
                         int row = 0;
                         model()->removeBranch(model()->indexOf(slice->row(), 0, slice));
 
                         foreach (WorldItem *child, *replica->children())
                             model()->attachBranch(child, slice, row++);
-                        // Assign replica if this was not a copy
-                        if (event->button()&Qt::RightButton)
-                            static_cast<Slice*>(slice)->setReplica(replica);
                     } else {
                         slice = 0;
                     }

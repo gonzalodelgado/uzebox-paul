@@ -21,14 +21,16 @@ MIX_PATH_ESC:= $(subst $(SPACE),$(SPACE_ESC),$(MIX_PATH))
 ## Kernel settings
 KERNEL_DIR = ../kernel
 KERNEL_OPTIONS  = -DVIDEO_MODE=2 -DINTRO_LOGO=0 -DSCREEN_SECTIONS_COUNT=3 -DSOUND_CHANNEL_4_ENABLE=1 -DSOUND_CHANNEL_2_ENABLE=1 -DSOUND_CHANNEL_3_ENABLE=1
-KERNEL_OPTIONS  += -DMIXER_WAVES=\"$(MIX_PATH_ESC)\"
+KERNEL_OPTIONS  += -DMIXER_WAVES=\"$(MIX_PATH_ESC)\" -DVRAM_TILES_V=26
 
 ## Platz settings
 	## MAX_MOVING_PLATFORMS and MAX_ANIMATED_BGS are per slice. Set to 0 (or delete) to disable.
 	## VIEWPORT_SLACK should be small enough so as to not allow your player to wander offscreen.
 	## SS_OFFSET_Y is the offset in tiles from the top of the screen that your Platz screenSection begins (for VIDEO_MODE=2)
+	## PLATZ_SLIM can save 1k or more of flash at the cost of minor graphical compromises
+	## MAX_MAP_SIZE the largest bg map/pattern in bytes
 	## PLATZ_COMPATABILE is ten times the version of Platz that you wish to target (if not targettting the latest compatible version)
-PLATZ_OPTIONS = -DVIEWPORT_SLACK=0 -DMAX_ANIMATED_BGS=5 -DMAX_MOVING_PLATFORMS=3 -DMUTABLE_BGS -DMP_HACK -DSS_OFFSET_Y=3
+PLATZ_OPTIONS = -DVIEWPORT_SLACK=0 -DMAX_ANIMATED_BGS=5 -DMAX_MOVING_PLATFORMS=3 -DMUTABLE_BGS -DMP_HACK -DSS_OFFSET_Y=3 -DPLATZ_SLIM -DMAX_MAP_SIZE=16
 
 ## B.C. Dash settings
 BC_DASH_OPTIONS = -DSLICE_COUNT=51 -DSTART_Y=40
@@ -39,6 +41,7 @@ COMMON = -mmcu=$(MCU)
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
 CFLAGS += -Wall -gdwarf-2 -std=gnu99 -DF_CPU=28636360UL -Os -fsigned-char -ffunction-sections 
+##CFLAGS += -Wall -gstabs -std=gnu99 -DF_CPU=28636360UL -Os -fsigned-char		## Emu debug setting
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 CFLAGS += $(KERNEL_OPTIONS)
 CFLAGS += $(PLATZ_OPTIONS)

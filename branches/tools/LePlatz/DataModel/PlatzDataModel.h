@@ -89,6 +89,7 @@ signals:
     void selectedIndexChanged(const QModelIndex &index);
     void selectedIndexParentChanged(const QModelIndex &index);
     void currentIndexChanged(const QModelIndex &index);
+    void bgoSortComplete(Slice *slice);
 private:
     void updateGeometries(WorldItem *branchRoot);
     void updateCurrentIndex(const QModelIndex &parent, int start, int end);

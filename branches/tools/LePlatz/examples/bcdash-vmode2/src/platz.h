@@ -38,6 +38,14 @@
 	#define MAX_MOVING_PLATFORMS 0
 #endif
 
+#ifndef MAX_MAP_SIZE
+	#define MAX_MAP_SIZE 64
+#endif
+
+#ifndef RAM_TILES_COUNT
+	RAM_TILES_COUNT = 0
+#endif
+
 #ifndef VIEWPORT_SLACK			// How far from the viewport anchor should the player move before we scroll
 	#define VIEWPORT_SLACK 0
 #endif
@@ -62,6 +70,14 @@
 
 #ifndef SS_OFFSET_Y
 	#define SS_OFFSET_Y 0
+#endif
+
+#if VIDEO_MODE == 2
+	#define PLATZ_SCRN_WID		132
+	#define PLATZ_SCRN_HGT		208
+#elif VIDEO_MODE == 3
+	#define PLATZ_SCRN_WID		240
+	#define PLATZ_SCRN_HGT		224
 #endif
 
 #define GET_VEL(v)	(((v).frames&(v).mod)?(v).disp:(v).modDisp)		// Takes a velocity struct v
@@ -138,14 +154,6 @@
 #define DIR_DOWN				1
 #define DIR_UP					-1
 #define DIR_NONE				0
-
-#if VIDEO_MODE == 2
-	#define PLATZ_SCRN_WID		144
-	#define PLATZ_SCRN_HGT		208
-#elif VIDEO_MODE == 3
-	#define PLATZ_SCRN_WID		240
-	#define PLATZ_SCRN_HGT		224
-#endif
 
 #define MP_SMOOTH				0x40
 #define MP_STEPPED 				0x80
@@ -261,7 +269,9 @@ typedef struct bgDirectory {
 	u8 animCount;				// The # of animated background elements in the slice (always the first elements in the slice for easy loading)	
 	u8 animIndex;				// Index into pgmAnimDir
 	u8 pdIndex;					// Index into platforms directory (PF_ZERO if none)
-	char ordered;				// Are bgs ordered left-to-right(1), right-to-left(-1),unordered(0) - note right-to-left not currently supported (v0.0-v1.1)
+#if PLATZ_COMPATABILE > 10
+	char ordered;				// Are bgs ordered left-to-right(1), right-to-left(-1),unordered(0)
+#endif
 } bgDirectory;
 
 typedef struct platform {

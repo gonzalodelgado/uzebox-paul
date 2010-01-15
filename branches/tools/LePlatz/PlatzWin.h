@@ -114,6 +114,7 @@ public slots:
     void setSnapToResolutionY(QAction* action);
     int findReplaceSrcDefines();
     void updateGameFlow(int flow);
+    void updateTreeviewPluses(Slice *slice);
     void publicKeyPressEvent(QKeyEvent *e);
 signals:
     void zoomIn(int delta = 120);

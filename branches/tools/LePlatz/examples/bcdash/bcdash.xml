@@ -4,6 +4,8 @@
     <ProjectSettings>
         <VideoMode mode="3"/>
         <SliceSize width="256" height="200"/>
+        <OffsetY offset="24"/>
+        <GameFlow gameFlow="1"/>
         <SlicePath>./art/slices/</SlicePath>
         <TilePath>./art/tiles.png</TilePath>
         <MapPath>./art/maps.png</MapPath>
@@ -14,7 +16,7 @@
         <PlatzfilePath>./src/data/platz.levels.inc</PlatzfilePath>
     </ProjectSettings>
     <World>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>0</Left>
@@ -277,7 +279,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>256</Left>
@@ -533,7 +535,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>512</Left>
@@ -796,7 +798,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>768</Left>
@@ -1045,7 +1047,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>1024</Left>
@@ -1217,7 +1219,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>1280</Left>
@@ -1468,7 +1470,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>1536</Left>
@@ -1677,7 +1679,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>1792</Left>
@@ -1948,7 +1950,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>2048</Left>
@@ -2201,7 +2203,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>2304</Left>
@@ -2366,7 +2368,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>2560</Left>
@@ -2673,7 +2675,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>2816</Left>
@@ -3011,7 +3013,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>3072</Left>
@@ -3408,7 +3410,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>3328</Left>
@@ -3728,7 +3730,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>3584</Left>
@@ -3991,7 +3993,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>3840</Left>
@@ -4559,7 +4561,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>4096</Left>
@@ -4931,7 +4933,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="16" locked="0">
+        <Slice replica="16" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>4352</Left>
@@ -5303,7 +5305,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>4608</Left>
@@ -5710,7 +5712,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>4864</Left>
@@ -5855,7 +5857,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>5120</Left>
@@ -6028,7 +6030,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>5376</Left>
@@ -6174,7 +6176,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>5632</Left>
@@ -6292,7 +6294,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>5888</Left>
@@ -6419,7 +6421,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>6144</Left>
@@ -6618,7 +6620,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>6400</Left>
@@ -6791,7 +6793,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>6656</Left>
@@ -6954,7 +6956,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>6912</Left>
@@ -7135,7 +7137,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="1">
+        <Slice replica="-1" locked="1" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>7168</Left>
@@ -7440,7 +7442,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>7424</Left>
@@ -7765,7 +7767,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>7680</Left>
@@ -7990,7 +7992,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="30" locked="0">
+        <Slice replica="30" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>7936</Left>
@@ -8215,7 +8217,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="30" locked="0">
+        <Slice replica="30" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>8192</Left>
@@ -8440,7 +8442,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>8448</Left>
@@ -8543,7 +8545,7 @@
                     </Bounds>
                     <BgInner flags="9" tile="24">
                         <Title>BgInner</Title>
-                        <Bgmc>MC_HOURGLASS</Bgmc>
+                        <Bgmc>MC_BUDDHA</Bgmc>
                         <Bounds>
                             <Left>8488</Left>
                             <Top>24</Top>
@@ -8794,7 +8796,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>8704</Left>
@@ -8959,7 +8961,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>8960</Left>
@@ -9222,7 +9224,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>9216</Left>
@@ -9370,7 +9372,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>9472</Left>
@@ -9514,7 +9516,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="37" locked="0">
+        <Slice replica="37" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>9728</Left>
@@ -9658,7 +9660,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="37" locked="0">
+        <Slice replica="37" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>9984</Left>
@@ -9802,7 +9804,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>10240</Left>
@@ -10088,7 +10090,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="40" locked="0">
+        <Slice replica="40" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>10496</Left>
@@ -10374,7 +10376,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="40" locked="0">
+        <Slice replica="40" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>10752</Left>
@@ -10660,7 +10662,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>11008</Left>
@@ -10804,7 +10806,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="43" locked="0">
+        <Slice replica="43" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>11264</Left>
@@ -10948,7 +10950,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="43" locked="0">
+        <Slice replica="43" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>11520</Left>
@@ -11092,7 +11094,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>11776</Left>
@@ -11263,7 +11265,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>12032</Left>
@@ -11490,7 +11492,7 @@
                 </PlatformPath>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>12288</Left>
@@ -11580,7 +11582,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>12544</Left>
@@ -11670,7 +11672,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="49" locked="0">
+        <Slice replica="49" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>12800</Left>
@@ -11760,7 +11762,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="49" locked="0">
+        <Slice replica="49" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>13056</Left>
@@ -11850,7 +11852,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>13312</Left>
@@ -12122,7 +12124,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>13568</Left>
@@ -12662,7 +12664,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>13824</Left>
@@ -12806,7 +12808,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>14080</Left>
@@ -13112,7 +13114,7 @@
                 <Title>Moving Platforms</Title>
             </PlatformPathProxy>
         </Slice>
-        <Slice replica="-1" locked="0">
+        <Slice replica="-1" locked="0" bgoOrder="0">
             <Title>Slice</Title>
             <Bounds>
                 <Left>14336</Left>

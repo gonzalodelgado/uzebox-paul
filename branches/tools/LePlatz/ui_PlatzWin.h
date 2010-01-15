@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzWin.ui'
 **
-** Created: Wed 13. Jan 21:01:43 2010
+** Created: Thu 14. Jan 13:41:58 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

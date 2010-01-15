@@ -24,12 +24,26 @@
  *			  	 Defines				*
  ****************************************/
 
+#define PLATZ_VERSION 11
+
+#ifndef PLATZ_COMPATABILE
+	#define PLATZ_COMPATABILE PLATZ_VERSION
+#endif
+
 #ifndef MAX_ANIMATED_BGS		// Maximum animated bgs per world slice
 	#define MAX_ANIMATED_BGS 0
 #endif
 
 #ifndef MAX_MOVING_PLATFORMS	// Maximum moving platforms per world slice
 	#define MAX_MOVING_PLATFORMS 0
+#endif
+
+#ifndef MAX_MAP_SIZE
+	#define MAX_MAP_SIZE 64
+#endif
+
+#ifndef RAM_TILES_COUNT
+	RAM_TILES_COUNT = 0
 #endif
 
 #ifndef VIEWPORT_SLACK			// How far from the viewport anchor should the player move before we scroll
@@ -46,34 +60,81 @@
 	#define SLICE_SEQ_LEN 0
 #endif
 
+#ifndef SPRITE_FLIP_X
+	#define SPRITE_FLIP_X	0
+#endif
+
+#ifndef OVERLAY_LINES
+	#define OVERLAY_LINES 0
+#endif
+
+#ifndef SS_OFFSET_Y
+	#define SS_OFFSET_Y 0
+#endif
+
+#if VIDEO_MODE == 2
+	#define PLATZ_SCRN_WID		132
+	#define PLATZ_SCRN_HGT		208
+#elif VIDEO_MODE == 3
+	#define PLATZ_SCRN_WID		240
+	#define PLATZ_SCRN_HGT		224
+#endif
+
 #define GET_VEL(v)	(((v).frames&(v).mod)?(v).disp:(v).modDisp)		// Takes a velocity struct v
 
-
-#define inline_set_tile(x,y,tileId) 	\
-	asm (								\
-		"mov r24,%2" "\n\t"				\
-		"ldi r25,%4" "\n\t"				\
-		"ldi %A3,lo8(vram)" "\n\t"		\
-		"ldi %B3,hi8(vram)" "\n\t"		\
-		"mul %1,r25" "\n\t"				\
-		"clr r25" "\n\t"				\
-		"add r0,%0" "\n\t"				\
-		"adc r1,r25" "\n\t"				\
-		"add %A3,r0" "\n\t"				\
-		"adc %B3,r1" "\n\t"				\
-		"subi r24,%5" "\n\t"			\
-		"st %a3,r24" "\n\t"				\
-		"clr r1"						\
-		: /* no outputs */				\
-		: "r" (x),						\
-		  "r" (y),						\
-		  "r" (tileId),					\
-		  "e" (vram),					\
-		  "M" (VRAM_TILES_H),			\
-		  "M" (255-(RAM_TILES_COUNT-1))	\
-		: "r24",						\
-		  "r25"							\
-	)
+#if VIDEO_MODE == 2
+	#define inline_set_tile(x,y,tileId) 	\
+		asm (								\
+			"mov r24,%2" "\n\t"				\
+			"ldi r25,%4" "\n\t"				\
+			"ldi %A3,lo8(vram)" "\n\t"		\
+			"ldi %B3,hi8(vram)" "\n\t"		\
+			"mul %1,r25" "\n\t"				\
+			"clr r25" "\n\t"				\
+			"add r0,%0" "\n\t"				\
+			"adc r1,r25" "\n\t"				\
+			"add %A3,r0" "\n\t"				\
+			"adc %B3,r1" "\n\t"				\
+			"subi r24,%5" "\n\t"			\
+			"st %a3,r24" "\n\t"				\
+			"clr r1"						\
+			: /* no outputs */				\
+			: "r" (x),						\
+			  "r" (y),						\
+			  "r" (tileId),					\
+			  "e" (vram),					\
+			  "M" (VRAM_TILES_H),			\
+			  "M" (0)						\
+			: "r24",						\
+			  "r25"							\
+		)
+#elif VIDEO_MODE == 3
+	#define inline_set_tile(x,y,tileId) 	\
+		asm (								\
+			"mov r24,%2" "\n\t"				\
+			"ldi r25,%4" "\n\t"				\
+			"ldi %A3,lo8(vram)" "\n\t"		\
+			"ldi %B3,hi8(vram)" "\n\t"		\
+			"mul %1,r25" "\n\t"				\
+			"clr r25" "\n\t"				\
+			"add r0,%0" "\n\t"				\
+			"adc r1,r25" "\n\t"				\
+			"add %A3,r0" "\n\t"				\
+			"adc %B3,r1" "\n\t"				\
+			"subi r24,%5" "\n\t"			\
+			"st %a3,r24" "\n\t"				\
+			"clr r1"						\
+			: /* no outputs */				\
+			: "r" (x),						\
+			  "r" (y),						\
+			  "r" (tileId),					\
+			  "e" (vram),					\
+			  "M" (VRAM_TILES_H),			\
+			  "M" (255-(RAM_TILES_COUNT-1))	\
+			: "r24",						\
+			  "r25"							\
+		)
+#endif
 
 // Constants
 #define L_INTERSECT				1
@@ -93,8 +154,7 @@
 #define DIR_DOWN				1
 #define DIR_UP					-1
 #define DIR_NONE				0
-#define PLATZ_SCRN_WID			240
-#define PLATZ_SCRN_HGT			224
+
 #define MP_SMOOTH				0x40
 #define MP_STEPPED 				0x80
 	// Mutatable bg event codes
@@ -209,6 +269,9 @@ typedef struct bgDirectory {
 	u8 animCount;				// The # of animated background elements in the slice (always the first elements in the slice for easy loading)	
 	u8 animIndex;				// Index into pgmAnimDir
 	u8 pdIndex;					// Index into platforms directory (PF_ZERO if none)
+#if PLATZ_COMPATABILE > 10
+	char ordered;				// Are bgs ordered left-to-right(1), right-to-left(-1),unordered(0)
+#endif
 } bgDirectory;
 
 typedef struct platform {
@@ -255,6 +318,10 @@ void PlatzMoveToSlice(platzActor *a, u8 sp);
 u8 PlatzSetBoundingBoxDimensions(platzActor *a, u8 wid, u8 hgt);
 void PlatzSetVelocity(velocity *v, char val, u8 *trPos);
 void PlatzTick(void);
+
+#if VIDEO_MODE == 2
+	void PlatzSetScreenSection(u8 index);
+#endif
 
 #if MAX_MOVING_PLATFORMS
 	void PlatzSetMovingPlatformTiles(u8 hTilesIndex, u8 vTilesIndex, u8 shTilesIndex, u8 svTilesIndex);

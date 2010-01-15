@@ -222,6 +222,7 @@ void PlatzDataModel::sortBgOuters(Slice *slice)
         setDropState(Valid);
         removeRow(child->row(), indexOf(proxy->row(), 0, proxy));
     }
+    emit bgoSortComplete(slice);
 }
 
 void PlatzDataModel::updateCurrentIndex(const QModelIndex &parent, int start, int)
