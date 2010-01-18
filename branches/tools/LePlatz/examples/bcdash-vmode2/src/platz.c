@@ -156,7 +156,6 @@ char scrDirAdj;						// Seam drawing directional adjustment
 u8 prevScrX;						// The previous scroll position in pixels
 u8 scrXMod;							// The current scroll position in tiles
 
-
 /****************************************
  *		Static function declarations	*
  ****************************************/
@@ -541,12 +540,13 @@ void PlatzMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags) {
 
 // Moves a sprite array's position offscreen so that it is not drawn
 void PlatzHideSprite(u8 spriteIndex, u8 wid, u8 hgt) {
-	for (int i = 0; i < (wid*hgt); i++)
-		//MoveSprite(spriteIndex+i,TO_PIXELS_X(SCREEN_TILES_H),0,1,1);
+	u8 size = wid*hgt;
+
+	for (int i = 0; i < size; i++)
 #if VIDEO_MODE == 2
 		MoveSprite(spriteIndex+i,0,-TILE_HEIGHT,1,1);
 #elif VIDEO_MODE == 3
-		MoveSprite(spriteIndex+i,-TILE_WIDTH,-TILE_HEIGHT,1,1);
+		MoveSprite(spriteIndex+i,TO_PIXELS_X(SCREEN_TILES_H),0,1,1);
 #endif
 }
 
@@ -554,12 +554,6 @@ void PlatzHideSprite(u8 spriteIndex, u8 wid, u8 hgt) {
 // Similar to kernel's Fill, but takes a rect
 void PlatzFill(const rect *r, u8 tileId) {
 #if 1
-	u8 x = r->left,wid = r->right-r->left;
-	int yLimit = r->btm*VRAM_TILES_H;
-
-	for (int y = r->top*VRAM_TILES_H; y < yLimit; y+=VRAM_TILES_H)
-		memset(vram+x+y,tileId+RAM_TILES_COUNT,wid);
-#else
 	u8 x,y;
 	
     for (x = r->left; x < r->right; x++) {
@@ -568,46 +562,56 @@ void PlatzFill(const rect *r, u8 tileId) {
         	inline_set_tile(x,y,tileId);
         }
     }
+#else
+	u8 x = r->left,wid = r->right-r->left;
+	int yLimit = r->btm*VRAM_TILES_H;
+
+	for (int y = r->top*VRAM_TILES_H; y < yLimit; y+=VRAM_TILES_H)
+		memset(vram+x+y,tileId+RAM_TILES_COUNT,wid);
 #endif
 }
-
-// Fills a region with a specified pattern. Pattern can be 2-dimensional. Handles partial draws (i.e. when scrolling).
-// SLOW_BG_PATTERNS (non 2^n) is MUCH slower (especially for large fill areas)
-#if 0 // Replaced by PlatzFillMap
-void PlatzFillPattern(const rect *r, u8 patWid, u8 patHgt, u8 patIndex, u8 patOffsetX, const char *map) {
-	u8 x,y,fillWid = r->right-r->left,fillHgt = r->btm-r->top;
-	u8 xPat,yPat;
-
-	for (y = 0, yPat = 0; y < fillHgt; y++,yPat++) {
-		if (yPat == patHgt)
-			yPat = 0;
-
-		for (x = 0,xPat = patOffsetX; x < fillWid; x++,xPat++) {
-			if (xPat == patWid)
-				xPat = 0;
-			//SetTile(x+r->left,y+r->top,pgm_read_byte(&(map[patIndex+xPat+yPat*patWid])));
-			inline_set_tile(x+r->left,y+r->top,pgm_read_byte(&(map[patIndex+xPat+yPat*patWid])));
-		}
-	}
-}
-#endif
 
 // Draws a rectangular region of a map
 void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int dataOffset) {
+#if 1
+	u8 x,y,wid = r->right-r->left,hgt = r->btm-r->top,mapWid = pgm_read_byte(&(map[0])),mapHgt = pgm_read_byte(&(map[1]));
+	u8 xMap, yMap, yMapMax = mapWid*mapHgt;
+
+	// Don't burden non-repeating maps with possible mod overhead
+	if ((xOffset > mapWid) || (yOffset > mapHgt)) {
+#ifndef SLOW_BG_PATTERNS
+		xOffset &= mapWid-1;
+		yOffset &= mapHgt-1;
+#else
+		xOffset %= mapWid;
+		yOffset %= mapHgt;
+#endif
+	}
+
+	// Do in vertical strips as this is mostly called by PlatzDrawColumn
+	for (x = 0, xMap = xOffset; x < wid; x++,xMap++) {
+		if (xMap == mapWid)
+			xMap = 0;
+		for (y = 0, yMap = yOffset*mapWid; y < hgt; y++,yMap+=mapWid) {
+			if (yMap == yMapMax)
+				yMap = 0;
+			inline_set_tile(x+r->left,y+r->top,pgm_read_byte(&(map[xMap+yMap+dataOffset])));
+		}
+	}
+#else
 	static u8 mapRam[MAX_MAP_SIZE];
     u8 x,yMap,mapWid = pgm_read_byte(&(map[0])),mapHgt = pgm_read_byte(&(map[1]));
 
     // Don't burden non-repeating maps with possible mod overhead
     if ((xOffset > mapWid) || (yOffset > mapHgt)) {
-        #ifndef SLOW_BG_PATTERNS
-                xOffset &= mapWid-1;
-                yOffset &= mapHgt-1;
-        #else
-                xOffset %= mapWid;
-                yOffset %= mapHgt;
-        #endif
+#ifndef SLOW_BG_PATTERNS
+	    xOffset &= mapWid-1;
+	    yOffset &= mapHgt-1;
+#else
+	    xOffset %= mapWid;
+	    yOffset %= mapHgt;
+#endif
     }
-
 	
 	u8 xLimit = r->right, yMapLimit = mapHgt*mapWid;
 	int yLimit = r->btm*VRAM_TILES_H;
@@ -632,6 +636,7 @@ void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int da
 		for (; x < xLimit; x+=mapWid)
 			memcpy(vram+x+y,mapRam+yMap,MIN(xLimit-x,mapWid));
 	}
+#endif
 }
 
 // Draws a column of tiles based on the bgs supplied to platz and paintX. Handles initial frame of animated
@@ -639,6 +644,7 @@ void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int da
 // and objects. Usually used at the scrolling edge
 void PlatzDrawColumn(u8 paintX, char dir) {
 	u8 i,j,start = 0;
+	//char breakEarly = 0;
 #if MAX_ANIMATED_BGS
 	u8 k,iAnimBg;
 #endif
@@ -656,27 +662,34 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 	PlatzFill(&(rect){paintX,paintX+1,0,SCREEN_TILES_V-OVERLAY_LINES},0);
 #endif
 
-#if PLATZ_COMPATABILE > 10
+#ifdef PLATZ_PRE_SCAN
 	u8 sampleOffset = 0;
 
-	if (dir == DIR_RIGHT && bgd.ordered == DIR_RIGHT)
-		sampleOffset = 5;
-	else if (dir == DIR_LEFT && bgd.ordered == DIR_LEFT)
-		sampleOffset = 4;
+	if (bgd.ordered == dir)
+		sampleOffset = (dir == DIR_RIGHT)?5:4;
 	if (sampleOffset)
 		start = LinearFlashSample(paintX,0,dir,bgd.bgoCount,sizeof(bgOuter),((const char*)(bgoTbl+bgd.bgoIndex))+sampleOffset);
 #endif
 
+/*
+#ifdef PLATZ_PRE_SCAN
+	if (bgd.ordered == DIR_RIGHT && dir == DIR_RIGHT)
+		breakEarly = 1;
+	else if (bgd.ordered == DIR_LEFT && dir == DIR_LEFT)
+		breakEarly = -1;
+#endif
+*/
 	// Paint bgs
 	for (i = start; i < bgd.bgoCount; i++) {
 		memcpy_P(&bgo,bgoTbl+bgd.bgoIndex+i,sizeof(bgOuter));
 
-#if PLATZ_COMPATABILE > 10
-		if ((bgd.ordered == DIR_RIGHT && dir == DIR_RIGHT && bgo.r.left > paintX) ||
-				(bgd.ordered == DIR_LEFT && dir == DIR_LEFT && bgo.r.right < paintX))
+/* - This makes the worst case worse and the average case better. In the end, the only thing that matters is the worst case
+     because it is happening on every slice.
+#ifdef PLATZ_PRE_SCAN
+		if ((breakEarly == DIR_RIGHT && bgo.r.left > paintX) || (breakEarly == DIR_LEFT && bgo.r.right < paintX))
 			break;
 #endif
-
+*/
 		if ((bgo.type&(BGI|BGT)) == 0) {	// Only draw visible bgs
 			if ((bgo.r.left <= paintX) && (bgo.r.right > paintX)) {	// Can skip all inner bgs if outer does not need painting
 				for (j = 0; j < bgo.count; j++) {
@@ -702,7 +715,7 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 							else
 								iAnimBg = 0;
 
-							// Inactive mutable bgs will have been culled above during callback
+							// Inactive mutable bgs will have been culled above after callback
 							for (k = 0; k < animBgs.count[iAnimBg]; k++) {
 								if ((animBgs.ids[iAnimBg][k].iOuter == i) && (animBgs.ids[iAnimBg][k].iInner == j))
 									PlatzFillMap(&(rect){paintX,paintX+1,animBgs.bgs[iAnimBg][k].r.top,animBgs.bgs[iAnimBg][k].r.btm},paintX-animBgs.bgs[iAnimBg][k].r.left,0,
@@ -764,30 +777,6 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 #endif
 }
 
-
-#if 0 // Not needed due to post v1.0 collision code
-// Source: Sedgewick
-// PlatzLinesIntersect helper
-char PlatzCcw(const pt16 *p0, const pt16 *p1, const pt16 *p2) {
-    long int dx1, dx2, dy1, dy2;
-    dx1 = p1->x-p0->x; dy1 = p1->y-p0->y;
-    dx2 = p2->x-p0->x; dy2 = p2->y-p0->y;
-
-    if (dx1*dy2 > dy1*dx2) return 1;
-    if (dx1*dy2 < dy1*dx2) return -1;
-    if ((dx1*dx2 < 0) || (dy1*dy2 < 0)) return -1;
-    if ((dx1*dx1+dy1*dy1) < (dx2*dx2+dy2*dy2)) return 1;
-    return 0;
-}
-
-
-// Source: Sedgewick
-// Determines if two line regions intersect
-u8 PlatzLinesIntersect(const line16 *l1, const line16 *l2) {
-	return ((PlatzCcw(&l1->p1, &l1->p2, &l2->p1)*PlatzCcw(&l1->p1, &l1->p2, &l2->p2)) <= 0)
-        && ((PlatzCcw(&l2->p1, &l2->p2, &l1->p1)*PlatzCcw(&l2->p1, &l2->p2, &l1->p2)) <= 0);
-}
-#endif
 
 // Determines if two rect16's overlap
 inline u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2) {
@@ -947,7 +936,7 @@ u8 LinearFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, con
 			if (compare <= (sample+flashAdj))
 				break;
 		} else {				// dir == DIR_LEFT: compare = rPost.right, sample = rBg.left
-			if (compare >= (sample+flashAdj))
+			if (compare < (sample+flashAdj))
 				break;
 		}
 		++it;
@@ -964,6 +953,9 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	u8 retVal = 0;		// Aggregate collision flags
 	u8 sp;				// Slice pointer of slice being processed
 	u8 start,fin,step;	// Iteration range and increment
+#ifdef PLATZ_PRE_SCAN
+	char breakEarly = DIR_NONE;	// Flag to indicate we can stop detection early under certain conditions
+#endif
 #if MAX_MOVING_PLATFORMS
 	u8 mpsp = 0;	// Moving platforms slice pointer
 #endif
@@ -1012,7 +1004,7 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	rPost.right = rPre.right+xVel;
 	rPost.top = rPre.top+yVel;
 	rPost.btm = rPre.btm+yVel;
-	trigPos = (pt16){rPost.left+a->bbx,rPost.top+a->bby};
+	trigPos = (pt16){rPre.left+a->bbx,rPre.top+a->bby};
 	sp = csp;
 	
 	// i: 0-1 Moving Platforms (when MAX_MOVING_PLATFORMS != 0)
@@ -1027,10 +1019,17 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 		step = 1;
 
 		if (i&1) {	// 1 && 3
+#if VIDEO_MODE == 2
+			if (xAdjust)
+				rBg = (rect16){0,SCRL_WID,TO_PIXELS_Y(SS_OFFSET_Y),TO_PIXELS_Y(SS_OFFSET_Y)+ss->height};
+			else
+				rBg = (rect16){SCRL_WID,SCRL_WID<<1,TO_PIXELS_Y(SS_OFFSET_Y),TO_PIXELS_Y(SS_OFFSET_Y)+ss->height};
+#elif VIDEO_MODE == 3
 			if (xAdjust)
 				rBg = (rect16){0,SCRL_WID,0,PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))};
 			else
 				rBg = (rect16){SCRL_WID,SCRL_WID<<1,0,PLATZ_SCRN_HGT-(TO_PIXELS_Y(OVERLAY_LINES))};
+#endif
 			if (!PlatzRectsIntersect16(&rPost,&rBg))
 				continue;
 			if (sp != wsp)
@@ -1059,7 +1058,17 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 #endif
 			memcpy_P(&bgd, bgDir+sp, sizeof(bgDirectory));
 
-			if (!bgd.ordered || (a->vx.dir == DIR_RIGHT && bgd.ordered == DIR_RIGHT) || (a->vx.dir == DIR_LEFT && bgd.ordered == DIR_LEFT)) {
+#ifdef PLATZ_PRE_SCAN
+			if (!MAX_MOVING_PLATFORMS || i > 1) {
+				if (bgd.ordered == a->vx.dir)
+					breakEarly = bgd.ordered;
+				else
+					breakEarly = DIR_NONE;
+			} else {
+				breakEarly = DIR_NONE;
+			}
+
+			if (!bgd.ordered || breakEarly) {
                 start = 0;
                 fin = bgd.bgoCount;
                 step = 1;
@@ -1069,25 +1078,34 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
                 step = -1;
 	        }
 
-#if PLATZ_COMPATABILE > 10
-			int compare;
-			u8 flashAdj = (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust))?SCRL_WID:0,sampleOffset = 0;
+			if (breakEarly) {
+				int compare;
+				int flashAdj = (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust))?SCRL_WID:0,sampleOffset = 0;
 
-			if (a->vx.dir == DIR_RIGHT && bgd.ordered == DIR_RIGHT) {
-				sampleOffset = 5;
-				compare = rPost.left;
-			} else if (a->vx.dir == DIR_LEFT && bgd.ordered == DIR_LEFT) {
-				sampleOffset = 4;
-				compare = rPost.right;
+				if (breakEarly == DIR_RIGHT) {
+					sampleOffset = 5;
+					compare = rPost.left;
+				} else {
+					sampleOffset = 4;
+					compare = rPost.right;
+				}
+				if (sampleOffset)
+					start = LinearFlashSample(compare,flashAdj,a->vx.dir,bgd.bgoCount,sizeof(bgOuter),((const char*)(bgoTbl+bgd.bgoIndex))+sampleOffset);
 			}
-			if (sampleOffset)
-				start = LinearFlashSample(compare,flashAdj,a->vx.dir,bgd.bgoCount,sizeof(bgOuter),((const char*)(bgoTbl+bgd.bgoIndex))+sampleOffset);
+#else
+			if (a->vx.dir == DIR_RIGHT) {
+				start = 0;
+				fin = bgd.bgoCount;
+				step = 1;
+			} else {
+				start = bgd.bgoCount-1;
+				fin = 255;
+				step = -1;
+			}
 #endif
 		}
 
 		for (u8 j = start; j < fin; j+=step) {
-			if (xVel == 0 && yVel == 0)
-				break;
 			colVal = 0;
 #if MAX_MOVING_PLATFORMS
 			if (i < 2) {
@@ -1115,10 +1133,9 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 				rBg.right += SCRL_WID;
 			}
 
-#if PLATZ_COMPATABILE > 10
+#ifdef PLATZ_PRE_SCAN
 			// Because bgs are ordered left-to-right, we can break early
-			if ((!MAX_MOVING_PLATFORMS || i > 1) && ((bgd.ordered == DIR_RIGHT && a->vx.dir == DIR_RIGHT && rBg.left > rPost.right) ||
-					(bgd.ordered == DIR_LEFT && a->vx.dir == DIR_LEFT && rBg.right < rPost.left)))
+			if ((breakEarly == DIR_RIGHT && rBg.left > rPost.right) || (breakEarly == DIR_LEFT && rBg.right < rPost.left))
 				break;
 #endif
 
@@ -1210,8 +1227,6 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	if (retVal&H_INTERSECT) {
 		PlatzSetVelocity(&a->vy,yVel,&a->trLoc.y);
 	}
-	//if (enTrig == 0)
-	//	return 0;
 	return retVal;
 }
 
@@ -1875,6 +1890,8 @@ void PlatzMoveProjectiles(void) {
 	}
 }
 #endif
+
+
 
 
 

@@ -1920,7 +1920,7 @@
     <string>Bg Order</string>
    </property>
    <property name="toolTip">
-    <string>Toggle Outer Bg ordering for the selected slice (left-to-right or right-to-left)</string>
+    <string>Reverse Outer Bg ordering for the selected slice (left-to-right or right-to-left)</string>
    </property>
   </action>
  </widget>

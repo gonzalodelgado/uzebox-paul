@@ -24,12 +24,6 @@
  *			  	 Defines				*
  ****************************************/
 
-#define PLATZ_VERSION 11
-
-#ifndef PLATZ_COMPATABILE
-	#define PLATZ_COMPATABILE PLATZ_VERSION
-#endif
-
 #ifndef MAX_ANIMATED_BGS		// Maximum animated bgs per world slice
 	#define MAX_ANIMATED_BGS 0
 #endif
@@ -73,7 +67,7 @@
 #endif
 
 #if VIDEO_MODE == 2
-	#define PLATZ_SCRN_WID		132
+	#define PLATZ_SCRN_WID		144
 	#define PLATZ_SCRN_HGT		208
 #elif VIDEO_MODE == 3
 	#define PLATZ_SCRN_WID		240
@@ -211,13 +205,13 @@ typedef struct rect16 {
 	int btm;
 } rect16;
 
-typedef struct velocity {		// Single axis velocity
-	char 	vel;				// Base velocity - implemented as mod, modDisp and disp
-	char	dir;				// Direction of travel - useful for when spd == 0
-	u8		frames;				// Counts the game frames for use by mod
-	u8 		mod;				// Fractional speed adjustment (2^n-1)
-	char	modDisp;			// Special case displacement when frames&mod == 0
-	char	disp;				// Typical displacement
+typedef struct velocity {	// Single axis velocity
+	char 	vel;			// Base velocity - implemented as mod, modDisp and disp
+	char	dir;			// Direction of travel - useful for when vel == 0
+	u8		frames;			// Counts the game frames for use by mod
+	u8 		mod;			// Fractional speed adjustment (2^n-1)
+	char	modDisp;		// Special case displacement when frames&mod == 0
+	char	disp;			// Typical displacement
 } velocity;
 
 typedef struct animation {
@@ -269,7 +263,7 @@ typedef struct bgDirectory {
 	u8 animCount;				// The # of animated background elements in the slice (always the first elements in the slice for easy loading)	
 	u8 animIndex;				// Index into pgmAnimDir
 	u8 pdIndex;					// Index into platforms directory (PF_ZERO if none)
-#if PLATZ_COMPATABILE > 10
+#ifdef PLATZ_PRE_SCAN
 	char ordered;				// Are bgs ordered left-to-right(1), right-to-left(-1),unordered(0)
 #endif
 } bgDirectory;
@@ -350,5 +344,7 @@ u8 PlatzRectsIntersect(const rect *r1, const rect *r2);
 u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2);
 
 #endif
+
+
 
 

@@ -301,6 +301,7 @@ u8 wfall;
 u8 wfalltmr = 15;
 u8 fps;
 u8 checkpoints;
+u8 watertmr;
 u8 mutmap[MUT_BG_COUNT];
 bcTime tCurr,tBest[7] = {{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9}};
 char initsCurr[4],inits[28];
@@ -828,11 +829,14 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 		case TRIG_WATER:				
 			if (trig > 0) {
 				if (bob.form == FORM_TURTLE) {
-					SetForm(FORM_LYNX);
-					bob.ay.state = TM_YSTATE_TAKEOFF;
+					if (SetForm(FORM_LYNX)) {
+						watertmr = HZ;
+					} else {
+						bob.ay.state = TM_YSTATE_TAKEOFF;
 
-					if (move&MOVE_JUMP)
-						superjumptmr = HZ;
+						if (move&MOVE_JUMP)
+							superjumptmr = HZ;
+					}
 				}
 			} else {
 				if ((bob.form != FORM_TURTLE) && ((bob.ay.state&(TM_YSTATE_TAKEOFF|TM_YSTATE_RISING|TM_YSTATE_PEAK)) == 0) && (walkOnWater == 0)) {
@@ -872,6 +876,7 @@ char SetForm(u8 form) {
 	// Don't call PlatzSetBoundingBoxDimensions before bob has been initialised
 	if (!prevForm || PlatzSetBoundingBoxDimensions(&bob.pa,bob.anim.wid<<3,bob.anim.hgt<<3)) {
 		bob.ay.state = TM_YSTATE_IDLE;
+		watertmr = 0;
 
 		switch (form) {		
 			case FORM_DRAGONFLY:
@@ -1282,8 +1287,6 @@ extern const platformDirectory *platDir;	// Moving platform headers
 extern const platform *platTbl;				// Moving platforms' attributes
 extern const mutableClass *mcTbl;			// Mutable bg class directory - for consolidating similar behavior
 
-extern unsigned char ram_tiles[];
-
 int main(void) {
 	u8 cursor = 0;				// For entering initials
 	u8 demoX = 0, demoY = 0;	// Demo "X" coords
@@ -1390,6 +1393,17 @@ int main(void) {
 				if (--wfalltmr == 0) {
 					wfalltmr = 15;
 					TRIGGER_NOTE(3,SFX_WATERFALL,85,SFX_VOL_WATERFALL,15);
+				}
+			}
+
+			if (watertmr) {
+				if (bob.form == FORM_TURTLE) {
+					if (--watertmr == 0) {
+						if (SetForm(FORM_LYNX))
+							watertmr = HZ;
+					}
+				} else {
+					watertmr = 0;
 				}
 			}
 
@@ -1725,18 +1739,6 @@ int main(void) {
 					}
 				}
 			}
-			// Sprite curtains
-			//sprites[6].tileIndex = 49;
-			//sprites[6].x = (256-bob.pa.loc.x)&7;
-			//sprites[6].y = 40;
-		
-			//memcpy_P(ram_tiles+13*TILE_HEIGHT*TILE_WIDTH,tileset+216*TILE_HEIGHT*TILE_WIDTH,TILE_HEIGHT*TILE_WIDTH);
-
-			//for (u8 y = 6; y < 16; y++)
-				//for (u8 z = 0; z < VRAM_TILES_H; z++)
-					//SetTile(z,y,fps);
-					//vram[z+y*VRAM_TILES_H] = 15;
-			//memset(vram+3+5*VRAM_TILES_H,15,VRAM_TILES_H-6);
 			PlatzTick();
 		}
 	}

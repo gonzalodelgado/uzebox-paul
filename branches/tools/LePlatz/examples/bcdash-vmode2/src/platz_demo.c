@@ -314,6 +314,7 @@ u8 wfall;
 u8 wfalltmr = 15;
 u8 fps;
 u8 checkpoints;
+u8 watertmr;
 u8 mutmap[MUT_BG_COUNT];
 bcTime tCurr,tBest[7] = {{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9}};
 char initsCurr[4],inits[28];
@@ -843,11 +844,14 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 		case TRIG_WATER:				
 			if (trig > 0) {
 				if (bob.form == FORM_TURTLE) {
-					SetForm(FORM_LYNX);
-					bob.ay.state = TM_YSTATE_TAKEOFF;
+					if (SetForm(FORM_LYNX)) {
+						watertmr = HZ;
+					} else {
+						bob.ay.state = TM_YSTATE_TAKEOFF;
 
-					if (move&MOVE_JUMP)
-						superjumptmr = HZ;
+						if (move&MOVE_JUMP)
+							superjumptmr = HZ;
+					}
 				}
 			} else {
 				if ((bob.form != FORM_TURTLE) && ((bob.ay.state&(TM_YSTATE_TAKEOFF|TM_YSTATE_RISING|TM_YSTATE_PEAK)) == 0) && (walkOnWater == 0)) {
@@ -887,6 +891,7 @@ char SetForm(u8 form) {
 	// Don't call PlatzSetBoundingBoxDimensions before bob has been initialised
 	if (!prevForm || PlatzSetBoundingBoxDimensions(&bob.pa,bob.anim.wid*6,bob.anim.hgt<<3)) {
 		bob.ay.state = TM_YSTATE_IDLE;
+		watertmr = 0;
 
 		switch (form) {		
 			case FORM_DRAGONFLY:
@@ -1408,6 +1413,17 @@ int main(void) {
 				if (--wfalltmr == 0) {
 					wfalltmr = 15;
 					TRIGGER_NOTE(3,SFX_WATERFALL,85,SFX_VOL_WATERFALL,15);
+				}
+			}
+
+			if (watertmr) {
+				if (bob.form == FORM_TURTLE) {
+					if (--watertmr == 0) {
+						if (SetForm(FORM_LYNX))
+							watertmr = HZ;
+					}
+				} else {
+					watertmr = 0;
 				}
 			}
 

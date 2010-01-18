@@ -1108,7 +1108,7 @@ void PlatzWin::compileWorld()
     wc.setSliceSize(sliceSize);
     //wc.setSpriteSize(spriteSize);
     wc.setTileSize(tileSize);
-    wc.setOffsetY(offsetY);
+    wc.setOffsetY((videoMode == 2)?offsetY:0);
 
     if (wc.compileWorld(&file, projectName))
         ui->statusBar->showMessage("World compiled successfully. Output to " + QFileInfo(platzfilePath).absoluteFilePath(), STATUS_DELAY);

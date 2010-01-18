@@ -4842,6 +4842,40 @@
                         </Bounds>
                     </BgInner>
                 </BgOuter>
+                <BgOuter flags="8">
+                    <Title>BgOuter</Title>
+                    <Bounds>
+                        <Left>3360</Left>
+                        <Top>144</Top>
+                        <Right>3432</Right>
+                        <Bottom>160</Bottom>
+                    </Bounds>
+                    <BgInner flags="6" tile="3">
+                        <Title>BgInner</Title>
+                        <Bounds>
+                            <Left>3360</Left>
+                            <Top>144</Top>
+                            <Right>3432</Right>
+                            <Bottom>160</Bottom>
+                        </Bounds>
+                    </BgInner>
+                    <BgMutable flags="0" tile="13" custom="0">
+                        <Title>BgMutable</Title>
+                        <MutString>MUT_FIRE</MutString>
+                        <Bounds>
+                            <Left>3360</Left>
+                            <Top>144</Top>
+                            <Right>3432</Right>
+                            <Bottom>160</Bottom>
+                        </Bounds>
+                        <Payload>
+                            <Left>96</Left>
+                            <Right>168</Right>
+                            <Top>144</Top>
+                            <Bottom>160</Bottom>
+                        </Payload>
+                    </BgMutable>
+                </BgOuter>
                 <BgOuter flags="1">
                     <Title>BgOuter</Title>
                     <Bounds>
@@ -4859,40 +4893,6 @@
                             <Bottom>72</Bottom>
                         </Bounds>
                     </BgInner>
-                </BgOuter>
-                <BgOuter flags="8">
-                    <Title>BgOuter</Title>
-                    <Bounds>
-                        <Left>3366</Left>
-                        <Top>144</Top>
-                        <Right>3432</Right>
-                        <Bottom>160</Bottom>
-                    </Bounds>
-                    <BgInner flags="6" tile="3">
-                        <Title>BgInner</Title>
-                        <Bounds>
-                            <Left>3366</Left>
-                            <Top>144</Top>
-                            <Right>3432</Right>
-                            <Bottom>160</Bottom>
-                        </Bounds>
-                    </BgInner>
-                    <BgMutable flags="0" tile="13" custom="0">
-                        <Title>BgMutable</Title>
-                        <MutString>MUT_FIRE</MutString>
-                        <Bounds>
-                            <Left>3366</Left>
-                            <Top>144</Top>
-                            <Right>3432</Right>
-                            <Bottom>160</Bottom>
-                        </Bounds>
-                        <Payload>
-                            <Left>102</Left>
-                            <Right>168</Right>
-                            <Top>144</Top>
-                            <Bottom>160</Bottom>
-                        </Payload>
-                    </BgMutable>
                 </BgOuter>
             </BgOuterProxy>
             <BgObjectProxy>

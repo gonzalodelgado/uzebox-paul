@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzWin.ui'
 **
-** Created: Thu 14. Jan 13:41:58 2010
+** Created: Sun 17. Jan 11:33:35 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -1446,7 +1446,7 @@ public:
 #endif // QT_NO_TOOLTIP
         actionBgOrdering->setText(QApplication::translate("PlatzWin", "Bg Order", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        actionBgOrdering->setToolTip(QApplication::translate("PlatzWin", "Toggle Outer Bg ordering for the selected slice (left-to-right or right-to-left)", 0, QApplication::UnicodeUTF8));
+        actionBgOrdering->setToolTip(QApplication::translate("PlatzWin", "Reverse Outer Bg ordering for the selected slice (left-to-right or right-to-left)", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         lblSelectedDetailsIcon->setText(QString());
         lblSelectedDetails->setText(QString());

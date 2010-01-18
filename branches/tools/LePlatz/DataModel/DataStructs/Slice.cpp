@@ -73,7 +73,7 @@ QVariant Slice::tooltipData(int) const
     return QVariant(data(0).toString() +
             "\nLocked: " + ((locked)?"Yes":"No") +
             "\nReplica Of: " + ((replica) ? replica->data(0).toString() : "None") +
-            "\nOrder: " + ((mBgoOrder == 1) ? "--->" : "<---") +
+            "\nOrder: " + ((mBgoOrder == -1) ? "<---" : "--->") +
             "\nBgOuters: " + QString::number(outerProxy()->childCount()) +
             "\nBgObjects: " + QString::number(objectProxy()->childCount()) +
             "\nBgPlatformPaths: " + QString::number(platformProxy()->childCount()));
@@ -83,7 +83,7 @@ QString Slice::detailData() const
 {
     QString details((locked)?"Locked: Yes":"Locked: No");
     details += "\tReplica Of: " + ((replica) ? replica->data(0).toString() : "None");
-    details += "\nOrder: " + ((mBgoOrder == 1) ? QString("--->") : QString("<---"));
+    details += "\nOrder: " + ((mBgoOrder == -1) ? QString("<---") : QString("--->"));
     return details;
 }
 

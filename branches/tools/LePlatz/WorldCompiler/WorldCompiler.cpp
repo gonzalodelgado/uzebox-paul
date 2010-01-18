@@ -172,7 +172,7 @@ bool WorldCompiler::compileWorld(QIODevice *device, const QString &worldName)
 
 void WorldCompiler::compileBgDirectory(QTextStream &ts)
 {
-    int sliceIndex = 0;
+    int sliceIndex = 0, bgOrder = 0;
     BgDirectory *dir;
     Slice *slice;
 
@@ -200,7 +200,15 @@ void WorldCompiler::compileBgDirectory(QTextStream &ts)
             ts << dir->platDirIndex << ",";
         else
             ts << "PF_ZERO,";
-        ts << slice->validateBgoOrdering() << "}";
+        bgOrder = slice->validateBgoOrdering();
+
+        if (bgOrder == 1)
+            ts << "DIR_RIGHT";
+        else if (bgOrder == -1)
+            ts << "DIR_LEFT";
+        else
+            ts << "DIR_NONE";
+        ts << "}";
 
         if (++sliceIndex != bgDir.count())
             ts << ",\n";
