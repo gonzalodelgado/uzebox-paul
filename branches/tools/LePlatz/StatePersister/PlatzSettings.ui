@@ -176,33 +176,6 @@
                    </layout>
                   </widget>
                   <widget class="QWidget" name="page"/>
-                  <widget class="QWidget" name="page_4">
-                   <layout class="QHBoxLayout" name="horizontalLayout_8">
-                    <item>
-                     <widget class="QLabel" name="lblGameFlow">
-                      <property name="text">
-                       <string>Game flow:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QComboBox" name="cboGameFlow"/>
-                    </item>
-                    <item>
-                     <spacer name="horizontalSpacer_2">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>178</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                   </layout>
-                  </widget>
                   <widget class="QWidget" name="page_11">
                    <layout class="QHBoxLayout" name="horizontalLayout_21">
                     <item>
@@ -532,6 +505,31 @@
                        <string>...</string>
                       </property>
                      </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                  <widget class="QWidget" name="page_4">
+                   <layout class="QVBoxLayout" name="verticalLayout">
+                    <item>
+                     <widget class="QLabel" name="lblUpdatesUrl">
+                      <property name="text">
+                       <string>LePlatz Updates URL:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_8">
+                      <item>
+                       <widget class="QLineEdit" name="leUpdatesUrl"/>
+                      </item>
+                      <item>
+                       <widget class="QPushButton" name="pbUpdatesUrlReset">
+                        <property name="text">
+                         <string>Default</string>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </item>
                    </layout>
                   </widget>

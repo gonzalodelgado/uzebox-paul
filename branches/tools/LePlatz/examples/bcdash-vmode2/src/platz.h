@@ -263,9 +263,6 @@ typedef struct bgDirectory {
 	u8 animCount;				// The # of animated background elements in the slice (always the first elements in the slice for easy loading)	
 	u8 animIndex;				// Index into pgmAnimDir
 	u8 pdIndex;					// Index into platforms directory (PF_ZERO if none)
-#ifdef PLATZ_PRE_SCAN
-	char ordered;				// Are bgs ordered left-to-right(1), right-to-left(-1),unordered(0)
-#endif
 } bgDirectory;
 
 typedef struct platform {

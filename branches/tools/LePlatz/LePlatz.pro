@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 TARGET = LePlatz
+QT += network
 TEMPLATE = app
 SOURCES += main.cpp \
     PlatzWin.cpp
@@ -24,3 +25,4 @@ include(StatePersister/StatePersister.pri)
 include(Resources/Resources.pri)
 include(Widgets/Widgets.pri)
 include(About/About.pri)
+include(Updater/Updater.pri)

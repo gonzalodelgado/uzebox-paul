@@ -43,9 +43,7 @@ public:
 
     SettingsDialog(Settings *settings, QWidget *parent = 0, Qt::WindowFlags f = Qt::WindowTitleHint | Qt::WindowSystemMenuHint);
     ~SettingsDialog();
-//signals:
-    //void worldPathTextChanged(const QString &text, int index = 2);
-public slots:
+private slots:
     void okSettings();
     void applySettings();
     void settingSelected(QTreeWidgetItem *current, QTreeWidgetItem *previous);
@@ -54,6 +52,7 @@ public slots:
     void showSettingsDialog(QString &path, QString openPath, const PathType &type = FilePath, const QString &filter = "*.*");
     void setCanvasColor();
     void setCanvasColorButtonIcon(const QColor &c);
+    void setDefaultUpdatesUrl();
 private slots:
     void updateTrees(const QString &text);
     void pathFileDialog();

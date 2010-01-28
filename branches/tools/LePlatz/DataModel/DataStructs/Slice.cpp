@@ -47,7 +47,7 @@ WorldItem* Slice::createItem(const QList<QVariant> &data, WorldItem *parent)
     if (slice) {
         slice->setReplica(replica);
         slice->setLockedOrdering(locked);
-        slice->setBgoOrder(mBgoOrder);
+        //slice->setBgoOrder(mBgoOrder);
 
         if (graphicalRepresentation())
             slice->setGraphicalRepresentation(new PlatzGraphicsItem(slice, graphicalRepresentation()->mode()));
@@ -73,7 +73,7 @@ QVariant Slice::tooltipData(int) const
     return QVariant(data(0).toString() +
             "\nLocked: " + ((locked)?"Yes":"No") +
             "\nReplica Of: " + ((replica) ? replica->data(0).toString() : "None") +
-            "\nOrder: " + ((mBgoOrder == -1) ? "<---" : "--->") +
+            //"\nOrder: " + ((mBgoOrder == -1) ? "<---" : "--->") +
             "\nBgOuters: " + QString::number(outerProxy()->childCount()) +
             "\nBgObjects: " + QString::number(objectProxy()->childCount()) +
             "\nBgPlatformPaths: " + QString::number(platformProxy()->childCount()));
@@ -82,8 +82,8 @@ QVariant Slice::tooltipData(int) const
 QString Slice::detailData() const
 {
     QString details((locked)?"Locked: Yes":"Locked: No");
-    details += "\tReplica Of: " + ((replica) ? replica->data(0).toString() : "None");
-    details += "\nOrder: " + ((mBgoOrder == -1) ? QString("<---") : QString("--->"));
+    details += "\nReplica Of: " + ((replica) ? replica->data(0).toString() : "None");
+    //details += "\nOrder: " + ((mBgoOrder == -1) ? QString("<---") : QString("--->"));
     return details;
 }
 
@@ -100,12 +100,12 @@ void Slice::setData(const QVariant &data)
 {
     sliceData = data.toString();
 }
-
+/*
 void Slice::toggleBgoOrder()
 {
     setBgoOrder((mBgoOrder == 1) ? -1 : 1);
 }
-
+*/
 int Slice::validateBgoOrdering()
 {
     ProxyItem *proxy = outerProxy();

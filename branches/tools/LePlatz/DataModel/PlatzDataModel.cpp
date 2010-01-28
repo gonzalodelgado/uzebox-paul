@@ -47,6 +47,20 @@ PlatzDataModel::~PlatzDataModel()
     delete rootItem;
 }
 
+void PlatzDataModel::cropWorldData(const QRectF &sliceBounds)
+{
+    if (!root())
+        return;
+    QList<WorldItem*> empties;
+
+    foreach (WorldItem *child, *root()->children())
+        child->cropBoundingRect(sliceBounds.adjusted(child->offsetX(), 0.0, child->offsetX(), 0.0), empties);
+    foreach (WorldItem *empty, empties) {
+        setDropState(Valid);
+        removeRow(empty->row(), indexOf(empty->parent()->row(), 0, empty->parent()));
+    }
+}
+
 int PlatzDataModel::replaceStringData(QStringList &data, const WorldItem::StringDataType &type, int from, int to)
 {
     return retrieveStringData(data, type, from, to, true);

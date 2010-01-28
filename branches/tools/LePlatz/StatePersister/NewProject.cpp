@@ -44,7 +44,6 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
 
     ui->cboImageFormat->addItems(Platz::SUPPORTED_IMAGE_FORMATS_EXTS);
     ui->cboImageFormat->setCurrentIndex(ui->cboImageFormat->count()-1);
-    ui->cboGameFlow->addItems(QStringList() << "--->" << "<---");
     displayDefaultHelp();
 
     // Connections
@@ -63,8 +62,6 @@ NewProject::NewProject(Settings *settings, QWidget *parent, Qt::WindowFlags f)
     connect(ui->leSrcFolder, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
     connect(ui->cboVideoMode, SIGNAL(receivedFocus()), this, SLOT(displayVideoModeHelp()));
     connect(ui->cboVideoMode, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
-    connect(ui->cboGameFlow, SIGNAL(receivedFocus()), this, SLOT(displayGameFlowHelp()));
-    connect(ui->cboGameFlow, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
     connect(ui->spbOffsetY, SIGNAL(valueChanged(int)), this, SLOT(syncSliceHeight(int)));
     connect(ui->spbOffsetY, SIGNAL(receivedFocus()), this, SLOT(displayOffsetYHelp()));
     connect(ui->spbOffsetY, SIGNAL(focusLost()), this, SLOT(displayDefaultHelp()));
@@ -163,12 +160,6 @@ void NewProject::displaySrcFolderHelp()
 }
 
 void NewProject::displayVideoModeHelp()
-{
-    ui->lblContextualHelp->setText("Resolution represents vram array horizontally, and screen tiles vertically (both converted to pixels). "
-                                   "This is because only horizontal scrolling is currently supported.");
-}
-
-void NewProject::displayGameFlowHelp()
 {
     ui->lblContextualHelp->setText("Resolution represents vram array horizontally, and screen tiles vertically (both converted to pixels). "
                                    "This is because only horizontal scrolling is currently supported.");
@@ -288,7 +279,6 @@ void NewProject::createNewProject()
     settings->setRelativeSrcFolder(ui->leSrcFolder->text());
     settings->setSliceSize(sliceSize);
     settings->setOffsetY(ui->spbOffsetY->value()*8);
-    settings->setGameFlow((ui->cboGameFlow->currentIndex()== 0) ? 1 : -1);
     accept();
 }
 

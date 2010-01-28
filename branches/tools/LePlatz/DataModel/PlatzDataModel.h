@@ -82,6 +82,7 @@ public:
     void setDropState(PlatzDataModel::DropState state);
     bool removeBranch(const QModelIndex &parent);
     void sortBgOuters(Slice *slice);
+    void cropWorldData(const QRectF &sliceBounds);
 public slots:
     void setSelectedIndex(const QModelIndex &index);
 signals:

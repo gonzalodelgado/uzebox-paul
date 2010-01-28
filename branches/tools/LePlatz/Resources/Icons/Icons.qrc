@@ -50,5 +50,7 @@
         <file>128x128/lock.png</file>
         <file>128x128/search.png</file>
         <file>128x128/bgoOrdering.png</file>
+        <file>128x128/updates.png</file>
+        <file>128x128/installUpdates.png</file>
     </qresource>
 </RCC>

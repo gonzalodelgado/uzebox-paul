@@ -124,6 +124,7 @@ void ProxyItem::setRelativeBoundingRect(const QRectF &r)
         parent()->setRelativeBoundingRect(r);
 }
 
+
 QRectF ProxyItem::limitRect() const
 {
     if (parent())

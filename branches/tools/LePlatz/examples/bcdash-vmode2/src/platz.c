@@ -178,7 +178,7 @@ void PlatzDrawColumn(u8 paintX, char dir);
 void PlatzUpdateCollisionPointer(platzActor *a);
 void PlatzScroll(char xDelta);
 //u8 BinaryFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, const char *flash);
-u8 LinearFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, const char *flash);
+//u8 LinearFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, const char *flash);
 
 /****************************************
  *			Function definitions		*
@@ -644,7 +644,6 @@ void PlatzFillMap(const rect *r, u8 xOffset, u8 yOffset, const char *map, int da
 // and objects. Usually used at the scrolling edge
 void PlatzDrawColumn(u8 paintX, char dir) {
 	u8 i,j,start = 0;
-	//char breakEarly = 0;
 #if MAX_ANIMATED_BGS
 	u8 k,iAnimBg;
 #endif
@@ -662,34 +661,10 @@ void PlatzDrawColumn(u8 paintX, char dir) {
 	PlatzFill(&(rect){paintX,paintX+1,0,SCREEN_TILES_V-OVERLAY_LINES},0);
 #endif
 
-#ifdef PLATZ_PRE_SCAN
-	u8 sampleOffset = 0;
-
-	if (bgd.ordered == dir)
-		sampleOffset = (dir == DIR_RIGHT)?5:4;
-	if (sampleOffset)
-		start = LinearFlashSample(paintX,0,dir,bgd.bgoCount,sizeof(bgOuter),((const char*)(bgoTbl+bgd.bgoIndex))+sampleOffset);
-#endif
-
-/*
-#ifdef PLATZ_PRE_SCAN
-	if (bgd.ordered == DIR_RIGHT && dir == DIR_RIGHT)
-		breakEarly = 1;
-	else if (bgd.ordered == DIR_LEFT && dir == DIR_LEFT)
-		breakEarly = -1;
-#endif
-*/
 	// Paint bgs
 	for (i = start; i < bgd.bgoCount; i++) {
 		memcpy_P(&bgo,bgoTbl+bgd.bgoIndex+i,sizeof(bgOuter));
 
-/* - This makes the worst case worse and the average case better. In the end, the only thing that matters is the worst case
-     because it is happening on every slice.
-#ifdef PLATZ_PRE_SCAN
-		if ((breakEarly == DIR_RIGHT && bgo.r.left > paintX) || (breakEarly == DIR_LEFT && bgo.r.right < paintX))
-			break;
-#endif
-*/
 		if ((bgo.type&(BGI|BGT)) == 0) {	// Only draw visible bgs
 			if ((bgo.r.left <= paintX) && (bgo.r.right > paintX)) {	// Can skip all inner bgs if outer does not need painting
 				for (j = 0; j < bgo.count; j++) {
@@ -924,7 +899,7 @@ u8 BinaryFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, con
 
 	return it;
 }
-#else
+
 u8 LinearFlashSample(int compare, int flashAdj, char dir, u8 count, u8 size, const char *flash) {
 	u8 it = 0;
 	int sample;
@@ -952,15 +927,13 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 	u8 colVal;			// Immediate collision flags
 	u8 retVal = 0;		// Aggregate collision flags
 	u8 sp;				// Slice pointer of slice being processed
-	u8 start,fin,step;	// Iteration range and increment
-#ifdef PLATZ_PRE_SCAN
-	char breakEarly = DIR_NONE;	// Flag to indicate we can stop detection early under certain conditions
-#endif
+	u8 start,fin;		// Iteration range
+	char step;			// Iteration increment
 #if MAX_MOVING_PLATFORMS
 	u8 mpsp = 0;	// Moving platforms slice pointer
 #endif
 	char xVel = GET_VEL(a->vx),yVel = GET_VEL(a->vy); // Actor's velocities
-	int xAdjust = 0;
+	int xAdjust = 0, xOffset;
 	int xDist, yDist; // For calculating collision specifics
 	pt16 trigPos; 	// Trigger point
 	rect16 rPre,rPost,rBg; // Collision bounds
@@ -1017,6 +990,7 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 #endif
 		start = 0;
 		step = 1;
+		xOffset = (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust))?SCRL_WID:0;
 
 		if (i&1) {	// 1 && 3
 #if VIDEO_MODE == 2
@@ -1058,41 +1032,6 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 #endif
 			memcpy_P(&bgd, bgDir+sp, sizeof(bgDirectory));
 
-#ifdef PLATZ_PRE_SCAN
-			if (!MAX_MOVING_PLATFORMS || i > 1) {
-				if (bgd.ordered == a->vx.dir)
-					breakEarly = bgd.ordered;
-				else
-					breakEarly = DIR_NONE;
-			} else {
-				breakEarly = DIR_NONE;
-			}
-
-			if (!bgd.ordered || breakEarly) {
-                start = 0;
-                fin = bgd.bgoCount;
-                step = 1;
-	        } else {
-                start = bgd.bgoCount-1;
-                fin = 255;
-                step = -1;
-	        }
-
-			if (breakEarly) {
-				int compare;
-				int flashAdj = (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust))?SCRL_WID:0,sampleOffset = 0;
-
-				if (breakEarly == DIR_RIGHT) {
-					sampleOffset = 5;
-					compare = rPost.left;
-				} else {
-					sampleOffset = 4;
-					compare = rPost.right;
-				}
-				if (sampleOffset)
-					start = LinearFlashSample(compare,flashAdj,a->vx.dir,bgd.bgoCount,sizeof(bgOuter),((const char*)(bgoTbl+bgd.bgoIndex))+sampleOffset);
-			}
-#else
 			if (a->vx.dir == DIR_RIGHT) {
 				start = 0;
 				fin = bgd.bgoCount;
@@ -1102,7 +1041,6 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 				fin = 255;
 				step = -1;
 			}
-#endif
 		}
 
 		for (u8 j = start; j < fin; j+=step) {
@@ -1110,8 +1048,8 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 #if MAX_MOVING_PLATFORMS
 			if (i < 2) {
 				bgo.type = 0;
-				rBg.left = mp.p[mpsp][j].r.left;
-				rBg.right = mp.p[mpsp][j].r.right;
+				rBg.left = mp.p[mpsp][j].r.left+xOffset;
+				rBg.right = mp.p[mpsp][j].r.right+xOffset;
 				rBg.top = mp.p[mpsp][j].r.top;
 				rBg.btm = mp.p[mpsp][j].r.btm;
 			} else {
@@ -1122,26 +1060,15 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 
 				if (!(bgo.type&(BGC|BGM|BGT)))
 					continue;
-				rBg.left = TO_PIXELS_X(bgo.r.left);
-				rBg.right = TO_PIXELS_X(bgo.r.right);
+				rBg.left = TO_PIXELS_X(bgo.r.left)+xOffset;
+				rBg.right = TO_PIXELS_X(bgo.r.right)+xOffset;
 				rBg.top = TO_PIXELS_Y(bgo.r.top);
 				rBg.btm = TO_PIXELS_Y(bgo.r.btm);
 			}
 
-			if (((i&1) == 0 && xAdjust) || ((i&1) && !xAdjust)) {
-				rBg.left += SCRL_WID;
-				rBg.right += SCRL_WID;
-			}
-
-#ifdef PLATZ_PRE_SCAN
-			// Because bgs are ordered left-to-right, we can break early
-			if ((breakEarly == DIR_RIGHT && rBg.left > rPost.right) || (breakEarly == DIR_LEFT && rBg.right < rPost.left))
-				break;
-#endif
-
 			if (PlatzRectsIntersect16(&rPost,&rBg)) {
 				// Triggers
-				if (bgo.type&BGT) {	// Leave this on separate line so that a false enTrig stops here
+				if (bgo.type&BGT) {	// Leave this on separate line so that a false enTrig hits the continue
 					if (enTrig && trigCb && !PT_NOT_IN_RECT(trigPos,rBg)) {
 						char trig;	// Trigger orientation
 
@@ -1158,6 +1085,7 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 					}
 					continue;
 				} else {
+					// Mutable bgs
 					if ((bgo.type&BGM) && mutCb) {
 						bgInner bgi,bgm;
 						memcpy_P(&bgi,bgiTbl+bgo.index,sizeof(bgInner));
@@ -1169,7 +1097,7 @@ u8 DetectBgCollisions(platzActor *a, u8 enTrig) {
 						if (mutCb(PLATZ_MUT_EV_COLLISION,&bgi,&bgm,&bgo) == 0)
 							continue;
 					}
-				
+					// Collidable bgs
 					if (xVel == 0) {
 						colVal = H_INTERSECT;
 					} else if (yVel == 0) {
@@ -1890,6 +1818,8 @@ void PlatzMoveProjectiles(void) {
 	}
 }
 #endif
+
+
 
 
 

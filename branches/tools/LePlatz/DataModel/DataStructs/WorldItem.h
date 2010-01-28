@@ -60,7 +60,7 @@ public:
     static QStringList platClrTileIds;
     static const QString emptyString;
     static QSize SliceSize;
-    static int GameFlow;
+    static const int GameFlow;
 
     static const QString& mutableIdAt(int index);
     static const QString& mutableClassIdAt(int index);
@@ -140,6 +140,7 @@ public:
     virtual QRectF relativeBoundingRect() const;
     virtual void setBoundingRect(const QRectF &r);
     virtual void setRelativeBoundingRect(const QRectF &r);
+    virtual void cropBoundingRect(const QRectF &r, QList<WorldItem*> &empties);
     virtual QRectF limitRect() const;
     virtual void setDisplayMode(Platz::ItemDisplayMode mode);
     PlatzGraphicsItem* graphicalRepresentation();

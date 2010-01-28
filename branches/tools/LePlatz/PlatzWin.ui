@@ -196,6 +196,8 @@
     <addaction name="actionAboutLePlatz"/>
     <addaction name="actionAboutPlatz"/>
     <addaction name="actionAboutUzebox"/>
+    <addaction name="separator"/>
+    <addaction name="actionCheckForUpdates"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -237,6 +239,7 @@
    <addaction name="actionCompile"/>
    <addaction name="actionMake"/>
    <addaction name="actionEmulator"/>
+   <addaction name="actionInstallUpdates"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidgetUtilities">
@@ -1920,7 +1923,20 @@
     <string>Bg Order</string>
    </property>
    <property name="toolTip">
-    <string>Reverse Outer Bg ordering for the selected slice (left-to-right or right-to-left)</string>
+    <string>Sort unlocked slice (left-to-right)</string>
+   </property>
+  </action>
+  <action name="actionCheckForUpdates">
+   <property name="text">
+    <string>Check for updates...</string>
+   </property>
+  </action>
+  <action name="actionInstallUpdates">
+   <property name="text">
+    <string>Install Updates</string>
+   </property>
+   <property name="toolTip">
+    <string>Install Updates</string>
    </property>
   </action>
  </widget>

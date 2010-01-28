@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzSettings.ui'
 **
-** Created: Wed 13. Jan 20:55:27 2010
+** Created: Wed 20. Jan 14:08:25 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,7 +14,6 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
-#include <QtGui/QComboBox>
 #include <QtGui/QDialog>
 #include <QtGui/QFrame>
 #include <QtGui/QGroupBox>
@@ -56,11 +55,6 @@ public:
     QSpinBox *spbOffsetY;
     QSpacerItem *horizontalSpacer;
     QWidget *page;
-    QWidget *page_4;
-    QHBoxLayout *horizontalLayout_8;
-    QLabel *lblGameFlow;
-    QComboBox *cboGameFlow;
-    QSpacerItem *horizontalSpacer_2;
     QWidget *page_11;
     QHBoxLayout *horizontalLayout_21;
     QLabel *lblSlicePath;
@@ -117,6 +111,12 @@ public:
     QLabel *lblLePlatzEmuPath;
     QLineEdit *leEmuExePath;
     QPushButton *pbEmuExePath;
+    QWidget *page_4;
+    QVBoxLayout *verticalLayout;
+    QLabel *lblUpdatesUrl;
+    QHBoxLayout *horizontalLayout_8;
+    QLineEdit *leUpdatesUrl;
+    QPushButton *pbUpdatesUrlReset;
     QWidget *page_5;
     QHBoxLayout *horizontalLayout_9;
     QLabel *lblCanvasColor;
@@ -231,25 +231,6 @@ public:
         page = new QWidget();
         page->setObjectName(QString::fromUtf8("page"));
         swPs->addWidget(page);
-        page_4 = new QWidget();
-        page_4->setObjectName(QString::fromUtf8("page_4"));
-        horizontalLayout_8 = new QHBoxLayout(page_4);
-        horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
-        lblGameFlow = new QLabel(page_4);
-        lblGameFlow->setObjectName(QString::fromUtf8("lblGameFlow"));
-
-        horizontalLayout_8->addWidget(lblGameFlow);
-
-        cboGameFlow = new QComboBox(page_4);
-        cboGameFlow->setObjectName(QString::fromUtf8("cboGameFlow"));
-
-        horizontalLayout_8->addWidget(cboGameFlow);
-
-        horizontalSpacer_2 = new QSpacerItem(178, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_8->addItem(horizontalSpacer_2);
-
-        swPs->addWidget(page_4);
         page_11 = new QWidget();
         page_11->setObjectName(QString::fromUtf8("page_11"));
         horizontalLayout_21 = new QHBoxLayout(page_11);
@@ -495,6 +476,31 @@ public:
         horizontalLayout_7->addWidget(pbEmuExePath);
 
         swLps->addWidget(page_10);
+        page_4 = new QWidget();
+        page_4->setObjectName(QString::fromUtf8("page_4"));
+        verticalLayout = new QVBoxLayout(page_4);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        lblUpdatesUrl = new QLabel(page_4);
+        lblUpdatesUrl->setObjectName(QString::fromUtf8("lblUpdatesUrl"));
+
+        verticalLayout->addWidget(lblUpdatesUrl);
+
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
+        leUpdatesUrl = new QLineEdit(page_4);
+        leUpdatesUrl->setObjectName(QString::fromUtf8("leUpdatesUrl"));
+
+        horizontalLayout_8->addWidget(leUpdatesUrl);
+
+        pbUpdatesUrlReset = new QPushButton(page_4);
+        pbUpdatesUrlReset->setObjectName(QString::fromUtf8("pbUpdatesUrlReset"));
+
+        horizontalLayout_8->addWidget(pbUpdatesUrlReset);
+
+
+        verticalLayout->addLayout(horizontalLayout_8);
+
+        swLps->addWidget(page_4);
         page_5 = new QWidget();
         page_5->setObjectName(QString::fromUtf8("page_5"));
         horizontalLayout_9 = new QHBoxLayout(page_5);
@@ -597,7 +603,6 @@ public:
 #endif // QT_NO_WHATSTHIS
         groupBox->setTitle(QApplication::translate("SettingsDialog", "Project Settings", 0, QApplication::UnicodeUTF8));
         lblOffsetY->setText(QApplication::translate("SettingsDialog", "Y-axis offset (in tiles):", 0, QApplication::UnicodeUTF8));
-        lblGameFlow->setText(QApplication::translate("SettingsDialog", "Game flow:", 0, QApplication::UnicodeUTF8));
         lblSlicePath->setText(QApplication::translate("SettingsDialog", "Slice Path:", 0, QApplication::UnicodeUTF8));
         pbSlicePath->setText(QApplication::translate("SettingsDialog", "...", 0, QApplication::UnicodeUTF8));
         lblTilePath->setText(QApplication::translate("SettingsDialog", "Tile path:", 0, QApplication::UnicodeUTF8));
@@ -619,6 +624,8 @@ public:
         pbMakeExePath->setText(QApplication::translate("SettingsDialog", "...", 0, QApplication::UnicodeUTF8));
         lblLePlatzEmuPath->setText(QApplication::translate("SettingsDialog", "Emulator Path:", 0, QApplication::UnicodeUTF8));
         pbEmuExePath->setText(QApplication::translate("SettingsDialog", "...", 0, QApplication::UnicodeUTF8));
+        lblUpdatesUrl->setText(QApplication::translate("SettingsDialog", "LePlatz Updates URL:", 0, QApplication::UnicodeUTF8));
+        pbUpdatesUrlReset->setText(QApplication::translate("SettingsDialog", "Default", 0, QApplication::UnicodeUTF8));
         lblCanvasColor->setText(QApplication::translate("SettingsDialog", "Canvas Background Color:", 0, QApplication::UnicodeUTF8));
         tbtnCanvasColor->setText(QApplication::translate("SettingsDialog", "...", 0, QApplication::UnicodeUTF8));
         pbOk->setText(QApplication::translate("SettingsDialog", "Ok", 0, QApplication::UnicodeUTF8));

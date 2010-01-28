@@ -76,6 +76,7 @@ bool PlatzWriter::saveLePlatzSettings(const QString &path, const QByteArray &win
     writeTextElement("CanvasColor", QString::number(settings->canvasColor().rgb(), 16));
     writeTextElement("MakeExePath", settings->makeExePath());
     writeTextElement("EmuExePath", settings->emuExePath());
+    writeTextElement("UpdatesUrl", settings->updatesUrl());
 
     if (settings->recentProjects().count()) {
         writeStartElement("RecentProjects");
@@ -104,9 +105,6 @@ void PlatzWriter::writeSettings()
     writeStartElement("OffsetY");
     writeAttribute("offset", QString::number(settings->offsetY()));
     writeEndElement();  // OffsetY
-    writeStartElement("GameFlow");
-    writeAttribute("gameFlow", QString::number(settings->gameFlow()));
-    writeEndElement();  // GameFlow
     writeTextElement("SlicePath", settings->slicePath());
     writeTextElement("TilePath", settings->tilePath());
     writeTextElement("MapPath", settings->mapPath());
@@ -127,7 +125,6 @@ void PlatzWriter::writeItem(WorldItem *item)
             writeStartElement("Slice");
             writeAttribute("replica", QString::number((slice->replicaOf())?slice->replicaOf()->row():-1));
             writeAttribute("locked", QString::number(slice->lockedOrdering()?1:0));
-            writeAttribute("bgoOrder", QString::number(slice->bgoOrder()));
             writeTextElement("Title", "Slice");
             writeBounds(item->limitRect());
             foreach(WorldItem *child, *item->children())

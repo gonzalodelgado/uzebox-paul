@@ -408,7 +408,7 @@ void PlatzGraphicsView::mousePressEvent(QMouseEvent *event)
                             s->setReplica(replica);
                         // Set these before the insert as they will affect bgo ordering
                         s->setLockedOrdering(replica->lockedOrdering());
-                        s->setBgoOrder(replica->bgoOrder());
+                        //s->setBgoOrder(replica->bgoOrder());
 
                         // Don't allow replicating a replicate or self. Do allow copying of anything except self
                         int row = 0;
@@ -445,7 +445,7 @@ void PlatzGraphicsView::updateSliceIndex()
         mSliceIndex = 0;
     else
         mSliceIndex = ((int)mapToScene(mousePos).x() / mSliceSize.width());
-    int index = qMin(qMax(mSliceIndex, 0), sliceCount()-1), count = qMax(sliceCount()-1, 0);
+    int index = qMin(qMax(mSliceIndex, 0), qMax(sliceCount()-1,0)), count = qMax(sliceCount()-1, 0);
     emit sliceIndexChanged(QString::number(index) + " / " + QString::number(count));
 }
 

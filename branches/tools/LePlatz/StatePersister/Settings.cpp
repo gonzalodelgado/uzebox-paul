@@ -30,11 +30,17 @@
 const int Settings::VMODE2_SCREEN_TILES_V = 26;
 const int Settings::VMODE3_SCREEN_TILES_V = 28;
 
+#if defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
+    const QString Settings::DEFAULT_UPDATES_URL = "http://uzebox-paul.googlecode.com/svn/trunk/patches/LePlatz/LePlatz-Updates-Win.xml";
+#else
+    const QString Settings::DEFAULT_UPDATES_URL = "http://uzebox-paul.googlecode.com/svn/trunk/patches/LePlatz/LePlatz-Updates-Linux.xml";
+#endif
+
 static const QString UNSET = "";
 
 Settings::Settings(int maxRecentProjects)
     : mMaxRecentProjects(maxRecentProjects), mVideoMode(3),
-        mSliceSize(QSize(0,0)), mSpriteSize(QSize(0,0)), mGameFlow(1)
+        mSliceSize(QSize(0,0)), mSpriteSize(QSize(0,0))
 {
 }
 
@@ -100,12 +106,19 @@ void Settings::setVideoMode(int mode)
 }
 
 void Settings::setSliceSize(const QSize &size) {
-    mSliceSize = size;
-    emit sliceSizeChanged(mSliceSize);
+    setSliceSize(size.width(), size.height());
 }
 
 void Settings::setSliceSize(int wid, int hgt) {
     mSliceSize = QSize(wid, hgt);
+
+    if (videoMode() == 2) {
+        if ((hgt + offsetY()) != (VMODE2_SCREEN_TILES_V*8))
+            setOffsetY((VMODE2_SCREEN_TILES_V*8)-hgt);
+    } else if (videoMode() == 3) {
+        if ((hgt + offsetY()) != (VMODE3_SCREEN_TILES_V*8))
+            setOffsetY((VMODE3_SCREEN_TILES_V*8)-hgt);
+    }
     emit sliceSizeChanged(mSliceSize);
 }
 
@@ -121,15 +134,15 @@ void Settings::setSpriteSize(int wid, int hgt) {
 
 void Settings::setOffsetY(int offset) {
     mOffsetY = offset;
-    emit offsetYChanged(offset);
-}
 
-void Settings::setGameFlow(int flow)
-{
-    if (flow != 1 && flow != -1)
-        return;
-    mGameFlow = flow;
-    emit gameFlowChanged(flow);
+    if (videoMode() == 2) {
+        if ((sliceSize().height() + offset) != (VMODE2_SCREEN_TILES_V*8))
+            setSliceSize(sliceSize().width(), (VMODE2_SCREEN_TILES_V*8)-offset);
+    } else if (videoMode() == 3) {
+        if ((sliceSize().height() + offset) != (VMODE3_SCREEN_TILES_V*8))
+            setSliceSize(sliceSize().width(), (VMODE3_SCREEN_TILES_V*8)-offset);
+    }
+    emit offsetYChanged(offset);
 }
 
 void Settings::setArtFolder(const QString &folder)
@@ -204,6 +217,12 @@ void Settings::setMakeExePath(const QString &path) {
 void Settings::setEmuExePath(const QString &path) {
     mEmuExePath = path;
     emit emuExePathChanged(path);
+}
+
+void Settings::setUpdatesUrl(const QString &url)
+{
+    mUpdatesUrl = url;
+    emit updatesUrlChanged(url);
 }
 
 void Settings::addRecentProject(const QString &project)

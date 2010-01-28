@@ -50,8 +50,8 @@ public:
     bool lockedOrdering() const { return locked; }
     void setLockedOrdering(bool lockState) { locked = lockState; }
     int bgoOrder() { return mBgoOrder; }
-    void toggleBgoOrder();
-    void setBgoOrder(int order){  mBgoOrder = order; }  // Don't like how model sorts afterwards
+    //void toggleBgoOrder();
+    //void setBgoOrder(int order){  mBgoOrder = order; }  // Don't like how model sorts afterwards
     int validateBgoOrdering();
     //void setColumnData(int column, int count, const QVariant &data);
 

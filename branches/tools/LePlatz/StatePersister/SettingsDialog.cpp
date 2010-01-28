@@ -62,7 +62,6 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
             << QString("%1\tY-axis offset: %2").arg(settings->videoMode()).arg(ui->spbOffsetY->value()))
             << new QTreeWidgetItem(QStringList() << QString("Slice Size") << QString("Width: %1\tHeight: %2").arg(
             settings->sliceSize().width()).arg(settings->sliceSize().height()))
-            << new QTreeWidgetItem(QStringList() << QString("Game flow") << ((settings->gameFlow() == 1)?"--->":"<---"))
             << new QTreeWidgetItem(QStringList() << QString("Slice Path") << settings->slicePath())
             << new QTreeWidgetItem(QStringList() << QString("Tile Path") << settings->tilePath())
             << new QTreeWidgetItem(QStringList() << QString("Map Path") << settings->mapPath())
@@ -76,13 +75,12 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     items.clear();
     items.append(QList<QTreeWidgetItem*>() << new QTreeWidgetItem(QStringList() << QString("Make Path/Cmd") << settings->makeExePath())
             << new QTreeWidgetItem(QStringList() << QString("Emulator Path") << settings->emuExePath())
+            << new QTreeWidgetItem(QStringList() << QString("Updates URL") << settings->updatesUrl())
             << new QTreeWidgetItem(QStringList() << QString("Canvas Color") << QString::number(color.rgb(), 16))
     );
     ui->twLps->insertTopLevelItems(0, items);
 
     // Populate stacked widgets
-    ui->cboGameFlow->addItems(QStringList() << "--->" << "<---");
-    ui->cboGameFlow->setCurrentIndex((settings->gameFlow() == 1)?0:1);
     ui->leSlicePath->setText(settings->slicePath());
     ui->leTilePath->setText(settings->tilePath());
     ui->leMapPath->setText(settings->mapPath());
@@ -93,6 +91,7 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     ui->leHexfilePath->setText(settings->hexfilePath());
     ui->leMakeExePath->setText(settings->makeExePath());
     ui->leEmuExePath->setText(settings->emuExePath());
+    ui->leUpdatesUrl->setText(settings->updatesUrl());
 
     // Hook everything up
     connect(ui->pbApply, SIGNAL(clicked()), this, SLOT(applySettings()));
@@ -116,7 +115,7 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     connect(ui->leHexfilePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leMakeExePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     connect(ui->leEmuExePath, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
-    connect(ui->cboGameFlow, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateTrees(QString)));
+    connect(ui->leUpdatesUrl, SIGNAL(textChanged(QString)), this, SLOT(updateTrees(QString)));
     // File dialogs
     connect(ui->pbSlicePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
     connect(ui->pbTilePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
@@ -128,8 +127,15 @@ SettingsDialog::SettingsDialog(Settings *settings, QWidget *parent, Qt::WindowFl
     connect(ui->pbHexfilePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
     connect(ui->pbMakeExePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
     connect(ui->pbEmuExePath, SIGNAL(clicked()), this, SLOT(pathFileDialog()));
+    // Updates url
+    connect(ui->pbUpdatesUrlReset, SIGNAL(clicked()), this, SLOT(setDefaultUpdatesUrl()));
     // Color dialog
     connect(ui->tbtnCanvasColor, SIGNAL(clicked()), this, SLOT(setCanvasColor()));
+}
+
+void SettingsDialog::setDefaultUpdatesUrl()
+{
+    ui->leUpdatesUrl->setText(Settings::DEFAULT_UPDATES_URL);
 }
 
 void SettingsDialog::setCanvasColor()
@@ -188,42 +194,42 @@ void SettingsDialog::pathFileDialog()
 
     if (ui->stackedWidget->currentIndex() == 0) {
         switch (ui->swPs->currentIndex()) {
-            case 3:
+            case 2:
                 le = ui->leSlicePath;
                 openPath = settings->slicePath();
                 type = DirPath;
                 break;
-            case 4:
+            case 3:
                 le = ui->leTilePath;
                 openPath = settings->tilePath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 5:
+            case 4:
                 le = ui->leMapPath;
                 openPath = settings->mapPath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 6:
+            case 5:
                 le = ui->leAnimPath;
                 openPath = settings->animPath();
                 filter = SUPPORTED_IMAGE_FORMATS_STR;
                 break;
-            case 7:
+            case 6:
                 le = ui->lePlatzPath;
                 openPath = settings->platzfilePath();
                 filter = PLATZ_INCLUDE_FORMATS_STR;
                 break;
-            case 8:
+            case 7:
                 le = ui->leSrcFolder;
                 openPath = settings->srcFolder();
                 type = DirPath;
                 break;
-            case 9:
+            case 8:
                 le = ui->leMakefilePath;
                 openPath = settings->makefilePath();
                 filter = "*";
                 break;
-            case 10:
+            case 9:
                 le = ui->leHexfilePath;
                 openPath = settings->hexfilePath();
                 filter = INTEL_HEX_FILES_STR;
@@ -292,7 +298,6 @@ void SettingsDialog::applySettings()
         hgt = settings->VMODE3_SCREEN_TILES_V-ui->spbOffsetY->value();
     settings->setSliceSize(wid, hgt<<3);
     settings->setOffsetY(ui->spbOffsetY->value()*settings->tileSize().height());
-    settings->setGameFlow((ui->cboGameFlow->currentIndex() == 0)?1:-1);
     settings->setSlicePath(ui->leSlicePath->text());
     settings->setTilePath(ui->leTilePath->text());
     settings->setMapPath(ui->leMapPath->text());
@@ -303,6 +308,7 @@ void SettingsDialog::applySettings()
     settings->setPlatzfilePath(ui->lePlatzPath->text());
     settings->setEmuExePath(ui->leEmuExePath->text());
     settings->setMakeExePath(ui->leMakeExePath->text());
+    settings->setUpdatesUrl(ui->leUpdatesUrl->text());
     settings->setCanvasColor(color);
 }
 

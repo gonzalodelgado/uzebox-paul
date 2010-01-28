@@ -23,6 +23,7 @@
 #include <QtGui/QMainWindow>
 #include <QProcess>
 #include <QAction>
+#include <QProgressBar>
 #include <QPlainTextEdit>
 #include <QComboBox>
 #include <PlatzEnums.h>
@@ -45,8 +46,10 @@ class PlatzWin : public QMainWindow
 public:
     PlatzWin(const QString &cmdLineProject, QWidget *parent = 0);
     ~PlatzWin();
-
 public slots:
+    void publicKeyPressEvent(QKeyEvent *e);
+
+private slots:
     void newProject();
     bool loadProject(const QString &path);
     bool loadProject(QAction *action);
@@ -91,6 +94,7 @@ public slots:
     void setSpriteSize(const QSize &size) { spriteSize = size; }
     void setTileSize(const QSize &size) { tileSize = size; }
     void setOffsetY(int offset) { offsetY = offset; }
+    void setUpdatesUrl(const QString &url) { updatesUrl = url; }
     void clearBgoCheckBoxes();
     void updateBgoToolboxAttributes();
     void updateBgiToolboxAttributes();
@@ -109,13 +113,16 @@ public slots:
     void flagUnsavedChanges() { unsavedChanges = true; }
     void replicateSlice();
     void toggleSelectedSliceLock();
-    void toggleBgoOrder();
+    void sortBgoOrder();
     void setSnapToResolutionX(QAction* action);
     void setSnapToResolutionY(QAction* action);
     int findReplaceSrcDefines();
-    void updateGameFlow(int flow);
     void updateTreeviewPluses(Slice *slice);
-    void publicKeyPressEvent(QKeyEvent *e);
+    void checkForUpdates();
+    void progressUpdate(const QString &fileName, int bytesRead, int totalBytes, int fileIndex, int totalFiles);
+    void downloadComplete(bool error, const QString &errMsg);
+    void installUpdates();
+
 signals:
     void zoomIn(int delta = 120);
     void zoomOut(int delta = -120);
@@ -140,6 +147,7 @@ private slots:
     void toggleBgmc(bool checked);
     void toggleBgmcCombo(bool enable);
 private:
+    bool queryUnsavedChanges();
     void PrintProcError(QProcess::ProcessError error, QPlainTextEdit *txtEdit);
     Ui::PlatzWin *ui;
     PlatzDataModel *model;
@@ -171,6 +179,9 @@ private:
     QActionGroup *snapToXGrpVMode3;
     bool bgoTrigger;
     bool unsavedChanges;
+    QProgressBar *updateProgress;
+    QString updatesUrl;
+    bool updateInProgress;
 };
 
 #endif // PLATZWIN_H

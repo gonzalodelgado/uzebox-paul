@@ -20,6 +20,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFileInfoList>
+#include <QList>
 #include "WorldItem.h"
 
 WorldItem::WorldStats WorldItem::worldStats;
@@ -32,7 +33,7 @@ QStringList WorldItem::triggerIds;
 QStringList WorldItem::platClrTileIds;
 const QString WorldItem::emptyString = "";
 QSize WorldItem::SliceSize;
-int WorldItem::GameFlow = 1;
+const int WorldItem::GameFlow = 1;
 
 const QString& WorldItem::mutableIdAt(int index)
 {
@@ -322,6 +323,22 @@ void WorldItem::setBoundingRect(const QRectF &r)
 void WorldItem::setRelativeBoundingRect(const QRectF &r)
 {
     setBoundingRect(r.adjusted(offsetX(), 0, offsetX(), 0));
+}
+
+void WorldItem::cropBoundingRect(const QRectF &r, QList<WorldItem*> &empties)
+{
+    if (type() == Mutable)
+        return;
+     QRectF intersect = r.intersected(boundingRect());
+
+     if (intersect.isEmpty()) {
+         empties.append(this);
+     } else {
+         setBoundingRect(intersect);
+
+         foreach (WorldItem *child, *children())
+             child->cropBoundingRect(boundingRect(), empties);
+     }
 }
 
 QRectF WorldItem::limitRect() const

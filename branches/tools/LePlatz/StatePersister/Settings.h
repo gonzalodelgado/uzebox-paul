@@ -36,6 +36,7 @@ class Settings : public QObject
 
         static const int VMODE2_SCREEN_TILES_V;
         static const int VMODE3_SCREEN_TILES_V;
+        static const QString DEFAULT_UPDATES_URL;
 
         Settings(int maxRecentProjects = Platz::MAX_RECENT_PROJECTS);
 
@@ -65,7 +66,6 @@ class Settings : public QObject
         QSize sliceSize() const { return mSliceSize; }
         QSize spriteSize() const { return mSpriteSize; }
         int offsetY() const { return mOffsetY; }
-        int gameFlow() const { return mGameFlow; }
 
         // Project - set
         void setProjectPath(const QString &path);
@@ -86,17 +86,18 @@ class Settings : public QObject
         void setSpriteSize(const QSize &size);
         void setSpriteSize(int wid, int hgt);
         void setOffsetY(int offset);
-        void setGameFlow(int flow);
 
         // LePlatz - get
         const QString& makeExePath() { return mMakeExePath; }
         const QString& emuExePath() { return mEmuExePath; }
+        const QString& updatesUrl() { return mUpdatesUrl; }
         const QStringList& recentProjects() { return mRecentProjects; }
         const QColor& canvasColor() { return mCanvasColor; }
 
         // LePlatz - set
         void setMakeExePath(const QString &path);
         void setEmuExePath(const QString &path);
+        void setUpdatesUrl(const QString &url);
         void addRecentProject(const QString &project);
         void addRecentProjects(const QStringList &projects);
         void setCanvasColor(const QColor &color);
@@ -117,11 +118,11 @@ class Settings : public QObject
         void spriteSizeChanged(const QSize &size);
         void makeExePathChanged(const QString &path);
         void emuExePathChanged(const QString &path);
+        void updatesUrlChanged(const QString &url);
         void recentProjectsChanged(const QStringList &recentProjects);
         void canvasColorChanged(const QColor &color);
         void tileSizeChanged(const QSize &size);
         void offsetYChanged(int offset);
-        void gameFlowChanged(int flow);
     public slots:
         void resetProjectSettings();
         bool loadSettings(const QString &path);
@@ -152,10 +153,10 @@ class Settings : public QObject
         // LePlatz
         QString mMakeExePath;
         QString mEmuExePath;
+        QString mUpdatesUrl;
         QStringList mRecentProjects;
         QColor mCanvasColor;
         int mOffsetY;
-        int mGameFlow;
 };
 
 #endif

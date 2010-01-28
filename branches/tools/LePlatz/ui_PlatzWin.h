@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzWin.ui'
 **
-** Created: Sun 17. Jan 11:33:35 2010
+** Created: Fri 29. Jan 03:17:15 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -86,6 +86,8 @@ public:
     QAction *actionLock;
     QAction *actionFindReplace;
     QAction *actionBgOrdering;
+    QAction *actionCheckForUpdates;
+    QAction *actionInstallUpdates;
     QWidget *centralWidget;
     QHBoxLayout *horizontalLayout_7;
     QVBoxLayout *verticalLayout_11;
@@ -432,6 +434,10 @@ public:
         actionFindReplace->setObjectName(QString::fromUtf8("actionFindReplace"));
         actionBgOrdering = new QAction(PlatzWin);
         actionBgOrdering->setObjectName(QString::fromUtf8("actionBgOrdering"));
+        actionCheckForUpdates = new QAction(PlatzWin);
+        actionCheckForUpdates->setObjectName(QString::fromUtf8("actionCheckForUpdates"));
+        actionInstallUpdates = new QAction(PlatzWin);
+        actionInstallUpdates->setObjectName(QString::fromUtf8("actionInstallUpdates"));
         centralWidget = new QWidget(PlatzWin);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         horizontalLayout_7 = new QHBoxLayout(centralWidget);
@@ -1276,6 +1282,8 @@ public:
         menuAbout->addAction(actionAboutLePlatz);
         menuAbout->addAction(actionAboutPlatz);
         menuAbout->addAction(actionAboutUzebox);
+        menuAbout->addSeparator();
+        menuAbout->addAction(actionCheckForUpdates);
         mainToolBar->addAction(actionNew);
         mainToolBar->addAction(actionOpen);
         mainToolBar->addAction(actionSave);
@@ -1296,6 +1304,7 @@ public:
         mainToolBar->addAction(actionCompile);
         mainToolBar->addAction(actionMake);
         mainToolBar->addAction(actionEmulator);
+        mainToolBar->addAction(actionInstallUpdates);
 
         retranslateUi(PlatzWin);
 
@@ -1446,7 +1455,12 @@ public:
 #endif // QT_NO_TOOLTIP
         actionBgOrdering->setText(QApplication::translate("PlatzWin", "Bg Order", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        actionBgOrdering->setToolTip(QApplication::translate("PlatzWin", "Reverse Outer Bg ordering for the selected slice (left-to-right or right-to-left)", 0, QApplication::UnicodeUTF8));
+        actionBgOrdering->setToolTip(QApplication::translate("PlatzWin", "Sort unlocked slice (left-to-right)", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
+        actionCheckForUpdates->setText(QApplication::translate("PlatzWin", "Check for updates...", 0, QApplication::UnicodeUTF8));
+        actionInstallUpdates->setText(QApplication::translate("PlatzWin", "Install Updates", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        actionInstallUpdates->setToolTip(QApplication::translate("PlatzWin", "Install Updates", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
         lblSelectedDetailsIcon->setText(QString());
         lblSelectedDetails->setText(QString());

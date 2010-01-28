@@ -111,6 +111,8 @@ bool PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeomet
                 settings->setMakeExePath(readElementText());
             } else if (s == "EmuExePath") {
                 settings->setEmuExePath(readElementText());
+            } else if (s == "UpdatesUrl") {
+                settings->setUpdatesUrl(readElementText());
             } else if (s == "RecentProjects") {
                 ; // Do nothing
             } else  if (s == "Project") {
@@ -207,9 +209,6 @@ void PlatzReader::readSettings()
                 int height = attributes().value("height").toString().toInt();
                 settings->setSpriteSize(width, height);
                 readElementText();
-            } else if (s == "GameFlow") {
-                settings->setGameFlow(attributes().value("gameFlow").toString().toInt());
-                readElementText();
             } else if (s == "ImageFormat") {    // v1.0 remnant
                 settings->setImageFormat(readElementText());
             } else if (s == "SlicePath") {
@@ -240,17 +239,12 @@ void PlatzReader::readSlice()
 
     int replica = attributes().value("replica").toString().toInt();
     int locked = attributes().value("locked").toString().toInt();
-    int bgoOrder = 1;
-
-    if (version != Platz::LEPLATZ_VERSIONS.first())
-        bgoOrder =  attributes().value("bgoOrder").toString().toInt();
     QString title = readString("Title");
     Slice *slice = new Slice(QList<QVariant>() << title, worldPtr.top());
     model->insertRow(worldPtr.top()->childCount(), slice, model->indexOf(worldPtr.top()->row(), 0, worldPtr.top()));
     slice->setBoundingRect(QRectF(sliceCount*settings->sliceSize().width(),0.0,settings->sliceSize().width(),settings->sliceSize().height()));
     slice->setGraphicalRepresentation(new PlatzGraphicsItem(slice, Platz::INVISIBLE));
     slice->setLockedOrdering(locked);
-    slice->setBgoOrder(bgoOrder);
     worldPtr.push(slice);
 
     if (replica != -1 && replica < model->root()->childCount())

@@ -39,6 +39,7 @@
 #include <SourceParser.h>
 #include <FindReplace.h>
 #include <About.h>
+#include <PlatzUpdater.h>
 #include "PlatzWin.h"
 #include "ui_PlatzWin.h"
 
@@ -47,7 +48,8 @@ static const int STATUS_DELAY = 10000;
 PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::PlatzWin), procMake(new QProcess(this)), procEmu(new QProcess(this)),
         settings(new Settings(MAX_RECENT_PROJECTS)), projectPath(QDir::currentPath()), tileSize(QSize(8,8)),
-        offsetY(0), activeProject(false), recProjMenu(0), bgoTrigger(false), unsavedChanges(false)
+        offsetY(0), activeProject(false), recProjMenu(0), bgoTrigger(false), unsavedChanges(false),
+        updateInProgress(false)
 {
     ui->setupUi(this);
     setWindowIcon(QIcon(":/icons/128x128/mp.png"));
@@ -86,6 +88,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->actionAboutLePlatz->setIcon(QIcon(":/icons/128x128/mp.png"));
     ui->actionAboutPlatz->setIcon(QIcon(":/icons/128x128/aboutPlatz.png"));
     ui->actionAboutUzebox->setIcon(QIcon(":/misc/uzebox.png"));
+    ui->actionCheckForUpdates->setIcon(QIcon(":/icons/128x128/updates.png"));
     ui->actionSelectCursor->setIcon(QIcon(":/icons/128x128/pointer.png"));
     ui->actionBgOuterCursor->setIcon(QIcon(":/icons/128x128/bgo.png"));
     ui->actionBgInnerCursor->setIcon(QIcon(":/icons/128x128/bgi.png"));
@@ -93,6 +96,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->actionPlatformPathCursor->setIcon(QIcon(":/icons/128x128/mpPath.png"));
     ui->actionPlatformCursor->setIcon(QIcon(":/icons/128x128/mp.png"));
     ui->actionBgMutableCursor->setIcon(QIcon(":/icons/128x128/bgm.png"));
+    ui->actionInstallUpdates->setIcon(QIcon(":/icons/128x128/installUpdates.png"));
     ui->cboBgm->setFkeyProxy(this);
     ui->cboBgmc->setFkeyProxy(this);
     ui->cboBgt->setFkeyProxy(this);
@@ -169,6 +173,12 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     ui->menuSnapToX->addActions(snapToXGrpVMode3->actions());
     ui->menuSnapToY->addActions(snapToYGrp->actions());
     connect(ui->actionFindReplace, SIGNAL(triggered()), this, SLOT(findReplaceSrcDefines()));
+
+    // Check-for-updates progressbar
+    updateProgress = new QProgressBar(ui->statusBar);
+    updateProgress->setFixedSize(200, 16);
+    ui->statusBar->addPermanentWidget(updateProgress, 0);
+    updateProgress->setVisible(false);
 
     // Init external process comms slots
     connect(procMake, SIGNAL(readyReadStandardOutput()), this, SLOT(makeOutputReady()));
@@ -257,7 +267,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->actionNext, SIGNAL(triggered()), ui->graphicsView, SLOT(nextSlice()));
     connect(ui->actionLock, SIGNAL(triggered()), this, SLOT(toggleSelectedSliceLock()));
     connect(ui->actionReplicate, SIGNAL(triggered()), this, SLOT(replicateSlice()));
-    connect(ui->actionBgOrdering, SIGNAL(triggered()), this, SLOT(toggleBgoOrder()));
+    connect(ui->actionBgOrdering, SIGNAL(triggered()), this, SLOT(sortBgoOrder()));
     connect(ui->actionCompile, SIGNAL(triggered()), this, SLOT(compileWorld()));
     connect(ui->actionRemove, SIGNAL(triggered()), this, SLOT(removeSlice()));
     connect(ui->actionAdd, SIGNAL(triggered()), this, SLOT(insertSlice()));
@@ -265,6 +275,8 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(ui->actionAboutLePlatz, SIGNAL(triggered()), this, SLOT(aboutLePlatz()));
     connect(ui->actionAboutPlatz, SIGNAL(triggered()), this, SLOT(aboutPlatz()));
     connect(ui->actionAboutUzebox, SIGNAL(triggered()), this, SLOT(aboutUzebox()));
+    connect(ui->actionCheckForUpdates, SIGNAL(triggered()), this, SLOT(checkForUpdates()));
+    connect(ui->actionInstallUpdates, SIGNAL(triggered()), this, SLOT(installUpdates()));
 
     // Toolbox
     ui->tbtnPointer->setDefaultAction(ui->actionSelectCursor);
@@ -356,16 +368,22 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(settings, SIGNAL(platzfilePathChanged(QString)), this, SLOT(setPlatzfilePath(QString)));
     connect(settings, SIGNAL(makeExePathChanged(QString)), this, SLOT(setMakeExePath(QString)));
     connect(settings, SIGNAL(emuExePathChanged(QString)), this, SLOT(setEmuExePath(QString)));
-    connect(settings, SIGNAL(canvasColorChanged(QColor)), ui->graphicsView, SLOT(setCanvasColor(QColor)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), ui->graphicsView, SLOT(setSliceSize(QSize)));
     connect(settings, SIGNAL(videoModeChanged(int)), this, SLOT(setVideoMode(int)));
     connect(settings, SIGNAL(tileSizeChanged(QSize)), ui->graphicsView, SLOT(setTileSize(QSize)));
     connect(settings, SIGNAL(offsetYChanged(int)), this, SLOT(setOffsetY(int)));
     connect(settings, SIGNAL(tileSizeChanged(QSize)), this, SLOT(setTileSize(QSize)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), this, SLOT(setSliceSize(QSize)));
-    connect(settings, SIGNAL(gameFlowChanged(int)), this, SLOT(updateGameFlow(int)));
-    //connect(settings, SIGNAL(spriteSizeChanged(QSize)), this, SLOT(setSpriteSize(QSize)));
     settings->setCanvasColor(QColor(qRgb(236,233,216)));
+    connect(settings, SIGNAL(canvasColorChanged(QColor)), ui->graphicsView, SLOT(setCanvasColor(QColor)));
+    connect(settings, SIGNAL(updatesUrlChanged(QString)), this, SLOT(setUpdatesUrl(QString)));
+    settings->setUpdatesUrl(Settings::DEFAULT_UPDATES_URL);
+
+    // Check for uninstall updates
+    QFile file(QDir::currentPath() + "/updates/LePlatz-Updates.xml");
+
+    if (!file.exists())
+        ui->actionInstallUpdates->setVisible(false);
 
     // Restore window state
     QByteArray winGeometry, winLayout;
@@ -450,6 +468,66 @@ void PlatzWin::aboutUzebox()
     delete about;
 }
 
+void PlatzWin::installUpdates()
+{
+    QMessageBox msgbox("Install updates", "Exit LePlatz and install updates?", QMessageBox::Question,
+                       QMessageBox::Ok, QMessageBox::Cancel, QMessageBox::NoButton, this);
+    int ret = msgbox.exec();
+
+    if (ret == QMessageBox::Ok) {
+        if (!queryUnsavedChanges())
+            return;
+#if defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
+        if (QProcess::startDetached(QDir::currentPath() + "/LePatch.exe", QStringList() << "-v" << LEPLATZ_VERSIONS.last()))
+#else
+        if (QProcess::startDetached(QDir::currentPath() + "/LePatch", QStringList() << "-v" << LEPLATZ_VERSIONS.last()))
+#endif
+            close();
+        else
+            ui->statusBar->showMessage("LePatch not found. Install aborted.", STATUS_DELAY);
+    }
+}
+
+void PlatzWin::checkForUpdates()
+{
+    if (updateInProgress)
+        return;
+    PlatzUpdater *updater = new PlatzUpdater(this); // Deletes self
+
+    if (!updater->downloadUpdates(updatesUrl)) {
+        ui->statusBar->showMessage("Failed to download LePlatz version document. Updated aborted.", STATUS_DELAY);
+    } else {
+        updateProgress->setMinimum(0);
+        updateProgress->setMaximum(100);
+        updateProgress->setValue(0);
+        updateProgress->setVisible(true);
+        connect(updater, SIGNAL(progressChanged(QString,int,int,int,int)), this, SLOT(progressUpdate(QString,int,int,int,int)));
+        connect(updater, SIGNAL(downloadComplete(bool,QString)), this, SLOT(downloadComplete(bool,QString)));
+        ui->statusBar->showMessage("Downloading LePlatz version file...");
+        updateInProgress = true;
+    }
+}
+
+void PlatzWin::progressUpdate(const QString &fileName, int bytesRead, int totalBytes, int fileIndex, int totalFiles)
+{
+    updateProgress->setValue((int)100*((fileIndex/(qreal)totalFiles) + ((bytesRead/(qreal)totalBytes)/totalFiles)));
+    ui->statusBar->showMessage(QString("Downloading file %1 of %2: ").arg(QString::number(fileIndex+1)).arg(QString::number(totalFiles)) + fileName);
+}
+
+void PlatzWin::downloadComplete(bool error, const QString &errMsg)
+{
+    if (!error) {
+        ui->actionInstallUpdates->setVisible(true);
+        ui->actionInstallUpdates->setEnabled(true);
+        ui->statusBar->showMessage("Update downloaded successfully. /!\\ tool button to install.", STATUS_DELAY);
+    } else {
+        ui->statusBar->showMessage("Update downloaded failed. Error: " + errMsg, STATUS_DELAY);
+    }
+    updateProgress->setVisible(false);
+    updateInProgress = false;
+}
+
+
 int PlatzWin::findReplaceSrcDefines()
 {
     QPointer<FindReplace> fr = new FindReplace(model, this);
@@ -490,6 +568,9 @@ void PlatzWin::setSnapToResolutionY(QAction* action)
 void PlatzWin::setSliceSize(const QSize &size) {
     sliceSize = size;
     WorldItem::SliceSize = size;
+
+    if (model)
+       model->cropWorldData(QRectF(0, 0, size.width(), size.height()));
 }
 
 void PlatzWin::setVideoMode(int vmode)
@@ -532,7 +613,7 @@ void PlatzWin::toggleSelectedSliceLock()
     }
 }
 
-void PlatzWin::toggleBgoOrder()
+void PlatzWin::sortBgoOrder()
 {
     if (!model)
         return;
@@ -540,7 +621,6 @@ void PlatzWin::toggleBgoOrder()
 
     if (w && w->type() == WorldItem::Slice) {
         Slice *slice = static_cast<Slice*>(w);
-        slice->toggleBgoOrder();
         model->sortBgOuters(slice);
         updateDetailDataDisplay(slice);
         unsavedChanges = true;
@@ -571,11 +651,6 @@ void PlatzWin::updateTreeviewPluses(Slice *slice)
 void PlatzWin::replicateSlice()
 {
     ui->graphicsView->setMode(Platz::IM_REPLICATE);
-}
-
-void PlatzWin::updateGameFlow(int flow)
-{
-    WorldItem::GameFlow = flow;
 }
 
 void PlatzWin::updateRecentProjects(const QStringList &recentProjects)
@@ -907,10 +982,10 @@ void PlatzWin::newProject()
     }
 }
 
-bool PlatzWin::closeProject()
+bool PlatzWin::queryUnsavedChanges()
 {
     if (activeProject && unsavedChanges) {
-        QMessageBox msgbox("Save current project", "Save changes to currently open project before creating a new project?", QMessageBox::Question,
+        QMessageBox msgbox("Save current project", "Save changes to currently open project?", QMessageBox::Question,
                            QMessageBox::Save, QMessageBox::Discard, QMessageBox::Cancel, this);
         int ret = msgbox.exec();
 
@@ -927,6 +1002,13 @@ bool PlatzWin::closeProject()
             return false;
         }
     }
+    return true;
+}
+
+bool PlatzWin::closeProject()
+{
+    if (!queryUnsavedChanges())
+        return false;
     activeProject = false;
     unsavedChanges = false;
     settings->resetProjectSettings();

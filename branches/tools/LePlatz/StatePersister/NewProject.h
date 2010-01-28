@@ -42,7 +42,6 @@ public slots:
     void displayArtFolderHelp();
     void displaySrcFolderHelp();
     void displayVideoModeHelp();
-    void displayGameFlowHelp();
     void displaySliceHeightHelp();
     void displayOffsetYHelp();
     void setSpinBoxRanges(int index);
