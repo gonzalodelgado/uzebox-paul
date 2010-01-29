@@ -64,6 +64,15 @@ void Interpreter::cancelUpdate()
     rwlock.unlock();
 }
 
+bool Interpreter::isPatchCancelled()
+{
+    bool patchState;
+    rwlock.lockForRead();
+    patchState = cancel;
+    rwlock.unlock();
+    return patchState;
+}
+
 void Interpreter::run()
 {
     Q_ASSERT(patcher);
@@ -79,9 +88,7 @@ void Interpreter::run()
     bool status, push = true;
 
     revertCmds.clear();
-    rwlock.lockForRead();
-    status = !cancel;
-    rwlock.unlock();
+    status = !isPatchCancelled();
 
     while (status && cmds.count()) {
         if (cmds.head().at(0) == "mv") {
@@ -156,9 +163,7 @@ void Interpreter::run()
             cmds.dequeue();
             emit commandCountChanged(cmds.count());
         }
-        rwlock.lockForRead();
-        status = status && !cancel;
-        rwlock.unlock();
+        status = status && !isPatchCancelled();
     }
 
     if (!status)
@@ -385,6 +390,9 @@ bool Interpreter::copyDir(const QString &from, const QString &to)
     QDir dir(from);
     QFileInfoList fil = dir.entryInfoList();
 
+    if (isPatchCancelled())
+        return false;
+
     if (!QDir(to).exists())
         status = QDir().mkdir(to);
     foreach(QFileInfo fi, fil) {
@@ -408,6 +416,9 @@ bool Interpreter::removeDir(const QString &dirName, const QString &backupDirName
     QDir dir(dirName);
     QFileInfoList fil = dir.entryInfoList(QDir::Hidden|QDir::AllDirs|QDir::Files);
 
+    if (isPatchCancelled())
+        return false;
+
     foreach(QFileInfo fi, fil) {
         if (fi.isDir() && (QDir(fi.absoluteFilePath()) != dir) && (isChildPath(fi.absoluteFilePath(), dir)))
             status = removeDir(fi.absoluteFilePath(), backupDirName);
@@ -428,9 +439,11 @@ bool Interpreter::restoreDir(const QString &origDirName, const QString &currDirN
     if (!isChildPath(origDirName) || !isChildPath(currDirName))
         return false;
     bool status = true;
-
     QDir dir(currDirName);
     QFileInfoList fil = dir.entryInfoList();
+
+    if (isPatchCancelled())
+        return false;
 
     foreach(QFileInfo fi, fil) {
         if (fi.isDir() && (QDir(fi.absoluteFilePath()) != dir) && (isChildPath(fi.absoluteFilePath(), dir))) {

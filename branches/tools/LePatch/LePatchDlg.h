@@ -42,11 +42,13 @@ private slots:
     void exitProgram();
 
 private:
-    void printLn(const QString &s);
-    void print(const QString &s);
+    void print(const QString &s, bool append = false);
+    void printLn(const QString &s, bool append = false);
+    void initLogFile();
 
     Ui::LePatchDlg *ui;
     Interpreter *interpreter;
+    QFile logFile;
     bool updating;
 };
 

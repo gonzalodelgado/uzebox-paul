@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'LePatchDlg.ui'
 **
-** Created: Fri 29. Jan 21:22:02 2010
+** Created: Sat 30. Jan 02:48:17 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

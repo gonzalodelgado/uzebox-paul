@@ -5,7 +5,8 @@
 #include "ui_LePatchDlg.h"
 
 LePatchDlg::LePatchDlg(QWidget *parent)
-    : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint), ui(new Ui::LePatchDlg), updating(false)
+    : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint), ui(new Ui::LePatchDlg),
+        logFile("./patchLog.txt"), updating(false)
 {
     ui->setupUi(this);
     interpreter = new Interpreter(this, 10000);
@@ -67,11 +68,19 @@ void LePatchDlg::scriptParseComplete(bool error)
         printLn("Update script parsed successfully.");
 }
 
+void LePatchDlg::initLogFile()
+{
+    if (logFile.exists() && logFile.isOpen())
+        logFile.close();
+    logFile.open(QFile::WriteOnly | QFile::Text);
+}
+
 void LePatchDlg::applyUpdate()
 {
     if (!interpreter)
         return;
     if (!updating) {
+        initLogFile();
         ui->prbProgress->setValue(0);
         ui->lstDetails->clear();
         interpreter->applyUpdate();
@@ -110,60 +119,72 @@ void LePatchDlg::toggleDetails()
     }
 }
 
-void LePatchDlg::printLn(const QString &s)
+void LePatchDlg::print(const QString &s, bool append)
 {
-    ui->lblDetails->setText(s);
-    ui->lstDetails->addItem(s);
+    if (!append) {
+        ui->lblDetails->setText(s);
+        ui->lstDetails->addItem(s);
+    } else {
+        int count = ui->lstDetails->count();
+
+        if (count)
+            ui->lstDetails->item(count-1)->setText(ui->lstDetails->item(count-1)->text() + s);
+        else
+            ui->lstDetails->addItem(s);
+        ui->lblDetails->setText(ui->lblDetails->text() + s);
+    }
     ui->lstDetails->scrollToBottom();
+
+    if (logFile.isOpen())
+        logFile.write(s.toAscii());
 }
 
-void LePatchDlg::print(const QString &s)
+void LePatchDlg::printLn(const QString &s, bool append)
 {
-    int count = ui->lstDetails->count();
+    print(s, append);
 
-    if (count)
-        ui->lstDetails->item(count-1)->setText(ui->lstDetails->item(count-1)->text() + s);
-    ui->lblDetails->setText(ui->lblDetails->text() + s);
+    if (logFile.isOpen())
+        logFile.write(QString("\n").toAscii());
 }
 
 void LePatchDlg::fileMoveStarted(QString from, QString to)
 {
-    printLn("Moving file " + from + " to " + to + "...");
+    print("Moving file " + from + " to " + to + "...");
 }
 
 void LePatchDlg::fileRemovalStarted(QString fileName)
 {
-    printLn("Removing file " + fileName + "...");
+    print("Removing file " + fileName + "...");
 }
 
 void LePatchDlg::fileCopyStarted(QString from, QString to)
 {
-    printLn("Copying file " + from + " to " + to + "...");
+    print("Copying file " + from + " to " + to + "...");
 }
 
 void LePatchDlg::filePatchStarted(QString fileName)
 {
-    printLn("Patching file " + fileName + "...");
+    print("Patching file " + fileName + "...");
 }
 
 void LePatchDlg::dirMakeStarted(QString dirName)
 {
-    printLn("Making dir " + dirName + "...");
+    print("Making dir " + dirName + "...");
 }
 
 void LePatchDlg::dirRemoveStarted(QString dirName)
 {
-    printLn("Removing dir " + dirName + "...");
+    print("Removing dir " + dirName + "...");
 }
 
 void LePatchDlg::dirCopyStarted(QString from, QString to)
 {
-    printLn("Copying dir " + from + " to " + to + "...");
+    print("Copying dir " + from + " to " + to + "...");
 }
 
 void LePatchDlg::dirRestoreStarted(QString dirName)
 {
-    printLn("Restoring dir " + dirName + "...");
+    print("Restoring dir " + dirName + "...");
 }
 
 void LePatchDlg::updateStarted()
@@ -183,6 +204,9 @@ void LePatchDlg::updateFinished(bool error)
         printLn("Update applied successfully. Exit to close and launch LePlatz.");
     }
     updating = false;
+
+    if (logFile.isOpen())
+        logFile.close();
     ui->pbExit->setEnabled(true);
 }
 
@@ -206,7 +230,7 @@ void LePatchDlg::updateReversionFinished(bool error)
 
 void LePatchDlg::commandComplete(bool error)
 {
-    print((error)?"failed":"done");
+    printLn((error)?"failed":"done", true);
 }
 
 void LePatchDlg::fatalError(QString msg)
@@ -229,6 +253,8 @@ void LePatchDlg::exitProgram()
 
 LePatchDlg::~LePatchDlg()
 {
+    if (logFile.isOpen())
+        logFile.close();
     delete interpreter;
     delete ui;
 }

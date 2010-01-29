@@ -62,6 +62,7 @@ protected:
     void run();
 
 private:
+    bool isPatchCancelled();
     int convertVersion(const QString &v);
     bool validateUpdateScript(const QString &script);
     bool validateCmd(const QStringList &cmd);
