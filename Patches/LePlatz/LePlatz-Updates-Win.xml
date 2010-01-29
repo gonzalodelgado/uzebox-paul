@@ -4,6 +4,10 @@
 	<Update version="1.1">
 		<Files> 
 			<File>
+				<Name>./1.1/QtNetwork4.dll</Name>
+				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/QtNetwork4.dll</Url>
+			</File>
+			<File>
 				<Name>./1.1/xdelta3.0u.x86-32.exe</Name>
 				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/xdelta3.0u.x86-32.exe</Url>
 			</File>
@@ -313,6 +317,7 @@
 			</File>
 		</Files>
 		<UpdateCmds>
+			<Cmd>cp ./updates/1.1/QtNetwork4.dll ./QtNetwork4.dll</Cmd>
 			<Cmd>mv ./LePlatz.exe ./LePlatz-1.0.exe</Cmd>
 			<Cmd>patch ./updates/1.1/xdelta3.0u.x86-32.exe ./LePlatz-1.0.exe ./updates/1.1/LePlatz-1.0-1.1.patch ./LePlatz.exe</Cmd>
 			<Cmd>rm -b ./LePlatz-1.0.exe</Cmd>
