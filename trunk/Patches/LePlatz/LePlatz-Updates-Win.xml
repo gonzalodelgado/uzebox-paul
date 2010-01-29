@@ -228,10 +228,6 @@
 				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/examples/bcdash-vmode2/src/default/Makefile</Url>
 			</File>
 			<File>
-				<Name>./1.1/examples/bcdash-vmode2/src/default/bcdash.hex</Name>
-				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/examples/bcdash-vmode2/src/default/bcdash.hex</Url>
-			</File>
-			<File>
 				<Name>./1.1/examples/bcdash-vmode2/src/kernel/defines.h</Name>
 				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/examples/bcdash-vmode2/src/kernel/defines.h</Url>
 			</File>
