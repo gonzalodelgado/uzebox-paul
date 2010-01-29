@@ -316,14 +316,14 @@
 			<Cmd>mv ./LePlatz ./LePlatz-1.0</Cmd>
 			<Cmd>patch ./updates/1.1/xdelta3.0u.x86-32 ./LePlatz-1.0 ./updates/1.1/LePlatz-1.0-1.1.patch ./LePlatz</Cmd>
 			<Cmd>rm -b ./LePlatz-1.0</Cmd>
-			<Cmd>cp ../updates/1.1/examples/bcdash/bcdash.xml ./examples/bcdash/bcdash.xml</Cmd>
-			<Cmd>cp ../updates/1.1/examples/bcdash/src/bcdash.aps ./examples/bcdash/src/bcdash.aps</Cmd>
-			<Cmd>cp ../updates/1.1/examples/bcdash/src/bcdash.c ./examples/bcdash/src/bcdash.c</Cmd>
-			<Cmd>cp ../updates/1.1/examples/bcdash/src/platz.c ./examples/bcdash/src/platz.c</Cmd>
-			<Cmd>cp ../updates/1.1/examples/bcdash/src/platz.h ./examples/bcdash/src/platz.h</Cmd>
-			<Cmd>cp ../updates/1.1/examples/bcdash/src/data/platz.levels.inc ./examples/bcdash/src/data/platz.levels.inc</Cmd>
-			<Cmd>cp ../updates/1.1/examples/bcdash/src/default/gdb-script.cfg ./examples/bcdash/src/default/gdb-script.cfg</Cmd>
-			<Cmd>cp ../updates/1.1/examples/bcdash/src/default/Makefile ./examples/bcdash/src/default/Makefile</Cmd>
+			<Cmd>cp ./updates/1.1/examples/bcdash/bcdash.xml ./examples/bcdash/bcdash.xml</Cmd>
+			<Cmd>cp ./updates/1.1/examples/bcdash/src/bcdash.aps ./examples/bcdash/src/bcdash.aps</Cmd>
+			<Cmd>cp ./updates/1.1/examples/bcdash/src/bcdash.c ./examples/bcdash/src/bcdash.c</Cmd>
+			<Cmd>cp ./updates/1.1/examples/bcdash/src/platz.c ./examples/bcdash/src/platz.c</Cmd>
+			<Cmd>cp ./updates/1.1/examples/bcdash/src/platz.h ./examples/bcdash/src/platz.h</Cmd>
+			<Cmd>cp ./updates/1.1/examples/bcdash/src/data/platz.levels.inc ./examples/bcdash/src/data/platz.levels.inc</Cmd>
+			<Cmd>cp ./updates/1.1/examples/bcdash/src/default/gdb-script.cfg ./examples/bcdash/src/default/gdb-script.cfg</Cmd>
+			<Cmd>cp ./updates/1.1/examples/bcdash/src/default/Makefile ./examples/bcdash/src/default/Makefile</Cmd>
 			<Cmd>cpdir ./updates/1.1/examples/bcdash-vmode2 ./examples/bcdash-vmode2</Cmd>
 		</UpdateCmds>
 	</Update>
