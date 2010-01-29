@@ -623,8 +623,9 @@ WorldItem* PlatzDataModel::attachBranch(WorldItem *branchRoot, WorldItem *trunk,
 
                 foreach (WorldItem *child, *w->parent()->children()) {
                     if (child) {
-                        if ((slice->bgoOrder() == 1 && w->relativeBoundingRect().left() <= child->relativeBoundingRect().left()) ||
-                                (slice->bgoOrder() == -1 && w->relativeBoundingRect().right() >= child->relativeBoundingRect().right())) {
+                        if (w->relativeBoundingRect().left() <= child->relativeBoundingRect().left()) {
+                        //if ((slice->bgoOrder() == 1 && w->relativeBoundingRect().left() <= child->relativeBoundingRect().left()) ||
+                        //        (slice->bgoOrder() == -1 && w->relativeBoundingRect().right() >= child->relativeBoundingRect().right())) {
                             row = child->row();
                             break;
                         }

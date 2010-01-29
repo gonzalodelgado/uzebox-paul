@@ -32,8 +32,8 @@
 	#define MAX_MOVING_PLATFORMS 0
 #endif
 
-#ifndef MAX_MAP_SIZE
-	#define MAX_MAP_SIZE 64
+#ifndef PLATZ_SLIM
+	#define PLATZ_SLIM 1
 #endif
 
 #ifndef RAM_TILES_COUNT
@@ -341,6 +341,7 @@ u8 PlatzRectsIntersect(const rect *r1, const rect *r2);
 u8 PlatzRectsIntersect16(const rect16 *r1, const rect16 *r2);
 
 #endif
+
 
 
 

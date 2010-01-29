@@ -311,7 +311,7 @@ inline void PlatzBuildMutableBgFromClass(bgInner *bgi, bgInner *bgm) {
 
 // Moves the actor to slice sp and centers the viewport on their sprite position
 void PlatzMoveToSlice(platzActor *a, u8 sp) {
-#ifndef PLATZ_SLIM
+#if !PLATZ_SLIM
 	u8 xOffset;
 	bgOuter bgo;
 	bgInner bgi,bgm;
@@ -362,7 +362,7 @@ void PlatzMoveToSlice(platzActor *a, u8 sp) {
 	SCRL_X = prevScrX = scrX;
 	scrXMod = TO_TILES_X(scrX);
 
-#ifdef PLATZ_SLIM
+#if PLATZ_SLIM
 	u8 spIt = sp;
 
 	for (u8 i = 0; i < MAX_VIS_SLICES; i++) {

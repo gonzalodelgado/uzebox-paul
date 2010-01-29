@@ -5,7 +5,7 @@
 
 // This file adapted from original Qt Http Client example
 PlatzUpdater::PlatzUpdater(QWidget *parent)
-    : baseWin(parent), update(0), state(Idle)
+    : baseWin(parent), update(0), state(Idle), updateSucceeded(false)
 {
     http = new QHttp(this);
     connect(http, SIGNAL(requestFinished(int, bool)), this, SLOT(httpRequestFinished(int, bool)));
@@ -16,7 +16,7 @@ PlatzUpdater::PlatzUpdater(QWidget *parent)
 bool PlatzUpdater::downloadUpdates(const QString &versionUrl)
 {
     update = new UpdateFile();
-    update->file.setFileName("LePlatz-Updates.xml");
+    update->file.setFileName("updates/LePlatz-Updates.xml");
     update->url.setUrl(versionUrl);
     state = VersionCheck;
 
@@ -64,10 +64,10 @@ bool PlatzUpdater::beginDownload()
     if (!update || state == Idle)
         return false;
 
-    QDir dir(QDir::currentPath() + "/updates");
+    QDir dir(QCoreApplication::applicationDirPath() + "/updates");
 
     if (!dir.exists()) {
-        dir.setPath(QDir::currentPath());
+        dir.setPath(QCoreApplication::applicationDirPath());
 
         if (!dir.mkpath("updates"))
             return false;
@@ -180,16 +180,17 @@ void PlatzUpdater::httpRequestFinished(int requestId, bool error)
         update->file.close();
 
         if (error || httpRequestAborted) {
-            update->file.remove();
             emit downloadComplete(error, http->errorString());
             deleteLater();
             return;
         }
 
-        if (!parseUpdateFile(&update->file) || updatesQ.isEmpty()) {
+        if (!parseUpdateFile(&update->file)) {
             emit downloadComplete(true, "Invalid update file format.");
             deleteLater();
-            return;
+        } else if (updatesQ.isEmpty()) {
+            emit downloadComplete(true, "Current version is up-to-date.");
+            deleteLater();
         } else {
             state = Downloading;
             update = updatesQ.dequeue();
@@ -220,10 +221,45 @@ void PlatzUpdater::httpRequestFinished(int requestId, bool error)
                 deleteLater();
             }
         } else {
+            updateSucceeded = true;
             emit downloadComplete(error, http->errorString());
             deleteLater();
         }
     }
+}
+
+bool PlatzUpdater::removeFile(const QString &fileName)
+{
+    QFile file(fileName);
+
+    if (!file.exists())
+        return true;
+    if (!isChildPath(fileName))
+        return false;
+    if (file.isOpen())
+        file.close();
+    return file.remove();
+}
+
+bool PlatzUpdater::removeDir(const QString &dirName)
+{
+    if (!QDir(dirName).exists())
+        return true;
+    bool status = true;
+    QDir dir(dirName);
+    QFileInfoList fil = dir.entryInfoList();
+
+    foreach(QFileInfo fi, fil) {
+        if (fi.isDir() && (QDir(fi.absoluteFilePath()) != dir) && (isChildPath(fi.absoluteFilePath(), dir)))
+            status = removeDir(fi.absoluteFilePath());
+        else if (fi.isFile())
+            status = removeFile(fi.absoluteFilePath());
+        if (!status)
+            break;
+    }
+    if (status)
+        status = QDir().rmdir(dirName);
+    return status;
 }
 
 PlatzUpdater::~PlatzUpdater()
@@ -232,7 +268,6 @@ PlatzUpdater::~PlatzUpdater()
         http->abort();
     delete http;
     http = 0;
-
     UpdateFile *it = 0;
 
     while (!updatesQ.isEmpty()) {
@@ -249,4 +284,7 @@ PlatzUpdater::~PlatzUpdater()
     }
     delete update;
     update = 0;
+
+    if (!updateSucceeded)
+        removeDir(QCoreApplication::applicationDirPath() + "/updates");
 }

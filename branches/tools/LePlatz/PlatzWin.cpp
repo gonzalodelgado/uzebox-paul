@@ -521,7 +521,7 @@ void PlatzWin::downloadComplete(bool error, const QString &errMsg)
         ui->actionInstallUpdates->setEnabled(true);
         ui->statusBar->showMessage("Update downloaded successfully. /!\\ tool button to install.", STATUS_DELAY);
     } else {
-        ui->statusBar->showMessage("Update downloaded failed. Error: " + errMsg, STATUS_DELAY);
+        ui->statusBar->showMessage("Update aborted. " + errMsg, STATUS_DELAY);
     }
     updateProgress->setVisible(false);
     updateInProgress = false;

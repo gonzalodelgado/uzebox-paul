@@ -78,8 +78,10 @@ void FindReplace::replace()
         return;
     QApplication::setOverrideCursor(Qt::WaitCursor);
     WorldItem::StringDataType type = static_cast<WorldItem::StringDataType>(ui->cboCategory->itemData(ui->cboCategory->currentIndex()).toInt());
-    int numReplaced = model->replaceStringData(QStringList() << ui->cboReplaceThis->currentText() << ui->cboReplaceWith->currentText(),
-            type, ui->spbRangeLower->value(), ui->spbRangeUpper->value());
+    int from = (ui->spbRangeLower->isEnabled())?ui->spbRangeLower->value():-1;
+    int to = (ui->spbRangeUpper->isEnabled())?ui->spbRangeUpper->value():-1;
+    int numReplaced = model->replaceStringData(QStringList() << ui->cboReplaceThis->currentText() << ui->cboReplaceWith->currentText(), type, from, to);
+
     if (numReplaced)
         populateReplaceThisCombo(type);
     QApplication::restoreOverrideCursor();

@@ -32,8 +32,8 @@
 	#define MAX_MOVING_PLATFORMS 0
 #endif
 
-#ifndef MAX_MAP_SIZE
-	#define MAX_MAP_SIZE 64
+#ifndef PLATZ_SLIM
+	#define PLATZ_SLIM 1
 #endif
 
 #ifndef RAM_TILES_COUNT

@@ -46,6 +46,8 @@ private:
     bool downloadUpdateFile();
     bool parseUpdateFile(QIODevice *device);
     void parseFiles(QXmlStreamReader &reader);
+    bool removeFile(const QString &fileName);
+    bool removeDir(const QString &dirName);
 
     QWidget *baseWin;
     QHttp *http;
@@ -55,6 +57,7 @@ private:
     int httpGetId;
     bool httpRequestAborted;
     UpdateState state;
+    bool updateSucceeded;
 };
 
 #endif // PLATZUPDATER_H

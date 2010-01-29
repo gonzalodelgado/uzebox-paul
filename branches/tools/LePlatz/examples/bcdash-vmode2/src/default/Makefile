@@ -26,9 +26,9 @@ KERNEL_OPTIONS  += -DMIXER_WAVES=\"$(MIX_PATH_ESC)\" -DVRAM_TILES_V=26
 ## Platz settings
 	## MAX_MOVING_PLATFORMS and MAX_ANIMATED_BGS are per slice. Set to 0 (or delete) to disable.
 	## VIEWPORT_SLACK should be small enough so as to not allow your player to wander offscreen.
-	## SS_OFFSET_Y is the offset in tiles from the top of the screen that your Platz screenSection begins (for VIDEO_MODE=2)
-	## PLATZ_SLIM can save 1k or more of flash at the cost of minor graphical compromises
-PLATZ_OPTIONS = -DVIEWPORT_SLACK=0 -DMAX_ANIMATED_BGS=5 -DMAX_MOVING_PLATFORMS=3 -DMUTABLE_BGS -DMP_HACK -DSS_OFFSET_Y=3 -DPLATZ_SLIM
+	## SS_OFFSET_Y is the offset in tiles from the top of the screen that your Platz screenSection begins (for VIDEO_MODE=2).
+	## PLATZ_SLIM can save 1k or more of flash at the cost of minor graphical compromises. Set to zero to disable (enabled by default).
+PLATZ_OPTIONS = -DVIEWPORT_SLACK=0 -DMAX_MOVING_PLATFORMS=3 -DMAX_ANIMATED_BGS=5 -DMUTABLE_BGS -DMP_HACK -DPLATZ_SLIM=1
 
 ## B.C. Dash settings
 BC_DASH_OPTIONS = -DSLICE_COUNT=51 -DSTART_Y=40
