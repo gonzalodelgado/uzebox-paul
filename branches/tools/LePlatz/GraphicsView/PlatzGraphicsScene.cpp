@@ -234,6 +234,7 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     // Mutable parent has one turn lifespan after a BGM BgInner is created (for convenience)
     if (sceneMode != IM_MUTABLE_BG)
         setMutableParent(0);
+    item = 0;
 
     switch (sceneMode) {
         case IM_PLATFORM:
@@ -414,7 +415,6 @@ void PlatzGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent) {
             bgOutline.setBottomRight(p);
             Slice *slice = static_cast<Slice*>(dataModel->root()->child((int)p.x()/mSliceSize.width()));
             WorldItem *proxy = slice->outerProxy();
-            //item->setFlags(QGraphicsItem::ItemIsSelectable);
             BgOuter *bgo = new BgOuter(QList<QVariant>() << "BgOuter", proxy);
             bgo->setFlags(bgoFlags);
 

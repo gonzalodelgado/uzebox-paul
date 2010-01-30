@@ -200,7 +200,7 @@ void PlatzGraphicsView::insertSlice(int index, int beforeOrAfter, bool draw)
 
     if ((slice = new Slice(QList<QVariant>() << "Slice", model()->root()))) {
         model()->insertRow(index, slice, model()->indexOf(model()->root()->row(), 0, model()->root()));
-        slice->setBoundingRect(QRectF(index<<8,0.0,mSliceSize.width(),mSliceSize.height()));
+        slice->setBoundingRect(QRectF(index*sliceSize().width(),0.0,mSliceSize.width(),mSliceSize.height()));
         slice->setGraphicalRepresentation(new PlatzGraphicsItem(slice, Platz::INVISIBLE));
 
         if ((bgoProxy = new ProxyItem(QList<QVariant>() << WorldItem::baseData(WorldItem::OuterProxy), WorldItem::OuterProxy, slice))) {

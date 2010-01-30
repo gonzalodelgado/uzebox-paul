@@ -334,7 +334,10 @@ void WorldItem::cropBoundingRect(const QRectF &r, QList<WorldItem*> &empties)
      if (intersect.isEmpty()) {
          empties.append(this);
      } else {
-         setBoundingRect(intersect);
+         if (type() == Slice && r.contains(boundingRect()))
+             setBoundingRect(r);
+         else
+            setBoundingRect(intersect);
 
          foreach (WorldItem *child, *children())
              child->cropBoundingRect(boundingRect(), empties);

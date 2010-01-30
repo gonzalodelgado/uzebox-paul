@@ -621,9 +621,14 @@ void PlatzWin::sortBgoOrder()
 
     if (w && w->type() == WorldItem::Slice) {
         Slice *slice = static_cast<Slice*>(w);
-        model->sortBgOuters(slice);
-        updateDetailDataDisplay(slice);
-        unsavedChanges = true;
+
+        if (slice && !slice->lockedOrdering()) {
+            model->sortBgOuters(slice);
+            updateDetailDataDisplay(slice);
+            unsavedChanges = true;
+        } else {
+            ui->statusBar->showMessage("Slice must be unlocked to re-order.", STATUS_DELAY);
+        }
     }
 }
 
