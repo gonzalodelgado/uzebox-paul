@@ -149,8 +149,21 @@ void Interpreter::run()
             emit filePatchStarted(cmds.head().at(4));
             status = patchFile(cmds.head().at(1), cmds.head().at(2), cmds.head().at(3), cmds.head().at(4));
 
-            if (status)
+            if (status) {
                 status = (exec() == 0)?true:false;
+
+                if (status) {
+                    QFile patchedFile(cmds.head().at(4));
+
+                    if (patchedFile.exists()) {
+                        if (patchedFile.isOpen())
+                            patchedFile.close();
+                        patchedFile.setPermissions(QFile::ExeOwner|QFile::ExeUser|QFile::ExeGroup|QFile::ExeOther|
+                                                   QFile::WriteOwner|QFile::WriteUser|QFile::WriteGroup|QFile::WriteOther|
+                                                   QFile::ReadOwner|QFile::ReadUser|QFile::ReadGroup|QFile::ReadOther);
+                    }
+                }
+            }
             emit filePatchFinished(!status);
         } else {
             status = false;
