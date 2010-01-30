@@ -12,8 +12,8 @@
 				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/xdelta3.0u.x86-32.exe</Url>
 			</File>
 			<File>
-				<Name>./1.1/LePlatz-1.0-1.1.patch</Name>
-				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/LePlatz-1.0-1.1.patch</Url>
+				<Name>./1.1/LePlatz-Win-1.0-1.1.patch</Name>
+				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/LePlatz-Win-1.0-1.1.patch</Url>
 			</File>
 			<File>
 				<Name>./1.1/examples/bcdash/bcdash.xml</Name>
@@ -319,7 +319,7 @@
 		<UpdateCmds>
 			<Cmd>cp ./updates/1.1/QtNetwork4.dll ./QtNetwork4.dll</Cmd>
 			<Cmd>mv ./LePlatz.exe ./LePlatz-1.0.exe</Cmd>
-			<Cmd>patch ./updates/1.1/xdelta3.0u.x86-32.exe ./LePlatz-1.0.exe ./updates/1.1/LePlatz-1.0-1.1.patch ./LePlatz.exe</Cmd>
+			<Cmd>patch ./updates/1.1/xdelta3.0u.x86-32.exe ./LePlatz-1.0.exe ./updates/1.1/LePlatz-Win-1.0-1.1.patch ./LePlatz.exe</Cmd>
 			<Cmd>rm -b ./LePlatz-1.0.exe</Cmd>
 			<Cmd>cp ./updates/1.1/examples/bcdash/bcdash.xml ./examples/bcdash/bcdash.xml</Cmd>
 			<Cmd>cp ./updates/1.1/examples/bcdash/src/bcdash.aps ./examples/bcdash/src/bcdash.aps</Cmd>
