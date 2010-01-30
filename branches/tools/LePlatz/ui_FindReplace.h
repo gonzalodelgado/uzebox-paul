@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'FindReplace.ui'
 **
-** Created: Sat 30. Jan 02:48:23 2010
+** Created: Sun 31. Jan 05:11:44 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -27,15 +27,18 @@
 #include <QtGui/QSpacerItem>
 #include <QtGui/QSpinBox>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_FindReplace
 {
 public:
+    QWidget *widget;
     QHBoxLayout *horizontalLayout_2;
     QVBoxLayout *verticalLayout_3;
     QFrame *frame;
+    QVBoxLayout *verticalLayout;
     QFormLayout *formLayout;
     QLabel *lblCategory;
     QComboBox *cboCategory;
@@ -45,8 +48,8 @@ public:
     QComboBox *cboReplaceWith;
     QSpacerItem *verticalSpacer;
     QGroupBox *groupBox;
-    QVBoxLayout *verticalLayout;
     QRadioButton *rbtnApplyAll;
+    QWidget *widget1;
     QHBoxLayout *horizontalLayout;
     QRadioButton *rbtnApplyRange;
     QSpinBox *spbRangeLower;
@@ -63,19 +66,25 @@ public:
     {
         if (FindReplace->objectName().isEmpty())
             FindReplace->setObjectName(QString::fromUtf8("FindReplace"));
-        FindReplace->resize(475, 228);
-        FindReplace->setMinimumSize(QSize(475, 228));
-        FindReplace->setMaximumSize(QSize(548, 228));
-        horizontalLayout_2 = new QHBoxLayout(FindReplace);
+        FindReplace->resize(475, 300);
+        FindReplace->setMinimumSize(QSize(475, 300));
+        FindReplace->setMaximumSize(QSize(475, 300));
+        widget = new QWidget(FindReplace);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(10, 9, 464, 267));
+        horizontalLayout_2 = new QHBoxLayout(widget);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
         verticalLayout_3 = new QVBoxLayout();
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        frame = new QFrame(FindReplace);
+        frame = new QFrame(widget);
         frame->setObjectName(QString::fromUtf8("frame"));
         frame->setFrameShape(QFrame::StyledPanel);
         frame->setFrameShadow(QFrame::Raised);
         frame->setLineWidth(0);
-        formLayout = new QFormLayout(frame);
+        verticalLayout = new QVBoxLayout(frame);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        formLayout = new QFormLayout();
         formLayout->setObjectName(QString::fromUtf8("formLayout"));
         lblCategory = new QLabel(frame);
         lblCategory->setObjectName(QString::fromUtf8("lblCategory"));
@@ -107,56 +116,64 @@ public:
 
         formLayout->setWidget(2, QFormLayout::FieldRole, cboReplaceWith);
 
+
+        verticalLayout->addLayout(formLayout);
+
         verticalSpacer = new QSpacerItem(357, 8, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(3, QFormLayout::FieldRole, verticalSpacer);
+        verticalLayout->addItem(verticalSpacer);
 
         groupBox = new QGroupBox(frame);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        verticalLayout = new QVBoxLayout(groupBox);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        groupBox->setMinimumSize(QSize(0, 112));
         rbtnApplyAll = new QRadioButton(groupBox);
         rbtnApplyAll->setObjectName(QString::fromUtf8("rbtnApplyAll"));
-
-        verticalLayout->addWidget(rbtnApplyAll);
-
-        horizontalLayout = new QHBoxLayout();
+        rbtnApplyAll->setGeometry(QRect(10, 23, 71, 31));
+        rbtnApplyAll->setMinimumSize(QSize(71, 31));
+        widget1 = new QWidget(groupBox);
+        widget1->setObjectName(QString::fromUtf8("widget1"));
+        widget1->setGeometry(QRect(11, 68, 321, 33));
+        horizontalLayout = new QHBoxLayout(widget1);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        rbtnApplyRange = new QRadioButton(groupBox);
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        rbtnApplyRange = new QRadioButton(widget1);
         rbtnApplyRange->setObjectName(QString::fromUtf8("rbtnApplyRange"));
+        rbtnApplyRange->setMinimumSize(QSize(71, 31));
 
         horizontalLayout->addWidget(rbtnApplyRange);
 
-        spbRangeLower = new QSpinBox(groupBox);
+        spbRangeLower = new QSpinBox(widget1);
         spbRangeLower->setObjectName(QString::fromUtf8("spbRangeLower"));
+        spbRangeLower->setMinimumSize(QSize(51, 21));
 
         horizontalLayout->addWidget(spbRangeLower);
 
-        lblRangeTo = new QLabel(groupBox);
+        lblRangeTo = new QLabel(widget1);
         lblRangeTo->setObjectName(QString::fromUtf8("lblRangeTo"));
+        lblRangeTo->setMinimumSize(QSize(25, 31));
+        lblRangeTo->setAlignment(Qt::AlignCenter);
 
         horizontalLayout->addWidget(lblRangeTo);
 
-        spbRangeUpper = new QSpinBox(groupBox);
+        spbRangeUpper = new QSpinBox(widget1);
         spbRangeUpper->setObjectName(QString::fromUtf8("spbRangeUpper"));
+        spbRangeUpper->setMinimumSize(QSize(51, 21));
 
         horizontalLayout->addWidget(spbRangeUpper);
 
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer = new QSpacerItem(17, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout->addItem(horizontalSpacer);
 
 
-        verticalLayout->addLayout(horizontalLayout);
-
-
-        formLayout->setWidget(4, QFormLayout::SpanningRole, groupBox);
+        verticalLayout->addWidget(groupBox);
 
 
         verticalLayout_3->addWidget(frame);
 
-        lblReplaceResult = new QLabel(FindReplace);
+        lblReplaceResult = new QLabel(widget);
         lblReplaceResult->setObjectName(QString::fromUtf8("lblReplaceResult"));
+        lblReplaceResult->setMinimumSize(QSize(0, 31));
 
         verticalLayout_3->addWidget(lblReplaceResult);
 
@@ -165,12 +182,12 @@ public:
 
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        pbReplace = new QPushButton(FindReplace);
+        pbReplace = new QPushButton(widget);
         pbReplace->setObjectName(QString::fromUtf8("pbReplace"));
 
         verticalLayout_2->addWidget(pbReplace);
 
-        pbClose = new QPushButton(FindReplace);
+        pbClose = new QPushButton(widget);
         pbClose->setObjectName(QString::fromUtf8("pbClose"));
 
         verticalLayout_2->addWidget(pbClose);

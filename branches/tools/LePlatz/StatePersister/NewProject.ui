@@ -7,19 +7,25 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>460</height>
+    <height>500</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
     <width>600</width>
-    <height>460</height>
+    <height>500</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>600</width>
-    <height>460</height>
+    <height>500</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -29,7 +35,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>410</y>
+     <y>430</y>
      <width>581</width>
      <height>20</height>
     </rect>
@@ -42,7 +48,7 @@
    <property name="geometry">
     <rect>
      <x>430</x>
-     <y>429</y>
+     <y>450</y>
      <width>156</width>
      <height>23</height>
     </rect>
@@ -55,9 +61,9 @@
    <property name="geometry">
     <rect>
      <x>150</x>
-     <y>350</y>
-     <width>431</width>
-     <height>61</height>
+     <y>360</y>
+     <width>441</width>
+     <height>71</height>
     </rect>
    </property>
    <property name="text">
@@ -74,7 +80,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>10</y>
+     <y>13</y>
      <width>123</width>
      <height>335</height>
     </rect>
@@ -100,8 +106,8 @@
     <rect>
      <x>141</x>
      <y>10</y>
-     <width>448</width>
-     <height>335</height>
+     <width>451</width>
+     <height>344</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -120,15 +126,15 @@
     <string>Project Settings</string>
    </property>
    <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0" colspan="2">
-     <spacer name="verticalSpacer_14">
+    <item row="0" column="1">
+     <spacer name="verticalSpacer">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>428</width>
-        <height>13</height>
+        <width>351</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>
@@ -160,15 +166,15 @@
       </item>
      </layout>
     </item>
-    <item row="2" column="0" colspan="2">
-     <spacer name="verticalSpacer_13">
+    <item row="2" column="1">
+     <spacer name="verticalSpacer_8">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>428</width>
-        <height>13</height>
+        <width>351</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>
@@ -200,15 +206,15 @@
       </item>
      </layout>
     </item>
-    <item row="4" column="0" colspan="2">
-     <spacer name="verticalSpacer_12">
+    <item row="4" column="1">
+     <spacer name="verticalSpacer_6">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>428</width>
-        <height>13</height>
+        <width>351</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>
@@ -240,15 +246,15 @@
       </item>
      </layout>
     </item>
-    <item row="6" column="0" colspan="2">
-     <spacer name="verticalSpacer_11">
+    <item row="6" column="1">
+     <spacer name="verticalSpacer_7">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>428</width>
-        <height>13</height>
+        <width>351</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>
@@ -280,27 +286,27 @@
       </item>
      </layout>
     </item>
-    <item row="9" column="0" colspan="2">
-     <spacer name="verticalSpacer_8">
+    <item row="8" column="1">
+     <spacer name="verticalSpacer_9">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>428</width>
-        <height>13</height>
+        <width>351</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>
     </item>
-    <item row="10" column="0">
+    <item row="9" column="0">
      <widget class="QLabel" name="lblSrcPath">
       <property name="text">
        <string>Source Folder:</string>
       </property>
      </widget>
     </item>
-    <item row="10" column="1">
+    <item row="9" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
        <widget class="FocusLineEdit" name="leSrcFolder"/>
@@ -320,39 +326,39 @@
       </item>
      </layout>
     </item>
-    <item row="11" column="0" colspan="2">
-     <spacer name="verticalSpacer_9">
+    <item row="10" column="1">
+     <spacer name="verticalSpacer_10">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>428</width>
-        <height>13</height>
+        <width>351</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>
     </item>
-    <item row="12" column="0">
+    <item row="11" column="0">
      <widget class="QLabel" name="lvlVideoMode">
       <property name="text">
        <string>Video Mode:</string>
       </property>
      </widget>
     </item>
-    <item row="12" column="1">
+    <item row="11" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
        <widget class="FocusComboBox" name="cboVideoMode">
         <property name="minimumSize">
          <size>
-          <width>135</width>
+          <width>171</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>94</width>
+          <width>171</width>
           <height>16777215</height>
          </size>
         </property>
@@ -373,27 +379,27 @@
       </item>
      </layout>
     </item>
-    <item row="13" column="1">
-     <spacer name="verticalSpacer">
+    <item row="12" column="1">
+     <spacer name="verticalSpacer_11">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>348</width>
-        <height>6</height>
+        <width>351</width>
+        <height>5</height>
        </size>
       </property>
      </spacer>
     </item>
-    <item row="14" column="0">
+    <item row="13" column="0">
      <widget class="QLabel" name="lblOffsetY_2">
       <property name="text">
        <string>Slice height:</string>
       </property>
      </widget>
     </item>
-    <item row="14" column="1">
+    <item row="13" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
        <widget class="FocusSpinBox" name="spbSliceHeight">
@@ -458,14 +464,14 @@
       </item>
      </layout>
     </item>
-    <item row="15" column="1">
-     <spacer name="verticalSpacer_2">
+    <item row="14" column="1">
+     <spacer name="verticalSpacer_12">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>348</width>
+        <width>351</width>
         <height>5</height>
        </size>
       </property>

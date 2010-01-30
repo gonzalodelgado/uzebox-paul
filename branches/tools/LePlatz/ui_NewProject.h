@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'NewProject.ui'
 **
-** Created: Sat 30. Jan 02:48:23 2010
+** Created: Sun 31. Jan 05:11:44 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -39,37 +39,37 @@ public:
     QLabel *lblLogoImg;
     QGroupBox *groupBox;
     QFormLayout *formLayout;
-    QSpacerItem *verticalSpacer_14;
+    QSpacerItem *verticalSpacer;
     QLabel *lblProjectName;
     QHBoxLayout *horizontalLayout_2;
     FocusLineEdit *leProjectName;
     QSpacerItem *horizontalSpacer_3;
-    QSpacerItem *verticalSpacer_13;
+    QSpacerItem *verticalSpacer_8;
     QLabel *lblProjectPath;
     QHBoxLayout *horizontalLayout;
     FocusLineEdit *leProjectFolder;
     QPushButton *pbProjectPath;
-    QSpacerItem *verticalSpacer_12;
+    QSpacerItem *verticalSpacer_6;
     QLabel *lblArtPath;
     QHBoxLayout *horizontalLayout_4;
     FocusLineEdit *leArtFolder;
     QPushButton *pbArtPath;
-    QSpacerItem *verticalSpacer_11;
+    QSpacerItem *verticalSpacer_7;
     QLabel *lblImgFormat;
     QHBoxLayout *horizontalLayout_3;
     FocusComboBox *cboImageFormat;
     QSpacerItem *horizontalSpacer_4;
-    QSpacerItem *verticalSpacer_8;
+    QSpacerItem *verticalSpacer_9;
     QLabel *lblSrcPath;
     QHBoxLayout *horizontalLayout_5;
     FocusLineEdit *leSrcFolder;
     QPushButton *pbSrcPath;
-    QSpacerItem *verticalSpacer_9;
+    QSpacerItem *verticalSpacer_10;
     QLabel *lvlVideoMode;
     QHBoxLayout *horizontalLayout_7;
     FocusComboBox *cboVideoMode;
     QSpacerItem *horizontalSpacer_2;
-    QSpacerItem *verticalSpacer;
+    QSpacerItem *verticalSpacer_11;
     QLabel *lblOffsetY_2;
     QHBoxLayout *horizontalLayout_6;
     FocusSpinBox *spbSliceHeight;
@@ -79,48 +79,53 @@ public:
     FocusSpinBox *spbOffsetY;
     QLabel *lblOffsetYTiles;
     QSpacerItem *horizontalSpacer_6;
-    QSpacerItem *verticalSpacer_2;
+    QSpacerItem *verticalSpacer_12;
 
     void setupUi(QDialog *NewProject)
     {
         if (NewProject->objectName().isEmpty())
             NewProject->setObjectName(QString::fromUtf8("NewProject"));
-        NewProject->resize(600, 460);
-        NewProject->setMinimumSize(QSize(600, 460));
-        NewProject->setMaximumSize(QSize(600, 460));
+        NewProject->resize(600, 500);
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(NewProject->sizePolicy().hasHeightForWidth());
+        NewProject->setSizePolicy(sizePolicy);
+        NewProject->setMinimumSize(QSize(600, 500));
+        NewProject->setMaximumSize(QSize(600, 500));
         line = new QFrame(NewProject);
         line->setObjectName(QString::fromUtf8("line"));
-        line->setGeometry(QRect(10, 410, 581, 20));
+        line->setGeometry(QRect(10, 430, 581, 20));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
         buttonBox = new QDialogButtonBox(NewProject);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(430, 429, 156, 23));
+        buttonBox->setGeometry(QRect(430, 450, 156, 23));
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         lblContextualHelp = new QLabel(NewProject);
         lblContextualHelp->setObjectName(QString::fromUtf8("lblContextualHelp"));
-        lblContextualHelp->setGeometry(QRect(150, 350, 431, 61));
+        lblContextualHelp->setGeometry(QRect(150, 360, 441, 71));
         lblContextualHelp->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
         lblContextualHelp->setWordWrap(true);
         lblLogoImg = new QLabel(NewProject);
         lblLogoImg->setObjectName(QString::fromUtf8("lblLogoImg"));
-        lblLogoImg->setGeometry(QRect(10, 10, 123, 335));
+        lblLogoImg->setGeometry(QRect(10, 13, 123, 335));
         lblLogoImg->setMinimumSize(QSize(123, 335));
         lblLogoImg->setMaximumSize(QSize(123, 335));
         groupBox = new QGroupBox(NewProject);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(141, 10, 448, 335));
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
-        groupBox->setSizePolicy(sizePolicy);
+        groupBox->setGeometry(QRect(141, 10, 451, 344));
+        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(groupBox->sizePolicy().hasHeightForWidth());
+        groupBox->setSizePolicy(sizePolicy1);
         groupBox->setMaximumSize(QSize(460, 600));
         formLayout = new QFormLayout(groupBox);
         formLayout->setObjectName(QString::fromUtf8("formLayout"));
-        verticalSpacer_14 = new QSpacerItem(428, 13, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer = new QSpacerItem(351, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(0, QFormLayout::SpanningRole, verticalSpacer_14);
+        formLayout->setItem(0, QFormLayout::FieldRole, verticalSpacer);
 
         lblProjectName = new QLabel(groupBox);
         lblProjectName->setObjectName(QString::fromUtf8("lblProjectName"));
@@ -141,9 +146,9 @@ public:
 
         formLayout->setLayout(1, QFormLayout::FieldRole, horizontalLayout_2);
 
-        verticalSpacer_13 = new QSpacerItem(428, 13, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_8 = new QSpacerItem(351, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(2, QFormLayout::SpanningRole, verticalSpacer_13);
+        formLayout->setItem(2, QFormLayout::FieldRole, verticalSpacer_8);
 
         lblProjectPath = new QLabel(groupBox);
         lblProjectPath->setObjectName(QString::fromUtf8("lblProjectPath"));
@@ -166,9 +171,9 @@ public:
 
         formLayout->setLayout(3, QFormLayout::FieldRole, horizontalLayout);
 
-        verticalSpacer_12 = new QSpacerItem(428, 13, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_6 = new QSpacerItem(351, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(4, QFormLayout::SpanningRole, verticalSpacer_12);
+        formLayout->setItem(4, QFormLayout::FieldRole, verticalSpacer_6);
 
         lblArtPath = new QLabel(groupBox);
         lblArtPath->setObjectName(QString::fromUtf8("lblArtPath"));
@@ -191,9 +196,9 @@ public:
 
         formLayout->setLayout(5, QFormLayout::FieldRole, horizontalLayout_4);
 
-        verticalSpacer_11 = new QSpacerItem(428, 13, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_7 = new QSpacerItem(351, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(6, QFormLayout::SpanningRole, verticalSpacer_11);
+        formLayout->setItem(6, QFormLayout::FieldRole, verticalSpacer_7);
 
         lblImgFormat = new QLabel(groupBox);
         lblImgFormat->setObjectName(QString::fromUtf8("lblImgFormat"));
@@ -214,14 +219,14 @@ public:
 
         formLayout->setLayout(7, QFormLayout::FieldRole, horizontalLayout_3);
 
-        verticalSpacer_8 = new QSpacerItem(428, 13, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_9 = new QSpacerItem(351, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(9, QFormLayout::SpanningRole, verticalSpacer_8);
+        formLayout->setItem(8, QFormLayout::FieldRole, verticalSpacer_9);
 
         lblSrcPath = new QLabel(groupBox);
         lblSrcPath->setObjectName(QString::fromUtf8("lblSrcPath"));
 
-        formLayout->setWidget(10, QFormLayout::LabelRole, lblSrcPath);
+        formLayout->setWidget(9, QFormLayout::LabelRole, lblSrcPath);
 
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
@@ -237,23 +242,23 @@ public:
         horizontalLayout_5->addWidget(pbSrcPath);
 
 
-        formLayout->setLayout(10, QFormLayout::FieldRole, horizontalLayout_5);
+        formLayout->setLayout(9, QFormLayout::FieldRole, horizontalLayout_5);
 
-        verticalSpacer_9 = new QSpacerItem(428, 13, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_10 = new QSpacerItem(351, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(11, QFormLayout::SpanningRole, verticalSpacer_9);
+        formLayout->setItem(10, QFormLayout::FieldRole, verticalSpacer_10);
 
         lvlVideoMode = new QLabel(groupBox);
         lvlVideoMode->setObjectName(QString::fromUtf8("lvlVideoMode"));
 
-        formLayout->setWidget(12, QFormLayout::LabelRole, lvlVideoMode);
+        formLayout->setWidget(11, QFormLayout::LabelRole, lvlVideoMode);
 
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
         cboVideoMode = new FocusComboBox(groupBox);
         cboVideoMode->setObjectName(QString::fromUtf8("cboVideoMode"));
-        cboVideoMode->setMinimumSize(QSize(135, 0));
-        cboVideoMode->setMaximumSize(QSize(94, 16777215));
+        cboVideoMode->setMinimumSize(QSize(171, 0));
+        cboVideoMode->setMaximumSize(QSize(171, 16777215));
 
         horizontalLayout_7->addWidget(cboVideoMode);
 
@@ -262,16 +267,16 @@ public:
         horizontalLayout_7->addItem(horizontalSpacer_2);
 
 
-        formLayout->setLayout(12, QFormLayout::FieldRole, horizontalLayout_7);
+        formLayout->setLayout(11, QFormLayout::FieldRole, horizontalLayout_7);
 
-        verticalSpacer = new QSpacerItem(348, 6, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_11 = new QSpacerItem(351, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(13, QFormLayout::FieldRole, verticalSpacer);
+        formLayout->setItem(12, QFormLayout::FieldRole, verticalSpacer_11);
 
         lblOffsetY_2 = new QLabel(groupBox);
         lblOffsetY_2->setObjectName(QString::fromUtf8("lblOffsetY_2"));
 
-        formLayout->setWidget(14, QFormLayout::LabelRole, lblOffsetY_2);
+        formLayout->setWidget(13, QFormLayout::LabelRole, lblOffsetY_2);
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
@@ -311,11 +316,11 @@ public:
         horizontalLayout_6->addItem(horizontalSpacer_6);
 
 
-        formLayout->setLayout(14, QFormLayout::FieldRole, horizontalLayout_6);
+        formLayout->setLayout(13, QFormLayout::FieldRole, horizontalLayout_6);
 
-        verticalSpacer_2 = new QSpacerItem(348, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        verticalSpacer_12 = new QSpacerItem(351, 5, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        formLayout->setItem(15, QFormLayout::FieldRole, verticalSpacer_2);
+        formLayout->setItem(14, QFormLayout::FieldRole, verticalSpacer_12);
 
 
         retranslateUi(NewProject);

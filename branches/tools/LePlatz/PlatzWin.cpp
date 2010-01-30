@@ -17,6 +17,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QCoreApplication>
 #include <QStringList>
 #include <QFile>
 #include <QFileDialog>
@@ -47,7 +48,7 @@ static const int STATUS_DELAY = 10000;
 
 PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     : QMainWindow(parent), ui(new Ui::PlatzWin), procMake(new QProcess(this)), procEmu(new QProcess(this)),
-        settings(new Settings(MAX_RECENT_PROJECTS)), projectPath(QDir::currentPath()), tileSize(QSize(8,8)),
+        settings(new Settings(MAX_RECENT_PROJECTS)), projectPath(QCoreApplication::applicationDirPath()), tileSize(QSize(8,8)),
         offsetY(0), activeProject(false), recProjMenu(0), bgoTrigger(false), unsavedChanges(false),
         updateInProgress(false)
 {
@@ -370,17 +371,18 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(settings, SIGNAL(emuExePathChanged(QString)), this, SLOT(setEmuExePath(QString)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), ui->graphicsView, SLOT(setSliceSize(QSize)));
     connect(settings, SIGNAL(videoModeChanged(int)), this, SLOT(setVideoMode(int)));
+    settings->setVideoMode(3);  // For LePlatz v1.0 compatibility (save files didn't specify a mode)
     connect(settings, SIGNAL(tileSizeChanged(QSize)), ui->graphicsView, SLOT(setTileSize(QSize)));
     connect(settings, SIGNAL(offsetYChanged(int)), this, SLOT(setOffsetY(int)));
     connect(settings, SIGNAL(tileSizeChanged(QSize)), this, SLOT(setTileSize(QSize)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), this, SLOT(setSliceSize(QSize)));
-    settings->setCanvasColor(QColor(qRgb(236,233,216)));
     connect(settings, SIGNAL(canvasColorChanged(QColor)), ui->graphicsView, SLOT(setCanvasColor(QColor)));
+    settings->setCanvasColor(QColor(qRgb(236,233,216)));
     connect(settings, SIGNAL(updatesUrlChanged(QString)), this, SLOT(setUpdatesUrl(QString)));
     settings->setUpdatesUrl(Settings::DEFAULT_UPDATES_URL);
 
     // Check for uninstall updates
-    QFile file(QDir::currentPath() + "/updates/LePlatz-Updates.xml");
+    QFile file(QCoreApplication::applicationDirPath() + "/updates/LePlatz-Updates.xml");
 
     if (!file.exists())
         ui->actionInstallUpdates->setVisible(false);
@@ -478,9 +480,9 @@ void PlatzWin::installUpdates()
         if (!queryUnsavedChanges())
             return;
 #if defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
-        if (QProcess::startDetached(QDir::currentPath() + "/LePatch.exe", QStringList() << "-v" << LEPLATZ_VERSIONS.last()))
+        if (QProcess::startDetached(QCoreApplication::applicationDirPath() + "/LePatch.exe", QStringList() << "-v" << LEPLATZ_VERSIONS.last()))
 #else
-        if (QProcess::startDetached(QDir::currentPath() + "/LePatch", QStringList() << "-v" << LEPLATZ_VERSIONS.last()))
+        if (QProcess::startDetached(QCoreApplication::applicationDirPath() + "/LePatch", QStringList() << "-v" << LEPLATZ_VERSIONS.last()))
 #endif
             close();
         else
@@ -1209,7 +1211,7 @@ bool PlatzWin::initLoadProject()
 {
     // Ensure we have a valid default path
     if (!QFile::exists(projectPath))
-        projectPath = QDir::currentPath();
+        projectPath = QCoreApplication::applicationDirPath();
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open Project"),
             projectPath, tr("LePlatz Project Files (*.xml)"));
@@ -1269,7 +1271,7 @@ bool PlatzWin::initSaveAsProject()
     if (QFile::exists(projectPath))
         dir.setPath(projectPath);
     else
-        dir.setPath(QDir::currentPath());
+        dir.setPath(QCoreApplication::applicationDirPath());
     path = QFileDialog::getSaveFileName(this, "Save As...", dir.absolutePath(), "*.xml");
 
     if (!path.endsWith(".xml")) {
