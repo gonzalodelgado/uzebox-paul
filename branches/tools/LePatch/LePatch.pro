@@ -11,3 +11,5 @@ HEADERS += LePatchDlg.h \
     Patcher.h \
     Interpreter.h
 FORMS += LePatchDlg.ui
+RC_FILE = LePatch.rc
+include(Resources/Resources.pri)

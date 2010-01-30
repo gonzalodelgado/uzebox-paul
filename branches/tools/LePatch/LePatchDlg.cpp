@@ -9,6 +9,7 @@ LePatchDlg::LePatchDlg(QWidget *parent)
         logFile("./patchLog.txt"), updating(false)
 {
     ui->setupUi(this);
+    setWindowIcon(QIcon(":/icons/128x128/LePatch-tick.png"));
     interpreter = new Interpreter(this, 10000);
 
     connect(ui->pbDetails, SIGNAL(clicked()), this, SLOT(toggleDetails()));
