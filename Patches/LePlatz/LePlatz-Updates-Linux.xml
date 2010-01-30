@@ -4,12 +4,12 @@
 	<Update version="1.1">
 		<Files> 
 			<File>
-				<Name>./1.1/xdelta3.0u.x86-32</Name>
-				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/xdelta3.0u.x86-32</Url>
+				<Name>./1.1/xdelta3</Name>
+				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/xdelta3</Url>
 			</File>
 			<File>
-				<Name>./1.1/LePlatz-1.0-1.1.patch</Name>
-				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/LePlatz-1.0-1.1.patch</Url>
+				<Name>./1.1/LePlatz-Linux-1.0-1.1.patch</Name>
+				<Url>http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/1.1/LePlatz-Linux-1.0-1.1.patch</Url>
 			</File>
 			<File>
 				<Name>./1.1/examples/bcdash/bcdash.xml</Name>
@@ -314,7 +314,7 @@
 		</Files>
 		<UpdateCmds>
 			<Cmd>mv ./LePlatz ./LePlatz-1.0</Cmd>
-			<Cmd>patch ./updates/1.1/xdelta3.0u.x86-32 ./LePlatz-1.0 ./updates/1.1/LePlatz-1.0-1.1.patch ./LePlatz</Cmd>
+			<Cmd>patch ./updates/1.1/xdelta3 ./LePlatz-1.0 ./updates/1.1/LePlatz-Linux-1.0-1.1.patch ./LePlatz</Cmd>
 			<Cmd>rm -b ./LePlatz-1.0</Cmd>
 			<Cmd>cp ./updates/1.1/examples/bcdash/bcdash.xml ./examples/bcdash/bcdash.xml</Cmd>
 			<Cmd>cp ./updates/1.1/examples/bcdash/src/bcdash.aps ./examples/bcdash/src/bcdash.aps</Cmd>

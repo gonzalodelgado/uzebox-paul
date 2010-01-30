@@ -11,7 +11,7 @@
         <AnimPath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/art/animations.png</AnimPath>
         <SrcFolder>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src</SrcFolder>
         <MakefilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src/default/Makefile</MakefilePath>
-        <HexfilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src/default/bcdash-vmode2.hex</HexfilePath>
+        <HexfilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src/default/platz_demo.hex</HexfilePath>
         <PlatzfilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src/data/platz.levels.inc</PlatzfilePath>
     </ProjectSettings>
     <World>
