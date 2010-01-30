@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'NewProject.ui'
 **
-** Created: Sun 31. Jan 05:11:44 2010
+** Created: Sun 31. Jan 06:54:25 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -85,14 +85,14 @@ public:
     {
         if (NewProject->objectName().isEmpty())
             NewProject->setObjectName(QString::fromUtf8("NewProject"));
-        NewProject->resize(600, 500);
+        NewProject->resize(600, 480);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(NewProject->sizePolicy().hasHeightForWidth());
         NewProject->setSizePolicy(sizePolicy);
-        NewProject->setMinimumSize(QSize(600, 500));
-        NewProject->setMaximumSize(QSize(600, 500));
+        NewProject->setMinimumSize(QSize(600, 480));
+        NewProject->setMaximumSize(QSize(600, 480));
         line = new QFrame(NewProject);
         line->setObjectName(QString::fromUtf8("line"));
         line->setGeometry(QRect(10, 430, 581, 20));
@@ -100,7 +100,7 @@ public:
         line->setFrameShadow(QFrame::Sunken);
         buttonBox = new QDialogButtonBox(NewProject);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(430, 450, 156, 23));
+        buttonBox->setGeometry(QRect(430, 448, 156, 23));
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         lblContextualHelp = new QLabel(NewProject);
         lblContextualHelp->setObjectName(QString::fromUtf8("lblContextualHelp"));
@@ -114,7 +114,7 @@ public:
         lblLogoImg->setMaximumSize(QSize(123, 335));
         groupBox = new QGroupBox(NewProject);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(141, 10, 451, 344));
+        groupBox->setGeometry(QRect(141, 10, 451, 341));
         QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);

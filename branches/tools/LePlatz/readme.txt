@@ -8,6 +8,8 @@ Created with Qt 4.6.
 /***** Change Log *****/
 
 LePlatz 1.1.0
+- Added update tool to easily distribute future versions.
+- Added LePatch tool to patch downloaded updates.
 - All valid slice sizes now supported.
 - Slice canvas background color configurable through "Edit->Canvas Bg Color" menu.
 - Compatible with v1.0 and v1.1 project files. v1.0 files will be converted to v1.1 files upon saving.
