@@ -1,4 +1,4 @@
-= Documentation Links =
+== Documentation Links ==
 
 [http://uzebox.org/wiki/index.php?title=Pac-Man Uzebox game: Pac-Man]
 
