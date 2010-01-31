@@ -5,14 +5,14 @@
         <VideoMode mode="2"/>
         <SliceSize width="192" height="184"/>
         <OffsetY offset="24"/>
-        <SlicePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/art/slices/</SlicePath>
-        <TilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/art/tiles.png</TilePath>
-        <MapPath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/art/maps.png</MapPath>
-        <AnimPath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/art/animations.png</AnimPath>
-        <SrcFolder>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src</SrcFolder>
-        <MakefilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src/default/Makefile</MakefilePath>
-        <HexfilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src/default/platz_demo.hex</HexfilePath>
-        <PlatzfilePath>C:/uzebox-paul-29-12-09/branches/tools/LePlatz/examples/bcdash-vmode2/src/data/platz.levels.inc</PlatzfilePath>
+        <SlicePath>./art/slices/</SlicePath>
+        <TilePath>./art/tiles.png</TilePath>
+        <MapPath>./art/maps.png</MapPath>
+        <AnimPath>./art/animations.png</AnimPath>
+        <SrcFolder>./src</SrcFolder>
+        <MakefilePath>./src/default/Makefile</MakefilePath>
+        <HexfilePath>./src/default/platz_demo.hex</HexfilePath>
+        <PlatzfilePath>./src/data/platz.levels.inc</PlatzfilePath>
     </ProjectSettings>
     <World>
         <Slice replica="-1" locked="0">

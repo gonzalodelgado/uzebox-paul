@@ -86,7 +86,7 @@ public slots:
     void setPlatformVelocity(int vel) { platformVel = vel; }
     void setPayloadToCustom(bool useCustom) { useCustomPayload = useCustom; }
     void setCustomPayload(const Platz::MutablePayload &payload) { customPayload = payload; }
-    void emitIndexChanges(const WorldItem *item);
+    void emitIndexChanges(const WorldItem *witem);
     void setMutableParent(BgInner *mp) { mutParent = mp; }
     void setSnapToResolutionX(int resolution);
     void setSnapToResolutionY(int resolution);
@@ -95,7 +95,7 @@ signals:
     void itemDrawn(WorldItem *item);
     void interactionModeChanged(Platz::InteractionMode mode);
     //void currentItemChanged(const WorldItem *item);
-    void currentItemDataChanged(const WorldItem *item);
+    void currentItemDataChanged(const WorldItem *witem);
     void currentTileIndexChanged(int index);
     void currentMapIndexChanged(int index);
     void currentAnimIndexChanged(int index);

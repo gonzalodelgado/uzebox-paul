@@ -578,12 +578,12 @@ void PlatzGraphicsScene::mouseReleaseEvent (QGraphicsSceneMouseEvent *mouseEvent
     mouseEvent->accept();
 }
 
-void PlatzGraphicsScene::emitIndexChanges(const WorldItem *item)
+void PlatzGraphicsScene::emitIndexChanges(const WorldItem *witem)
 {
-    if (!item) {
+    if (!witem) {
         emit currentTileIndexChanged(Platz::CLEAR);
-    } else if (item->type() == WorldItem::Inner) {
-        const BgInner *bgi = static_cast<const BgInner*>(item);
+    } else if (witem->type() == WorldItem::Inner) {
+        const BgInner *bgi = static_cast<const BgInner*>(witem);
 
         if (bgi) {
             if (bgi->flags()&BgInner::BGP)
@@ -593,15 +593,15 @@ void PlatzGraphicsScene::emitIndexChanges(const WorldItem *item)
             else
                 emit currentTileIndexChanged(bgi->tile());
         }
-    } else if (item->type() == WorldItem::Object) {
-        const BgObject *obj = static_cast<const BgObject*>(item);
+    } else if (witem->type() == WorldItem::Object) {
+        const BgObject *obj = static_cast<const BgObject*>(witem);
 
         if (obj)
             emit currentMapIndexChanged(obj->map());
     } else {
         emit currentTileIndexChanged(Platz::CLEAR);
     }
-    emit currentItemDataChanged(item);
+    emit currentItemDataChanged(witem);
 }
 
 Platz::InteractionMode PlatzGraphicsScene::interactionMode()

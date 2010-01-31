@@ -369,5 +369,7 @@ void WorldItem::setGraphicalRepresentation(PlatzGraphicsItem *item)
 
 WorldItem::~WorldItem()
 {
+    if (graphicsItem)
+        graphicsItem->setParent(0);
     delete graphicsItem;
 }
