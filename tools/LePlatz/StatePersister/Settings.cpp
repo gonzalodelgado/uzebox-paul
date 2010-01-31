@@ -31,9 +31,9 @@ const int Settings::VMODE2_SCREEN_TILES_V = 26;
 const int Settings::VMODE3_SCREEN_TILES_V = 28;
 
 #if defined(Q_OS_WIN32) || defined(Q_OS_WIN64)
-    const QString Settings::DEFAULT_UPDATES_URL = "http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/LePlatz-Updates-Win.xml";
+    const QString Settings::DEFAULT_UPDATES_URL = "http://uzebox-paul.googlecode.com/svn/trunk/patches/LePlatz/LePlatz-Updates-Win.xml";
 #else
-    const QString Settings::DEFAULT_UPDATES_URL = "http://uzebox-paul.googlecode.com/svn/trunk/Patches/LePlatz/LePlatz-Updates-Linux.xml";
+    const QString Settings::DEFAULT_UPDATES_URL = "http://uzebox-paul.googlecode.com/svn/trunk/patches/LePlatz/LePlatz-Updates-Linux.xml";
 #endif
 
 static const QString UNSET = "";
