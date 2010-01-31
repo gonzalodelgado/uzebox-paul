@@ -264,10 +264,14 @@ void Settings::setCanvasColor(const QColor &color)
     emit canvasColorChanged(color);
 }
 
-bool Settings::loadLePlatzSettings(QByteArray &winGeometry, QByteArray &winLayout)
+bool Settings::loadLePlatzSettings(QByteArray &winGeometry, QByteArray &winLayout, QString *errMsg)
 {
     PlatzReader reader(this);
-    return reader.loadLePlatzSettings(QApplication::applicationDirPath() + "/LePlatzSettings.xml", winGeometry, winLayout);
+    PlatzReader::ReadError err = reader.loadLePlatzSettings(QApplication::applicationDirPath() + "/LePlatzSettings.xml", winGeometry, winLayout);
+
+    if (errMsg)
+        *errMsg = reader.lookupErrorString(err);
+    return err == PlatzReader::NoError;
 }
 
 bool Settings::saveLePlatzSettings(const QByteArray &winGeometry, const QByteArray &winLayout)
@@ -276,30 +280,34 @@ bool Settings::saveLePlatzSettings(const QByteArray &winGeometry, const QByteArr
     return writer.saveLePlatzSettings(QApplication::applicationDirPath() + "/LePlatzSettings.xml", winGeometry, winLayout);
 }
 
-bool Settings::loadProject(const QString &path, PlatzDataModel *model)
+bool Settings::loadProject(const QString &path, PlatzDataModel *model, QString *errMsg)
 {
     if (!model)
         return false;
     setProjectPath(path);
     model->clear();
     PlatzReader reader(this, model);
-    bool result = reader.loadProject(path, PlatzReader::ReadWorld);
+    PlatzReader::ReadError err = reader.loadProject(path, PlatzReader::ReadWorld);
 
-    if (!result)
+    if (errMsg)
+        *errMsg = reader.lookupErrorString(err);
+    if (err != PlatzReader::NoError)
         setProjectPath("");
-    return result;
+    return err == PlatzReader::NoError;
 }
 
-bool Settings::loadSettings(const QString &path)
+bool Settings::loadSettings(const QString &path, QString *errMsg)
 {
     setProjectPath(path);
 
     PlatzReader reader(this);
-    bool result = reader.loadProject(path, PlatzReader::ReadSettings);
+    PlatzReader::ReadError err = reader.loadProject(path, PlatzReader::ReadSettings);
 
-    if (!result)
+    if (errMsg)
+        *errMsg = reader.lookupErrorString(err);
+    if (err != PlatzReader::NoError)
         setProjectPath("");
-    return result;
+    return err == PlatzReader::NoError;
 }
 
 bool Settings::saveProject(WorldItem *root)

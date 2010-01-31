@@ -34,10 +34,19 @@ public:
         ReadWorld
     };
 
+    enum ReadError {
+        NoError = 0x00,
+        ProgramError = 0x01,
+        FileError = 0x02,
+        InvalidError = 0x04,
+        VersionError = 0x08
+    };
+
     PlatzReader(Settings *settings, PlatzDataModel *model = 0);
     PlatzReader();
-    bool loadProject(const QString &path, const ReadType &type);
-    bool loadLePlatzSettings(const QString &path, QByteArray &winGeometry, QByteArray &winLayout);
+    PlatzReader::ReadError loadProject(const QString &path, const ReadType &type);
+    PlatzReader::ReadError loadLePlatzSettings(const QString &path, QByteArray &winGeometry, QByteArray &winLayout);
+    QString lookupErrorString(const ReadError &err);
 private:
     void readLePlatzProject(const ReadType &type);
     void readSettings();

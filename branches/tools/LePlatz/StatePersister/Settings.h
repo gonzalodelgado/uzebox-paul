@@ -125,9 +125,9 @@ class Settings : public QObject
         void offsetYChanged(int offset);
     public slots:
         void resetProjectSettings();
-        bool loadSettings(const QString &path);
-        bool loadProject(const QString &path, PlatzDataModel *model);
-        bool loadLePlatzSettings(QByteArray &winGeometry, QByteArray &winState);
+        bool loadSettings(const QString &path, QString *errMsg = 0);
+        bool loadProject(const QString &path, PlatzDataModel *model, QString *errMsg = 0);
+        bool loadLePlatzSettings(QByteArray &winGeometry, QByteArray &winState, QString *errMsg = 0);
         bool saveProject(WorldItem *root);
         bool saveProject(const QString &path, WorldItem *root);
         bool saveLePlatzSettings(const QByteArray &winGeometry, const QByteArray &winLayout);

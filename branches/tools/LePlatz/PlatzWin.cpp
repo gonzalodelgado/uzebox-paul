@@ -371,7 +371,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
     connect(settings, SIGNAL(emuExePathChanged(QString)), this, SLOT(setEmuExePath(QString)));
     connect(settings, SIGNAL(sliceSizeChanged(QSize)), ui->graphicsView, SLOT(setSliceSize(QSize)));
     connect(settings, SIGNAL(videoModeChanged(int)), this, SLOT(setVideoMode(int)));
-    settings->setVideoMode(3);  // For LePlatz v1.0 compatibility (save files didn't specify a mode)
+    settings->setVideoMode(3);  // For LePlatz v1.0 compatibility (save files didn't used to specify a mode)
     connect(settings, SIGNAL(tileSizeChanged(QSize)), ui->graphicsView, SLOT(setTileSize(QSize)));
     connect(settings, SIGNAL(offsetYChanged(int)), this, SLOT(setOffsetY(int)));
     connect(settings, SIGNAL(tileSizeChanged(QSize)), this, SLOT(setTileSize(QSize)));
@@ -395,6 +395,7 @@ PlatzWin::PlatzWin(const QString &cmdLineProject, QWidget *parent)
         restoreState(winLayout);
     } else {
         this->setWindowState(Qt::WindowMaximized);
+        ui->statusBar->showMessage("No valid settings file found. Applying default settings.", STATUS_DELAY);
     }
     clearBgoCheckBoxes();
     updatePlatformToolboxAttributes();
@@ -1232,12 +1233,13 @@ bool PlatzWin::loadProject(const QString &path)
     if (!closeProject())
         return false;
     bool retval = true;
+    QString errMsg;
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    retval = settings->loadProject(path, model);
+    retval = settings->loadProject(path, model, &errMsg);
 
     if (!retval) {
-        ui->statusBar->showMessage("Failed to load project. Check path and permissions.", STATUS_DELAY);
+        ui->statusBar->showMessage("Failed to load project. " + errMsg, STATUS_DELAY);
     } else {
         QString msg;
 

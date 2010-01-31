@@ -39,17 +39,19 @@ PlatzReader::PlatzReader(Settings *settings, PlatzDataModel *model)
         worldPtr.push(model->root());
 }
 
-bool PlatzReader::loadProject(const QString &path, const ReadType &type)
+PlatzReader::ReadError PlatzReader::loadProject(const QString &path, const ReadType &type)
 {
     if (!settings || (type == ReadWorld && !model))
-        return false;
+        return ProgramError;
 
     QFile file(path);
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
-        return false;
+        return FileError;
     setDevice(&file);
     sliceCount = 0;
+
+    ReadError rerr = NoError;
 
     while(!atEnd()) {
         readNext();
@@ -61,28 +63,35 @@ bool PlatzReader::loadProject(const QString &path, const ReadType &type)
                 if (Platz::LEPLATZ_VERSIONS.contains(version)) {
                     readLePlatzProject(type);
                     break;
+                } else {
+                    rerr = VersionError;
+                    break;
                 }
             }
             raiseError(QObject::tr("File is not a valid Platz World Save file"));   // Makes atEnd() true
         }
     }
     file.close();
-    return !error();
+
+    if (error())
+        rerr = InvalidError;
+    return rerr;
 }
 
 
-bool PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeometry, QByteArray &winLayout)
+PlatzReader::ReadError PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeometry, QByteArray &winLayout)
 {
     if (!settings)
-        return false;
+        return ProgramError;
 
     QFile file(path);
 
     if (!file.open(QFile::ReadOnly | QFile::Text))
-        return false;
+        return FileError;
     setDevice(&file);
 
     QString s;
+    ReadError rerr = NoError;
 
     while(!atEnd()) {
         readNext();
@@ -91,8 +100,10 @@ bool PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeomet
             s = name().toString();
 
             if (s == "LePlatz") {
-                if (!Platz::LEPLATZ_VERSIONS.contains(attributes().value("version").toString()))
+                if (!Platz::LEPLATZ_VERSIONS.contains(attributes().value("version").toString())) {
+                    rerr = VersionError;
                     break;
+                }
             } else if (s == "LePlatzSettings") {
                 ; // Do nothing
             } else if (s == "ScreenLayout") {
@@ -123,7 +134,22 @@ bool PlatzReader::loadLePlatzSettings(const QString &path, QByteArray &winGeomet
         }
     }
     file.close();
-    return !error();
+
+    if (error())
+        rerr = InvalidError;
+    return rerr;
+}
+
+QString PlatzReader::lookupErrorString(const ReadError &err)
+{
+    switch (err) {
+    case NoError: return ""; break;
+    case ProgramError: return "LePlatz program error."; break;
+    case FileError: return "File access error."; break;
+    case InvalidError: return "Invalid file format."; break;
+    case VersionError: return "File version not supported."; break;
+    default: return ""; break;
+    }
 }
 
 void PlatzReader::readLePlatzProject(const ReadType &type)
