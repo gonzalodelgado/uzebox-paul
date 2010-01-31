@@ -158,9 +158,9 @@ void Interpreter::run()
                     if (patchedFile.exists()) {
                         if (patchedFile.isOpen())
                             patchedFile.close();
-                        patchedFile.setPermissions(QFile::ExeOwner|QFile::ExeUser|QFile::ExeGroup|QFile::ExeOther|
-                                                   QFile::WriteOwner|QFile::WriteUser|QFile::WriteGroup|QFile::WriteOther|
-                                                   QFile::ReadOwner|QFile::ReadUser|QFile::ReadGroup|QFile::ReadOther);
+                        status = patchedFile.setPermissions(QFile::ExeOwner|QFile::ExeUser|QFile::ExeGroup|QFile::ExeOther|
+                                QFile::WriteOwner|QFile::WriteUser|QFile::WriteGroup|QFile::WriteOther|
+                                QFile::ReadOwner|QFile::ReadUser|QFile::ReadGroup|QFile::ReadOther);
                     }
                 }
             }
@@ -474,6 +474,14 @@ bool Interpreter::restoreDir(const QString &origDirName, const QString &currDirN
 
 bool Interpreter::patchFile(const QString &tool, const QString &oldFile, const QString &deltaFile, const QString &newFile)
 {
+    QFile f(tool);
+
+    if (!f.exists())
+        return false;
+    if (f.isOpen())
+        f.close();
+    if (!f.setPermissions(QFile::ExeOwner|QFile::ExeUser))
+        return false;
     if (!isChildPath(tool) || !isChildPath(oldFile) || !isChildPath(deltaFile) || !isChildPath(newFile))
         return false;
     if (!patcher || !QFile::exists(tool) || !QFile::exists(oldFile) || !QFile::exists(deltaFile) || (QFile::exists(newFile) && !removeFile(newFile)))

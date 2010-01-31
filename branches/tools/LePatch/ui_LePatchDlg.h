@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'LePatchDlg.ui'
 **
-** Created: Sat 30. Jan 02:48:17 2010
+** Created: Mon 1. Feb 03:17:40 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -43,13 +43,13 @@ public:
     {
         if (LePatchDlg->objectName().isEmpty())
             LePatchDlg->setObjectName(QString::fromUtf8("LePatchDlg"));
-        LePatchDlg->resize(400, 300);
+        LePatchDlg->resize(500, 300);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(LePatchDlg->sizePolicy().hasHeightForWidth());
         LePatchDlg->setSizePolicy(sizePolicy);
-        LePatchDlg->setMinimumSize(QSize(400, 300));
+        LePatchDlg->setMinimumSize(QSize(500, 300));
         LePatchDlg->setMaximumSize(QSize(1650, 300));
         verticalLayout = new QVBoxLayout(LePatchDlg);
         verticalLayout->setSpacing(6);
