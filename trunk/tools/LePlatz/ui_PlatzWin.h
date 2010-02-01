@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'PlatzWin.ui'
 **
-** Created: Mon 1. Feb 06:07:31 2010
+** Created: Mon 1. Feb 11:38:06 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -164,7 +164,6 @@ public:
     QWidget *pageInner;
     QGridLayout *gridLayout_2;
     QSpacerItem *horizontalSpacer_18;
-    QGroupBox *groupBox_2;
     QVBoxLayout *verticalLayout_4;
     QRadioButton *rbtnTile;
     QRadioButton *rbtnBgp;
@@ -254,7 +253,7 @@ public:
     {
         if (PlatzWin->objectName().isEmpty())
             PlatzWin->setObjectName(QString::fromUtf8("PlatzWin"));
-        PlatzWin->resize(933, 827);
+        PlatzWin->resize(933, 850);
         actionNew = new QAction(PlatzWin);
         actionNew->setObjectName(QString::fromUtf8("actionNew"));
         QIcon icon;
@@ -640,8 +639,8 @@ public:
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(dockWidgetToolbox->sizePolicy().hasHeightForWidth());
         dockWidgetToolbox->setSizePolicy(sizePolicy1);
-        dockWidgetToolbox->setMinimumSize(QSize(220, 351));
-        dockWidgetToolbox->setMaximumSize(QSize(220, 351));
+        dockWidgetToolbox->setMinimumSize(QSize(220, 378));
+        dockWidgetToolbox->setMaximumSize(QSize(220, 380));
         dockWidgetToolbox->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
         dockWidgetContents_7 = new QWidget();
         dockWidgetContents_7->setObjectName(QString::fromUtf8("dockWidgetContents_7"));
@@ -651,6 +650,7 @@ public:
         verticalLayout_16->setObjectName(QString::fromUtf8("verticalLayout_16"));
         groupBox = new QGroupBox(dockWidgetContents_7);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setMinimumSize(QSize(0, 172));
         groupBox->setMaximumSize(QSize(16777215, 16777215));
         gridLayout = new QGridLayout(groupBox);
         gridLayout->setSpacing(6);
@@ -711,7 +711,8 @@ public:
 
         stackedWidget = new QStackedWidget(dockWidgetContents_7);
         stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
-        stackedWidget->setMaximumSize(QSize(200, 140));
+        stackedWidget->setMinimumSize(QSize(0, 155));
+        stackedWidget->setMaximumSize(QSize(200, 160));
         stackedWidget->setFrameShape(QFrame::Box);
         stackedWidget->setFrameShadow(QFrame::Sunken);
         pageBlank = new QWidget();
@@ -808,31 +809,27 @@ public:
 
         gridLayout_2->addItem(horizontalSpacer_18, 0, 0, 1, 1);
 
-        groupBox_2 = new QGroupBox(pageInner);
-        groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-        groupBox_2->setMaximumSize(QSize(16777215, 16777215));
-        verticalLayout_4 = new QVBoxLayout(groupBox_2);
+        verticalLayout_4 = new QVBoxLayout();
         verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setContentsMargins(11, 11, 11, 11);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        rbtnTile = new QRadioButton(groupBox_2);
+        rbtnTile = new QRadioButton(pageInner);
         rbtnTile->setObjectName(QString::fromUtf8("rbtnTile"));
         rbtnTile->setChecked(true);
 
         verticalLayout_4->addWidget(rbtnTile);
 
-        rbtnBgp = new QRadioButton(groupBox_2);
+        rbtnBgp = new QRadioButton(pageInner);
         rbtnBgp->setObjectName(QString::fromUtf8("rbtnBgp"));
 
         verticalLayout_4->addWidget(rbtnBgp);
 
-        rbtnBga = new QRadioButton(groupBox_2);
+        rbtnBga = new QRadioButton(pageInner);
         rbtnBga->setObjectName(QString::fromUtf8("rbtnBga"));
 
         verticalLayout_4->addWidget(rbtnBga);
 
 
-        gridLayout_2->addWidget(groupBox_2, 0, 1, 2, 1);
+        gridLayout_2->addLayout(verticalLayout_4, 0, 1, 2, 1);
 
         horizontalSpacer = new QSpacerItem(13, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
@@ -1495,7 +1492,6 @@ public:
         chkBgi->setText(QApplication::translate("PlatzWin", "BGI", 0, QApplication::UnicodeUTF8));
         pbBgt->setText(QApplication::translate("PlatzWin", "BGT", 0, QApplication::UnicodeUTF8));
         pbClear->setText(QApplication::translate("PlatzWin", "Clear", 0, QApplication::UnicodeUTF8));
-        groupBox_2->setTitle(QString());
         rbtnTile->setText(QApplication::translate("PlatzWin", "Tile", 0, QApplication::UnicodeUTF8));
         rbtnBgp->setText(QApplication::translate("PlatzWin", "BGP", 0, QApplication::UnicodeUTF8));
         rbtnBga->setText(QApplication::translate("PlatzWin", "BGA", 0, QApplication::UnicodeUTF8));

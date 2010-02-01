@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>933</width>
-    <height>827</height>
+    <height>850</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -369,13 +369,13 @@
    <property name="minimumSize">
     <size>
      <width>220</width>
-     <height>351</height>
+     <height>378</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>220</width>
-     <height>351</height>
+     <height>380</height>
     </size>
    </property>
    <property name="allowedAreas">
@@ -388,6 +388,12 @@
     <layout class="QVBoxLayout" name="verticalLayout_16">
      <item>
       <widget class="QGroupBox" name="groupBox">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>172</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
@@ -521,10 +527,16 @@
      </item>
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>155</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>200</width>
-         <height>140</height>
+         <height>160</height>
         </size>
        </property>
        <property name="frameShape">
@@ -689,43 +701,32 @@
           </spacer>
          </item>
          <item row="0" column="1" rowspan="2">
-          <widget class="QGroupBox" name="groupBox_2">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="title">
-            <string/>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="QRadioButton" name="rbtnTile">
-              <property name="text">
-               <string>Tile</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="rbtnBgp">
-              <property name="text">
-               <string>BGP</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="rbtnBga">
-              <property name="text">
-               <string>BGA</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QRadioButton" name="rbtnTile">
+             <property name="text">
+              <string>Tile</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="rbtnBgp">
+             <property name="text">
+              <string>BGP</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="rbtnBga">
+             <property name="text">
+              <string>BGA</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
          <item row="0" column="2">
           <spacer name="horizontalSpacer">
