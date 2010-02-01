@@ -32,10 +32,8 @@
 
 // Default slices
 #ifndef SLICE_COUNT
-	#define SLICE_COUNT 51
+	#define SLICE_COUNT 53
 #endif
-
-#define SPRITE_FLIP_X 0
 
 #define TITLE_SLICE (SLICE_COUNT+0)
 #define HI_SLICE	(SLICE_COUNT+1)
@@ -44,29 +42,18 @@
 
 // Player
 #define BCDASH_EEPROM_ID				14
-#define SPRITE_BOB						1
+#define SPRITE_BOB						0
 #define SPD_MAX_BOB_GND_X				1
 #define SPD_MAX_BOB_GND_Y				2
-
-#if VIDEO_MODE == 2
-	#define SPD_MAX_LYNX_GND_X			9
-	#define SPD_MAX_LYNX_GND_Y			11
-	#define SPD_MAX_DRAGONFLY_X			9
-	#define SPD_MAX_DRAGONFLY_Y			7
-	#define SPD_MAX_TURTLE_X			6
-	#define SPD_MAX_TURTLE_Y			4
-#elif VIDEO_MODE == 3
-	#define SPD_MAX_LYNX_GND_X			12
-	#define SPD_MAX_LYNX_GND_Y			12
-	#define SPD_MAX_DRAGONFLY_X			12
-	#define SPD_MAX_DRAGONFLY_Y			8
-	#define SPD_MAX_TURTLE_X			12
-	#define SPD_MAX_TURTLE_Y			4
-#endif
-
+#define SPD_MAX_LYNX_GND_X				12
+#define SPD_MAX_LYNX_GND_Y				12
+#define SPD_MAX_DRAGONFLY_X				12
+#define SPD_MAX_DRAGONFLY_Y				8
+#define SPD_MAX_TURTLE_X				12
+#define SPD_MAX_TURTLE_Y				4
 #define SPD_MAX_SNAIL_X					2
 #define SPD_MAX_SNAIL_Y					12
-#define LOC_BOB_X						(PLATZ_SCRN_WID>>1)
+#define LOC_BOB_X						120
 
 #ifndef START_Y
 	#define LOC_BOB_Y					40
@@ -169,7 +156,7 @@
 #define MUT_BOMB_TARGET_SWITCH			14
 // _LePlatz_Mutable_Bg_Ids_
 
-// _LePlatz_Mutable_Class_Ids_`
+// _LePlatz_Mutable_Class_Ids_
 #define MC_COIN							0
 #define MC_POISON						1
 #define MC_POISON_WATER					2
@@ -199,7 +186,7 @@ const mutableClass pgmMcDir[] PROGMEM = {
 #define MUT_BG_COUNT					32	// 32x8 bits for 256 bgs total
 
 // HUD
-#define HUD_ORIGIN_Y					0 //VRAM_TILES_V
+#define HUD_ORIGIN_Y					VRAM_TILES_V
 #define HUD_CURR_TIME_X					1
 #define HUD_CURR_TIME_Y					(HUD_ORIGIN_Y+2)
 #define HUD_BEST_TIME_X					(HUD_CURR_TIME_X)
@@ -314,6 +301,7 @@ u8 wfall;
 u8 wfalltmr = 15;
 u8 fps;
 u8 checkpoints;
+u8 watertmr;
 u8 mutmap[MUT_BG_COUNT];
 bcTime tCurr,tBest[7] = {{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9},{9,9,9}};
 char initsCurr[4],inits[28];
@@ -338,8 +326,8 @@ u8 gstate = GSTATE_DEMO;
 //u8 sfxtmr;
 
 // Fonts - probably unnecessary as they are sequential, but allows more freedom in tile layout
-u8 fontNumerals = 155; //[11] = {155, 156, 157, 158, 159,160, 161, 162, 163, 164, 165};
-u8 fontAlpha = 167; //{167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192};
+u8 fontNumerals[11] = {155, 156, 157, 158, 159,160, 161, 162, 163, 164, 165};
+u8 fontAlpha[26] = {167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192};
 
 /****************************************
  *			Function prototypes			*
@@ -485,8 +473,8 @@ u8 BgMutator(u8 evType, bgInner *bgiSrc, bgInner *bgiInfo, void *v) {
 
 					if ((bob.form != FORM_TURTLE) && puptmrs[PUP_BUDDHA]) {
 						// Must test with tile-coordinates. Pixel coordinates will always fail.
-						if (!PlatzRectsIntersect(&bgiInfo->r,&(rect){(bob.pa.loc.x-bob.pa.bbx)/6,
-								(bob.pa.loc.x+bob.pa.bbx)/6,(bob.pa.loc.y-bob.pa.bby)>>3,(bob.pa.loc.y+bob.pa.bby)>>3})) {
+						if (!PlatzRectsIntersect(&bgiInfo->r,&(rect){(bob.pa.loc.x-bob.pa.bbx)>>3,
+								(bob.pa.loc.x+bob.pa.bbx)>>3,(bob.pa.loc.y-bob.pa.bby)>>3,(bob.pa.loc.y+bob.pa.bby)>>3})) {
 							walkOnWater = 1;
 							return 1;
 						}
@@ -601,25 +589,25 @@ int LoadBestTime(void) {
 
 
 void PrintHiScores(void) {
-	u8 x = 9,y = 4,prevX = x;
+	u8 x = 11,y = 1,prevX = x;
 
 	for (u8 i = 0; i < 7; i++) {
-		SetTile(x++,y,fontAlpha+(inits[4*i]-'A'));
-		SetTile(x++,y,fontAlpha+(inits[4*i+1]-'A'));
-		SetTile(x++,y,fontAlpha+(inits[4*i+2]-'A'));
+		SetTile(x++,y,fontAlpha[inits[4*i]-'A']);
+		SetTile(x++,y,fontAlpha[inits[4*i+1]-'A']);
+		SetTile(x++,y,fontAlpha[inits[4*i+2]-'A']);
 		SetTile(x++,y,TILE_SKY);
-		SetTile(x++,y,fontNumerals+tBest[i].min);
-		SetTile(x++,y,fontNumerals+(':'-'0'));
-		SetTile(x++,y,fontNumerals+(tBest[i].sec10));
-		SetTile(x,y,fontNumerals+(tBest[i].sec1));
+		SetTile(x++,y,fontNumerals[(int)tBest[i].min]);
+		SetTile(x++,y,fontNumerals[':'-'0']);
+		SetTile(x++,y,fontNumerals[(int)tBest[i].sec10]);
+		SetTile(x,y,fontNumerals[(int)tBest[i].sec1]);
 		y += 2;
 
 		if (i == 0) {
-			x = prevX = 4;
-			y = 7;
+			x = prevX = 5;
+			y = 4;
 		} else if (i == 3) {
-			x = prevX = 14;
-			y = 7;	
+			x = prevX = 17;
+			y = 4;	
 		} else {
 			x = prevX;
 		}
@@ -630,17 +618,17 @@ void PrintHiScores(void) {
 void InitHud(void) {
 	SetTile(HUD_CURR_TIME_X,HUD_CURR_TIME_Y,TILE_TIME);
 	SetTile(HUD_BEST_TIME_X,HUD_BEST_TIME_Y,TILE_TIME_BEST);
-	SetTile(HUD_CURR_TIME_X+2,HUD_CURR_TIME_Y,TILE_FONT_START+10);
-	SetTile(HUD_BEST_TIME_X+2,HUD_BEST_TIME_Y,TILE_FONT_START+10);
-	SetTile(HUD_BEST_TIME_X+1,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].min);
-	SetTile(HUD_BEST_TIME_X+3,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec10);
-	SetTile(HUD_BEST_TIME_X+4,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec1);
+	SetTile(HUD_CURR_TIME_X+3,HUD_CURR_TIME_Y,TILE_FONT_START+10);
+	SetTile(HUD_BEST_TIME_X+3,HUD_BEST_TIME_Y,TILE_FONT_START+10);
+	SetTile(HUD_BEST_TIME_X+2,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].min);
+	SetTile(HUD_BEST_TIME_X+4,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec10);
+	SetTile(HUD_BEST_TIME_X+5,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec1);
 	// Powerups
-	//DrawMap2(HUD_PUPS_X+1,HUD_PUPS_Y,mapPsn);
-	SetTile(HUD_PUPS_X+1,HUD_PUPS_Y,TILE_EGG);
-	DrawMap2(HUD_PUPS_X,HUD_PUPS_Y+1,mapBoots);
-	DrawMap2(HUD_PUPS_X+5,HUD_PUPS_Y,mapBuddha);
-	DrawMap2(HUD_PUPS_X+10,HUD_PUPS_Y,mapCoin);
+	DrawMap2(HUD_PUPS_X+1,HUD_PUPS_Y,mapPsn);
+	SetTile(HUD_PUPS_X+6,HUD_PUPS_Y,TILE_EGG);
+	DrawMap2(HUD_PUPS_X+5,HUD_PUPS_Y+1,mapBoots);
+	DrawMap2(HUD_PUPS_X+10,HUD_PUPS_Y,mapBuddha);
+	DrawMap2(HUD_PUPS_X+15,HUD_PUPS_Y,animCoins);
 }
 
 
@@ -675,16 +663,16 @@ void AdjustTime(char sec) {
 
 
 void PrintHudTime(void) {
-	SetTile(HUD_CURR_TIME_X+1,HUD_CURR_TIME_Y,TILE_FONT_START+tCurr.min);
-	SetTile(HUD_CURR_TIME_X+3,HUD_CURR_TIME_Y,TILE_FONT_START+tCurr.sec10);
-	SetTile(HUD_CURR_TIME_X+4,HUD_CURR_TIME_Y,TILE_FONT_START+tCurr.sec1);
+	SetTile(HUD_CURR_TIME_X+2,HUD_CURR_TIME_Y,TILE_FONT_START+tCurr.min);
+	SetTile(HUD_CURR_TIME_X+4,HUD_CURR_TIME_Y,TILE_FONT_START+tCurr.sec10);
+	SetTile(HUD_CURR_TIME_X+5,HUD_CURR_TIME_Y,TILE_FONT_START+tCurr.sec1);
 }
 
 
 void PrintHudBestTime(void) {
-	SetTile(HUD_BEST_TIME_X+1,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].min);
-	SetTile(HUD_BEST_TIME_X+3,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec10);
-	SetTile(HUD_BEST_TIME_X+4,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec1);
+	SetTile(HUD_BEST_TIME_X+2,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].min);
+	SetTile(HUD_BEST_TIME_X+4,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec10);
+	SetTile(HUD_BEST_TIME_X+5,HUD_BEST_TIME_Y,TILE_FONT_START+tBest[0].sec1);
 }
 
 
@@ -719,11 +707,11 @@ void PrintHudPupCount(u8 x, u8 y, u8 count, char indicator) {
 
 
 void UpdateHudPups(void) {
-	PrintHudPupCount(HUD_PUPS_X+2,HUD_PUPS_Y,puphud[PUP_EGG],PUP_EGG);
-	PrintHudPupCount(HUD_PUPS_X+2,HUD_PUPS_Y+1,puphud[PUP_BOOTS],PUP_BOOTS);
-	PrintHudPupCount(HUD_PUPS_X+7,HUD_PUPS_Y+1,puphud[PUP_BUDDHA],PUP_BUDDHA);
-	PrintHudPupCount(HUD_PUPS_X+12,HUD_PUPS_Y+1,puphud[PUP_COINS],PUP_COINS);
-	//PrintHudPupCount(HUD_PUPS_X+3,HUD_PUPS_Y+1,(u8)((psntmrs[PSN_SNAIL]+psntmrs[PSN_REV_CTLS]+psntmrs[PSN_FREEZE])>>6),-1);
+	PrintHudPupCount(HUD_PUPS_X+7,HUD_PUPS_Y,puphud[PUP_EGG],PUP_EGG);
+	PrintHudPupCount(HUD_PUPS_X+7,HUD_PUPS_Y+1,puphud[PUP_BOOTS],PUP_BOOTS);
+	PrintHudPupCount(HUD_PUPS_X+12,HUD_PUPS_Y+1,puphud[PUP_BUDDHA],PUP_BUDDHA);
+	PrintHudPupCount(HUD_PUPS_X+17,HUD_PUPS_Y+1,puphud[PUP_COINS],PUP_COINS);
+	PrintHudPupCount(HUD_PUPS_X+3,HUD_PUPS_Y+1,(u8)((psntmrs[PSN_SNAIL]+psntmrs[PSN_REV_CTLS]+psntmrs[PSN_FREEZE])>>6),-1);
 }
 
 
@@ -805,22 +793,20 @@ void LoadBobAnimations(void) {
 		case FORM_LYNX:
 			if ((bob.state&BS_MOVING) || bob.pa.vx.vel) {
 				// Move past lynx idle animation
-				index = 2;
+				index = 1;
 			}
 			break;
 		case FORM_DRAGONFLY:
-			index = 4;
+			index = 2;
 			break;
 		case FORM_TURTLE:
-			index = 6;
+			index = 3;
 			break;
 		case FORM_SNAIL:
-			index = 8;
+			index = 4;
 			break;
 	}
-
-	if (bob.pa.vx.dir == DIR_LEFT)
-		++index;
+		
 	memcpy_P(&bob.anim,bobAnimations+index,sizeof(animation));		
 }
 
@@ -843,11 +829,14 @@ void ActivateTrigger(u16 index, u8 type, char trig) {
 		case TRIG_WATER:				
 			if (trig > 0) {
 				if (bob.form == FORM_TURTLE) {
-					SetForm(FORM_LYNX);
-					bob.ay.state = TM_YSTATE_TAKEOFF;
+					if (SetForm(FORM_LYNX)) {
+						watertmr = HZ;
+					} else {
+						bob.ay.state = TM_YSTATE_TAKEOFF;
 
-					if (move&MOVE_JUMP)
-						superjumptmr = HZ;
+						if (move&MOVE_JUMP)
+							superjumptmr = HZ;
+					}
 				}
 			} else {
 				if ((bob.form != FORM_TURTLE) && ((bob.ay.state&(TM_YSTATE_TAKEOFF|TM_YSTATE_RISING|TM_YSTATE_PEAK)) == 0) && (walkOnWater == 0)) {
@@ -885,8 +874,9 @@ char SetForm(u8 form) {
 	LoadBobAnimations();
 	
 	// Don't call PlatzSetBoundingBoxDimensions before bob has been initialised
-	if (!prevForm || PlatzSetBoundingBoxDimensions(&bob.pa,bob.anim.wid*6,bob.anim.hgt<<3)) {
+	if (!prevForm || PlatzSetBoundingBoxDimensions(&bob.pa,bob.anim.wid<<3,bob.anim.hgt<<3)) {
 		bob.ay.state = TM_YSTATE_IDLE;
+		watertmr = 0;
 
 		switch (form) {		
 			case FORM_DRAGONFLY:
@@ -1021,7 +1011,7 @@ void AerialMovement(u16 move) {
 void AerialAnimation(char dir, char prevDir) {
 	// Check for direction change
     if (bob.pa.vx.dir != prevDir)
-    	bob.animFlag |= 3;
+    	bob.animFlag |= 2;
 
 	if (++bob.anim.disp >= bob.anim.dpf) {
 		// Bob has moved far enough to warrant a new frame
@@ -1142,7 +1132,7 @@ void TerrestrialAnimation(char prevDir, u16 move, u8 collMask) {
 
 	// Check for direction change
     if (bob.pa.vx.dir != prevDir)
-    	bob.animFlag |= 3;
+    	bob.animFlag |= 2;
 
 	if (collMask&4) {
 		// Y-Axis collision detected
@@ -1251,7 +1241,7 @@ void AquaticMovement(u16 move) {
 void AquaticAnimation(char prevDir, u16 move) {
 	// Check for direction change
     if (bob.pa.vx.dir != prevDir)
-    	bob.animFlag |= 3;
+    	bob.animFlag |= 2;
 
 	if (bob.form == FORM_TURTLE) {
 		if (bob.pa.vx.vel == 0) {
@@ -1297,7 +1287,6 @@ extern const platformDirectory *platDir;	// Moving platform headers
 extern const platform *platTbl;				// Moving platforms' attributes
 extern const mutableClass *mcTbl;			// Mutable bg class directory - for consolidating similar behavior
 
-
 int main(void) {
 	u8 cursor = 0;				// For entering initials
 	u8 demoX = 0, demoY = 0;	// Demo "X" coords
@@ -1327,30 +1316,11 @@ int main(void) {
 	// Init kernel
 	InitMusicPlayer(patches);
 	SetMasterVolume(0xb0);
-	//SetTileTable(tileset);
+	SetTileTable(tileset);
 	SetSpritesTileTable(spriteset);
-	//SetSpriteVisibility(true);
-	//Screen.overlayHeight = OVERLAY_LINES;
-	SetSpritesOptions(SPR_OVERFLOW_CLIP);
-	PlatzHideSprite(0,MAX_SPRITES,1);
-
-	// If we only use 2 screenSections, our Platz section repeats 1/3 of the way down???
-	screenSections[0].tileTableAdress = tileset;
-	screenSections[0].flags=SCT_PRIORITY_BG;
-	screenSections[0].vramBaseAdress=vram;
-	screenSections[0].height=16;
-
-	screenSections[1].tileTableAdress = tileset;
-	screenSections[1].flags=SCT_PRIORITY_BG;
-	screenSections[1].vramBaseAdress=vram+32*2;
-	screenSections[1].height=8;
-
-	screenSections[2].tileTableAdress = tileset;
-	screenSections[2].flags=SCT_PRIORITY_SPR;
-	screenSections[2].vramBaseAdress=vram+32*3;
-	screenSections[2].height = 184;
-
-	PlatzSetScreenSection(2);
+	SetSpriteVisibility(true);
+	Screen.overlayHeight = OVERLAY_LINES;
+	ClearVram();
 
 	// Init platz pointers
 	trigCb = ActivateTrigger;
@@ -1367,6 +1337,20 @@ int main(void) {
 	bgDir = pgmBgDir;
 	mcTbl = pgmMcDir;
 
+/*
+	PlatzSetTriggerCallback(ActivateTrigger);
+	PlatzSetMutCallback(BgMutator);
+	PlatzSetQueryCallback(QueryPlatformCollision)
+	PlatzSetMovingPlatformTable(pgmPlatforms);
+	PlatzSetMovingPlatformDirectory(pgmPlatformDir);
+	PlatzSetMapsTable(pgmMaps);
+	PlatzSetAnimatedBgTable(bgAnimations);
+	PlatzSetAnimatedBgDirectory(pgmAnimDir);
+	PlatzSetObjectTable(pgmObjects);
+	PlatzSetInnerBgTable(pgmBgsInner);
+	PlatzSetOuterBgTable(pgmBgsOuter);
+	PlatzSetBgDirectory(pgmBgDir);
+*/
 	// Local inits
 	bob.sprite = SPRITE_BOB;
 	bob.state = 0;
@@ -1374,21 +1358,22 @@ int main(void) {
 	memset(mutmap,0xff,MUT_BG_COUNT*sizeof(mutmap[0]));
 	
 	// Init platz actor
-	bob.pa.bbx = bob.anim.wid*3;	// Set to half of animation's wid in pixels
+	bob.pa.bbx = bob.anim.wid<<2;	// Set to half of animation's wid in pixels
 	bob.pa.bby = bob.anim.hgt<<2;	// Set to half of animation's hgt in pixels
-	bob.pa.trLoc = (pt){3,0};		// Trigger loc offset due to dragonfly's smaller size (than lynx). Should be 0,0 for largest sprite.
+	bob.pa.trLoc = (pt){4,0};		// Trigger loc offset due to dragonfly's smaller size (than lynx). Should be 0,0 for largest sprite.
 	bob.pa.vx.dir = DIR_RIGHT;
 	bob.pa.vy.dir = DIR_DOWN;
+	//PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
+	//PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
 
 	// Init platz scene
-	PlatzSetMovingPlatformTiles(194, 194, 194, 194);
-	PlatzInit(&bob.pa,SLICE_COUNT+4);
+	PlatzSetMovingPlatformTiles(216,194,216,193);
+	PlatzInit(&bob.pa,SLICE_COUNT);
 	//PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
 
 	while(1) {
 		if (GetVsyncFlag()) {
 			ClearVsyncFlag();
-
 			btnHeld = ReadJoypad(0);
 
 			if ((gstate&(GSTATE_PLAYING|GSTATE_INITIALS)) == 0)
@@ -1408,6 +1393,17 @@ int main(void) {
 				if (--wfalltmr == 0) {
 					wfalltmr = 15;
 					TRIGGER_NOTE(3,SFX_WATERFALL,85,SFX_VOL_WATERFALL,15);
+				}
+			}
+
+			if (watertmr) {
+				if (bob.form == FORM_TURTLE) {
+					if (--watertmr == 0) {
+						if (SetForm(FORM_LYNX))
+							watertmr = HZ;
+					}
+				} else {
+					watertmr = 0;
 				}
 			}
 
@@ -1443,11 +1439,10 @@ int main(void) {
 
 				if (demotmr) {
 					if (--demotmr == 0) {
-						PlatzHideSprite(5,1,1);
-						PlatzSetViewport(78,200);
-						bob.pa.loc = (pt){88,32};
+						PlatzHideSprite(4,1,1);
 						PlatzMoveToSlice(&bob.pa,HI_SLICE);
-						bob.pa.sprx = 36;
+						bob.pa.loc = (pt){64,8};
+						bob.pa.sprx = 64;
 						wfalltmr = 15;
 						wfall = 1;
 						demotmr = HISCORE_HZ;
@@ -1459,7 +1454,7 @@ int main(void) {
 				demoY = 5;
 
 				for (u8 i = 0; i < 3; i++)
-					SetTile(demoX+i,demoY,fontAlpha+(initsCurr[i]-'A'));
+					SetTile(demoX+i,demoY,fontAlpha[(int)(initsCurr[i]-'A')]);
 				
 				if (btnPressed&BTN_UP)
 					initsCurr[cursor]++;
@@ -1480,21 +1475,20 @@ int main(void) {
 					if ((demotmr&0xff) == 0) {
 						demoY += 4;
 
-						if (demoY > 24) {
-							demoY = 5;
-							demoX = 14;
+						if (demoY > 20) {
+							demoY = 2;
+							demoX = 19;
 						}
 					}					
 
 					if (--demotmr == 0) {
 						SetForm(FORM_DRAGONFLY);
-						PlatzSetViewport(102,96);
-						bob.pa.loc = (pt){126,64};
-						PlatzMapSprite(5,1,1,animSnailRt,0);
-						MoveSprite(5,24,64,1,1);
-						PlatzFill(&(rect){0,32,0,3},TILE_SKY);
+						bob.pa.loc = (pt){168,32};
+						PlatzSetViewport(156,120);
+						PlatzMapSprite(4,1,1,animSnail,0);
+						MoveSprite(4,44,32,1,1);
+						PlatzFill(&(rect){0,32,VRAM_TILES_V,31},TILE_SKY);
 						PlatzMoveToSlice(&bob.pa,TITLE_SLICE);
-						bob.pa.sprx = 96;
 						demotmr = TITLE_HZ;
 						gstate = GSTATE_INTRO;
 					} else {
@@ -1554,7 +1548,7 @@ int main(void) {
 								break;
 							case (DEMO_HZ-24*HZ):	// bomb
 								TRIGGER_NOTE(SFX_CHAN,SFX_BOMB,0,SFX_VOL_BOMB,33);
-								explRect = (rect){15,18,7,10};
+								explRect = (rect){20,23,4,7};
 								PlatzFillMap(&explRect,0,0,mapExplosion,2);
 								expltmr = HZ>>2;
 								break;
@@ -1571,14 +1565,14 @@ int main(void) {
 			} else if (gstate == GSTATE_HISCORE) {
 				if (demotmr) {
 					if (--demotmr == 0) {
-						bob.pa.loc = (pt){76,84};
-						PlatzSetViewport(64,104);
+						bob.pa.loc = (pt){126,100};
+						PlatzSetViewport(112,120);
 						PlatzMoveToSlice(&bob.pa,DEMO_SLICE);
 						ResetGame();
 						ResetGameTime();
 						InitHud();
 						demoX = 2;
-						demoY = 5;
+						demoY = 2;
 						demotmr = DEMO_HZ-1;
 						gstate = GSTATE_DEMO;
 					} else if (demotmr == (HISCORE_HZ-1)) {
@@ -1595,7 +1589,6 @@ int main(void) {
 					bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
 					bob.pa.sprx = (PLATZ_SCRN_WID>>1)-bob.pa.bbx;	// Center sprite on screen
 					PlatzSetViewport(bob.pa.sprx,0);
-					PlatzInit(&bob.pa,SLICE_COUNT);
 					PlatzMoveToSlice(&bob.pa,0);
 					btnPrev &= BTN_START;
 					btnPressed = 0;
@@ -1629,7 +1622,6 @@ int main(void) {
 					continue;
 				}
 				bob.pa.loc = (pt){LOC_BOB_X,LOC_BOB_Y};
-				PlatzInit(&bob.pa,SLICE_COUNT+4);
 				PlatzMoveToSlice(&bob.pa,EMPTY_SLICE);	// Ensure SetForms succeed
 				PlatzSetVelocity(&bob.pa.vx,0,&bob.pa.trLoc.x);
 				PlatzSetVelocity(&bob.pa.vy,0,&bob.pa.trLoc.y);
@@ -1725,11 +1717,11 @@ int main(void) {
 					AquaticAnimation(prevDir,fmove); break;
 			}
 			
+			
 			if (bob.animFlag&1) LoadBobAnimations();
 			if (bob.animFlag&2) PlatzMapSprite(bob.sprite,bob.anim.wid,bob.anim.hgt,
 					bob.anim.frames+bob.anim.currFrame*bob.anim.size,(bob.pa.vx.dir != 1)?SPRITE_FLIP_X:0);
-			// Add 6 and 8 below due to mode 2's sprite positioning being off-by-one (I think)
-			MoveSprite(bob.sprite,bob.pa.sprx-bob.pa.bbx+6,bob.pa.loc.y-bob.pa.bby+8+1,bob.anim.wid,bob.anim.hgt);
+			MoveSprite(bob.sprite,bob.pa.sprx-bob.pa.bbx,bob.pa.loc.y-bob.pa.bby+1,bob.anim.wid,bob.anim.hgt);
 			
 			if (gstate&(GSTATE_PLAYING|GSTATE_DEMO)) {
 				UpdateTimers();
@@ -1751,7 +1743,6 @@ int main(void) {
 		}
 	}
 }
-
 
 
 
