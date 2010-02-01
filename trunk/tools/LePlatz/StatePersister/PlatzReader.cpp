@@ -210,6 +210,9 @@ void PlatzReader::readSettings()
 
     QString s;
 
+    settings->setVideoMode(3);  // v1.0 compatibility
+    settings->setOffsetY(0);    //
+
     while (!atEnd()) {
         readNext();
 
