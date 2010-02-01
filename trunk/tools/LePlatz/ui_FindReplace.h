@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'FindReplace.ui'
 **
-** Created: Sun 31. Jan 07:13:09 2010
+** Created: Mon 1. Feb 22:43:56 2010
 **      by: Qt User Interface Compiler version 4.6.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
