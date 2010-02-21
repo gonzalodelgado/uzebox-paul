@@ -35,6 +35,8 @@
 // Sprites
 #include "data/sprites.pic.inc"
 #include "data/sprites.map.inc"
+// Music/sfx
+#include "data/patches.inc"
 
 /****************************************
  *			  	 Defines				*
@@ -51,7 +53,7 @@
 #define BOUNDARY_TOP				(6 * TILE_HEIGHT)
 #define BOUNDARY_BTM				(23 * TILE_HEIGHT)
 
-#define PLAYER_START_LOC_X 			((SCRN_HGT>>1) - ((animShip_Width*TILE_WIDTH)>>1))
+#define PLAYER_START_LOC_X 			((SCRN_HGT / 2) - (animShip_Width*TILE_WIDTH / 2))
 #define PLAYER_START_LOC_Y			(22 * TILE_HEIGHT)
 #define PLAYER_START_LIVES			3
 #define PLAYER_LIVES_LOC_X			26
@@ -64,7 +66,7 @@
 #define MONSTER_COUNT				(MONSTERS_PER_ROW * MONSTER_ROW_COUNT)
 #define MONSTER_SPACING_X			2
 #define MONSTER_SPACING_Y			2
-#define MONSTER_HIT_DURATION		(HZ>>2)
+#define MONSTER_HIT_DURATION		(HZ / 2)
 
 #define INVADERS_MIN_LOC_X			5
 #define INVADERS_MAX_LOC_X			(INVADERS_MIN_LOC_X + 5)
@@ -73,13 +75,21 @@
 #define INVADERS_HEIGHT				5
 #define INVADERS_DISPLAY_STATE_COUNT 4
 #define INVADERS_PROJECTILE_SPD		2
-#define INVADERS_MOVE_INTERVAL		HZ
-#define INVADERS_PROJ_INTERVAL		(2*HZ)
+
+#define INVADERS_MOVE_INTERVAL		(2 * HZ / 3)
+#define INVADERS_MOVE_INTERVAL_MIN	3
+#define INVADERS_PROJ_INTERVAL		(3 * HZ / 2)
+
+#define UFO_START_LOC_X				(25 * TILE_WIDTH)
+#define UFO_START_LOC_Y				(6 * TILE_HEIGHT)
+#define UFO_SPD						1
+#define UFO_ROLL_TIMER_INTERVAL		HZ
+#define UFO_HIT_TIMER_INTERVAL		HZ
 
 #define SHELTER_LOC_X				6
 #define SHELTER_LOC_Y				19
 #define SHELTER_COUNT				4
-#define SHELTER_LIMIT				4
+#define SHELTER_LIMIT				3
 #define SHELTER_SPACING_X			5
 
 #define PLAYING_FIELD_LOC_X			4
@@ -116,12 +126,27 @@
 #define DIR_RIGHT					1
 #define DIR_LEFT					-1
 
-#define MIN(x,y)  	((x)<(y) ? (x) : (y))
-#define MAX(x,y)  	((x)>(y) ? (x) : (y))
-#define ABS(x)		(((x) > 0) ? (x) : -(x))
+// Sfx
+#define SFX_PLAYER_SHOOT			0
+#define SFX_VOL_PLAYER_SHOOT		0xf0
+#define SFX_PLAYER_HIT				1
+#define SFX_VOL_PLAYER_HIT			0xa0
+#define SFX_MONSTER_MOVE_A			2
+#define SFX_VOL_MONSTER_MOVE_A		0x20
+#define SFX_MONSTER_MOVE_B			3
+#define SFX_VOL_MONSTER_MOVE_B		0x20
+#define SFX_MONSTER_HIT				4
+#define SFX_VOL_MONSTER_HIT			0x60
+#define SFX_UFO						5
+#define SFX_VOL_UFO					0xff
 
-#define GET_MONSTER_WID()	((ai.dispState == single || ai.dispState == dblVert) ? 1: 2)
-#define GET_MONSTER_HGT()	((ai.dispState == single || ai.dispState == dblHoriz) ? 1: 2)
+#define MIN(x,y) ((x)<(y) ? (x) : (y))
+#define MAX(x,y) ((x)>(y) ? (x) : (y))
+#define ABS(x) (((x) > 0) ? (x) : -(x))
+
+#define GET_MONSTER_WID() ((ai.dispState == single || ai.dispState == dblVert) ? 1: 2)
+#define GET_MONSTER_HGT() ((ai.dispState == single || ai.dispState == dblHoriz) ? 1: 2)
+#define PRNG_NEXT() ((u8)((prng>>1) | ((prng^(prng>>2)^(prng>>3)^(prng>>4))<<7)))
 
 /****************************************
  *			Type declarations			*
@@ -141,6 +166,10 @@ typedef enum {
 typedef enum {
 	idle, active
 } ProjectileState;
+
+typedef enum {
+	ufoIdle, ufoActive, ufoHit, ufoDead
+} UfoState;
 
 typedef enum {
 	single, dblHoriz, dblVert, quad
@@ -225,6 +254,16 @@ typedef struct {
 	monster monsters[MONSTER_COUNT];
 } invaders;
 
+typedef struct {
+	UfoState state;
+	pt loc;
+	u8 wid;
+	char vel;
+	u8 hitTimer;
+	u8 rollTimer;
+	u16 bonus;
+} ufoDetails;
+
 /****************************************
  *			File-level variables		*
  ****************************************/
@@ -237,15 +276,17 @@ const animation animations[] PROGMEM = {
 	{1,1,1,3,0,0,8,0,animInvaderShoot}
 };
 
+u8 prng;
 GameState gameState;
 player p1;
 invaders ai;
+ufoDetails ufo;
 shelter shelters[SHELTER_COUNT];
 hitQueue hitQ[4];
 u8 hqIndex;
 u32 hiScore;
 u32 freeLife;
-u8 prng;
+
 
 const char *monsterMaps[] PROGMEM = { 	mapMonsterGreen0, mapMonsterGreen1, mapMonsterGreen2, mapMonsterGreen3,
 										mapMonsterPink0, mapMonsterPink1, mapMonsterPink2, mapMonsterPink3,
@@ -254,7 +295,7 @@ const char *monsterMaps[] PROGMEM = { 	mapMonsterGreen0, mapMonsterGreen1, mapMo
 
 const char *monsterDeadMaps[] PROGMEM = { mapMonsterDead0, mapMonsterDead1, mapMonsterDead2, mapMonsterDead3 };
 
-const char *shelterMaps[] PROGMEM = { mapShelterDmg0, mapShelterDmg1, mapShelterDmg2, mapShelterDmg3 };
+const char *shelterMaps[] PROGMEM = { mapShelterDmg0, mapShelterDmg1, mapShelterDmg2 };
 
 /****************************************
  *			Function declarations		*
@@ -278,7 +319,6 @@ void DrawLives(void);
 void MoveProjectiles(u8 count, projectile **projectiles);
 void HideSprite(u8 spriteIndex, u8 wid, u8 hgt);
 u8 PointInRect(const pt *p, const rect *r);
-u8 RectsIntersect(const rect *r1, const rect *r2);
 void ProcessShelterCollision(projectile *prj);
 void ProcessCollisions(void);
 void PlayerMove(u16 move);
@@ -293,11 +333,17 @@ void DrawPlayer(void);
 void SetPlayerState(PlayerState state);
 void SetMonsterState(u8 index, MonsterState state);
 void SetProjectileState(projectile *p, ProjectileState state, char vel, const pt *loc);
+void SetUfoState(UfoState state);
+void UpdateUfo(void);
+void UfoBonusRoll(void);
+void MoveUfo(void);
+void DrawUfo(void);
 void AdjustScore(int val);
 u8 EnqueueHitMonster(const rect *r);
 rect* DequeueHitMonster(void);
 void UpdateAttackers(void);
 void SpaceInvadersMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 spriteFlags);
+u8 InvadersBreachedShelters(void);
 
 /****************************************
  *			Function definitions		*
@@ -343,11 +389,13 @@ void FlashPressStart(void) {
 void InitRound(u8 round) {
 	for (u8 i = 0; i < HIT_QUEUE_SIZE; i++)
 		hitQ[i].isValid = 0;
+	HideSprite(0, MAX_SPRITES, 1);
+	SetUfoState(ufoIdle);
 	ai.dispState = single;
 	ai.tileLoc = (pt){ INVADERS_MIN_LOC_X, INVADERS_MIN_LOC_Y };
 	ai.absLoc = (pt){ ai.tileLoc.x<<3, ai.tileLoc.y<<3 };
 	ai.dir = DIR_RIGHT;
-	ai.moveTimer = ai.maxMoveTimer = MAX(INVADERS_MOVE_INTERVAL-(round<<2), INVADERS_MOVE_INTERVAL>>4);
+	ai.moveTimer = ai.maxMoveTimer = MAX(INVADERS_MOVE_INTERVAL-(round<<2), INVADERS_MOVE_INTERVAL_MIN);
 	ai.prjTimer = ai.maxPrjTimer = INVADERS_PROJ_INTERVAL-(round<<2);
 	ai.monstersRemaining = MONSTER_COUNT;
 	SetProjectileState(&ai.prj, idle, 0, 0);
@@ -376,13 +424,14 @@ void InitRound(u8 round) {
 	}
 
 	if (round == 0) {
+		p1.loc.x = PLAYER_START_LOC_X;
+		p1.loc.y = PLAYER_START_LOC_Y;
 		p1.score = 0;
 		p1.lives = PLAYER_START_LIVES;
 		freeLife = 25000;
 	}
+
 	SetPlayerState(alive);
-	p1.loc.x = PLAYER_START_LOC_X;
-	p1.loc.y = PLAYER_START_LOC_Y;
 	p1.spd = PLAYER_SPEED_X;
 	p1.sprite = SPRITE_PLAYER_SHIP;
 	p1.prj.sprite = SPRITE_PLAYER_PROJ;
@@ -446,6 +495,17 @@ void MoveMonsters(void) {
 			++ai.tileLoc.y;
 	}
 	SetInvaderDisplayState();
+
+	switch (ai.dispState) {
+		case single:
+		case dblVert:
+			TriggerFx(SFX_MONSTER_MOVE_A, SFX_VOL_MONSTER_MOVE_A, true);
+			break;
+		case dblHoriz:
+		case quad:
+			TriggerFx(SFX_MONSTER_MOVE_B, SFX_VOL_MONSTER_MOVE_B, true);
+			break;
+	}
 }
 
 
@@ -550,13 +610,6 @@ u8 PointInRect(const pt *p, const rect *r) {
 }
 
 
-u8 RectsIntersect(const rect *r1, const rect *r2) {
-	if ((r1->btm < r2->top) || (r1->right < r2->left) || (r1->left > r2->right) || (r1->top > r2->btm))
-		return 0;
-	return 1;
-}
-
-
 u8 DestroyShelter(pt p, u8 index) {
 	pt sLoc = shelters[index].loc;
 
@@ -622,11 +675,13 @@ void ProcessInvadersCollision(void) {
 	}
 
 	if (hit) {
-		u8 index = (relativeLoc.x / 16) + (relativeLoc.y / 16) * MONSTERS_PER_ROW;
+		if ((relativeLoc.x / 16) < MONSTERS_PER_ROW) {	// Prevents high x with low y from false positive
+			u8 index = (relativeLoc.x / 16) + (relativeLoc.y / 16) * MONSTERS_PER_ROW;
 
-		if (index < MONSTER_COUNT && ai.monsters[index].state == mAlive) {
-			SetMonsterState(index, mHit);
-			SetProjectileState(&p1.prj, idle, 0, 0);
+			if (index < MONSTER_COUNT && ai.monsters[index].state == mAlive) {
+				SetMonsterState(index, mHit);
+				SetProjectileState(&p1.prj, idle, 0, 0);
+			}
 		}
 	}
 }
@@ -635,11 +690,11 @@ void ProcessInvadersCollision(void) {
 void ProcessCollisions(void) {
 	if (p1.state == dead)
 		return;
-	rect p1Rect = { p1.loc.x, p1.loc.x + (animShip_Width<<3), p1.loc.y, p1.loc.y + (animShip_Height<<3) };
+	rect r = { p1.loc.x, p1.loc.x + (animShip_Width<<3), p1.loc.y, p1.loc.y + (animShip_Height<<3) };
 
 	// Check for collision between invader projectile and player ship
 	if (ai.prj.state == active) {
-		if (PointInRect(&ai.prj.loc, &p1Rect)) {
+		if (PointInRect(&ai.prj.loc, &r)) {
 			SetPlayerState(dead);
 			return;
 		}
@@ -654,11 +709,24 @@ void ProcessCollisions(void) {
 			SetProjectileState(&ai.prj, idle, 0, 0);
 	}
 
+	// Check for collision between player projectile and shelters
+	ProcessShelterCollision(&p1.prj);
+
 	// Check for collision between player projectile and invader
 	ProcessInvadersCollision();
 
-	// Check for collision between player projectile and shelters
-	ProcessShelterCollision(&p1.prj);
+	// Check for collision between player projectile and ufo
+	if (p1.prj.state == active && ufo.state == ufoActive) {
+		r.left = ufo.loc.x;
+		r.right = r.left + (mapUfo_Width<<3);
+		r.top = ufo.loc.y;
+		r.btm = r.top + (mapUfo_Height<<3);
+
+		if (PointInRect(&p1.prj.loc, &r)) {
+			SetProjectileState(&p1.prj, idle, 0, 0);
+			SetUfoState(ufoHit);
+		}
+	}
 
 	// Check for collision between player projectile and game boundary
 	if (p1.prj.state == active) {
@@ -681,8 +749,10 @@ void PlayerMove(u16 move) {
 void PlayerAttack(u16 cmd) {
 	if (p1.state != alive)
 		return;
-	if ((cmd & (BTN_A | BTN_B)) && p1.prj.state == idle)
+	if ((cmd & (BTN_A | BTN_B)) && p1.prj.state == idle) {
 		SetProjectileState(&p1.prj, active, -PLAYER_PROJECTILE_SPD, &(pt){p1.loc.x + TILE_WIDTH, p1.loc.y - TILE_HEIGHT});
+		TriggerFx(SFX_PLAYER_SHOOT, SFX_VOL_PLAYER_SHOOT, true);
+	}
 }
 
 
@@ -690,9 +760,13 @@ void MonstersAttack(void) {
 	if (ai.prj.state != idle)
 		return;
 	if (--ai.prjTimer == 0) {
-		ai.prjTimer = ai.maxPrjTimer;
-		ai.prj.loc = GetMonsterLocAbs(ai.attackers[prng&7]);	// Clamp prng to our attackers (8 MONSTERS_PER_ROW)
+		u8 atkIndex = prng&7;
+
+		while (ai.monstersRemaining && ai.monsters[ai.attackers[atkIndex]].state != mAlive)
+			atkIndex = (atkIndex + ((prng&1) ? 1 : -1))&7;
+		ai.prj.loc = GetMonsterLocAbs(ai.attackers[atkIndex]);
 		ai.prj.loc.y += TILE_HEIGHT;
+		ai.prjTimer = ai.maxPrjTimer;
 		SetProjectileState(&ai.prj, active, INVADERS_PROJECTILE_SPD, &ai.prj.loc);
 	}
 }
@@ -762,7 +836,6 @@ void SetPlayerState(PlayerState state) {
 	switch (state) {
 		case alive:
 			memcpy_P(&p1.anim, animations + ANIM_INDEX_PLAYER_SHIP, sizeof(p1.anim));
-			p1.state = alive;
 			break;
 		case dead:
 			SetProjectileState(&p1.prj, idle, 0, 0);
@@ -770,9 +843,10 @@ void SetPlayerState(PlayerState state) {
 			memcpy_P(&p1.anim, animations + ANIM_INDEX_PLAYER_DEAD, sizeof(p1.anim));
 			--p1.lives;
 			DrawLives();
-			p1.state = dead;
+			TriggerFx(SFX_PLAYER_HIT, SFX_VOL_PLAYER_HIT, true);
 			break;
 	}
+	p1.state = state;
 }
 
 
@@ -783,23 +857,21 @@ void SetMonsterState(u8 index, MonsterState state) {
 
 	switch (state) {
 		case mAlive:
-			m->state = mAlive;
 			break;
 		case mHit:
 		{
 			rect r;
 
-			DrawMap2(ai.tileLoc.x + (index&7) * MONSTER_SPACING_X, ai.tileLoc.y + (index>>3) * MONSTER_SPACING_Y,
-					(const char*)pgm_read_word(monsterDeadMaps + ai.dispState));
-			m->hitTimer = MONSTER_HIT_DURATION;			
+			m->hitTimer = MIN(MONSTER_HIT_DURATION, ai.maxMoveTimer);
 			r.left = ai.tileLoc.x + (index&7) * MONSTER_SPACING_X;
 			r.right = r.left + GET_MONSTER_WID();
 			r.top = ai.tileLoc.y + (index>>3) * MONSTER_SPACING_Y;
 			r.btm = r.top + GET_MONSTER_HGT();
 			EnqueueHitMonster(&r);
+			DrawMap2(r.left, r.top, (const char*)pgm_read_word(monsterDeadMaps + ai.dispState));
 			--ai.monstersRemaining;
 			AdjustScore(100 + (yellow - m->type) * 100);
-			m->state = mHit;
+			TriggerFx(SFX_MONSTER_HIT, SFX_VOL_MONSTER_HIT, true);
 			break;
 		}
 		case mDead:
@@ -808,10 +880,10 @@ void SetMonsterState(u8 index, MonsterState state) {
 
 			if (r)
 				FillRegion(r->left, r->top, r->right - r->left, r->btm - r->top, CLEAR_TILE);
-			m->state = mDead;
 			break;
 		}
 	}
+	m->state = state;
 }
 
 
@@ -819,27 +891,112 @@ void SetProjectileState(projectile *p, ProjectileState state, char vel, const pt
 	switch (state) {
 		case idle:
 			HideSprite(p->sprite, p->anim.wid, p->anim.hgt);
-			p->state = idle;
 			break;
 		case active:
 			if (loc)
 				p->loc = *loc;
 			p->vel = vel;
 			memcpy_P(&p->anim, animations + p->animIndex, sizeof(p->anim));
-			p->state = active;
+			break;
+	}
+	p->state = state;
+}
+
+
+void SetUfoState(UfoState state) {
+	switch (state) {
+		case ufoIdle:
+			ufo.rollTimer = UFO_ROLL_TIMER_INTERVAL;
+			HideSprite(SPRITE_UFO, mapUfo_Width, mapUfo_Height);
+			break;
+		case ufoActive:
+			sprites[SPRITE_UFO].tileIndex = pgm_read_byte(mapUfo + 2);
+			ufo.loc = (pt) { UFO_START_LOC_X, UFO_START_LOC_Y };
+			ufo.wid = mapUfo_Width>>1;
+			ufo.vel = -UFO_SPD;
+			ufo.bonus = (1 + (((u16)prng + 1)>>6)) * 1000;	// 1-5k (1 in 256 of 5k)
+			TriggerFx(SFX_UFO, SFX_VOL_UFO, true);
+			break;
+		case ufoHit:
+		{
+			rect r;
+
+			HideSprite(SPRITE_UFO, mapUfo_Width, mapUfo_Height);
+			r.left = ufo.loc.x>>3;
+			r.right = r.left + mapUfo_Width;
+			r.top = ufo.loc.y>>3;
+			r.btm = r.top + mapUfo_Height;
+			EnqueueHitMonster(&r);
+			DrawMap2(r.left, r.top, mapMonsterDead1);
+			AdjustScore(ufo.bonus);
+			ufo.hitTimer = UFO_HIT_TIMER_INTERVAL;
+			TriggerFx(SFX_MONSTER_HIT, SFX_VOL_MONSTER_HIT, true);
+			break;
+		}
+		case ufoDead:
+		{
+			rect *r = DequeueHitMonster();
+
+			if (r)
+				FillRegion(r->left, r->top, r->right - r->left, r->btm - r->top, CLEAR_TILE);
+			break;
+		}
+	}
+	ufo.state = state;
+}
+
+
+void UpdateUfo(void) {
+	switch (ufo.state) {
+		case ufoIdle:
+			if (--ufo.rollTimer == 0) {
+				if ((prng&15) == 0	)
+					SetUfoState(ufoActive);
+				else
+					SetUfoState(ufoIdle);
+			}
+			break;
+		case ufoActive:
+			MoveUfo();
+			DrawUfo();
+			break;
+		case ufoHit:
+			if (--ufo.hitTimer == 0)
+				SetUfoState(ufoDead);
+			break;
+		case ufoDead:
+			SetUfoState(ufoIdle);
 			break;
 	}
 }
 
 
-u8 EnqueueHitMonster(const rect *r) {
-	if (!hitQ[hqIndex].isValid) {
-		hitQ[hqIndex].isValid = 1;
-		hitQ[hqIndex].r = *r;
-		hqIndex = (hqIndex + 1)&3;
-		return 1;
+void MoveUfo(void) {
+	if (ufo.state != ufoActive)
+		return;
+	ufo.loc.x += ufo.vel;
+
+	if (ufo.loc.x <= BOUNDARY_LEFT)
+		ufo.vel *= -1;
+	if (ufo.loc.x >= UFO_START_LOC_X && ufo.vel == UFO_SPD)
+			SetUfoState(ufoIdle);
+}
+
+
+void DrawUfo(void) {
+	if (ufo.state != ufoActive)
+		return;
+	if (ufo.loc.x == (UFO_START_LOC_X - TILE_WIDTH)) {
+		if (ufo.vel == UFO_SPD) {
+			HideSprite(SPRITE_UFO, mapUfo_Width, mapUfo_Height);
+			sprites[SPRITE_UFO].tileIndex = pgm_read_byte(mapUfo + 2);
+			ufo.wid = mapUfo_Width>>1;
+		} else {
+			MapSprite(SPRITE_UFO, mapUfo);
+			ufo.wid = mapUfo_Width;
+		}
 	}
-	return 0;
+	MoveSprite(SPRITE_UFO, ufo.loc.x, ufo.loc.y, ufo.wid, mapUfo_Height);
 }
 
 
@@ -854,12 +1011,23 @@ void AdjustScore(int val) {
 	}
 
 	if (p1.lives < 10) {
-		if (p1.score > freeLife) {
+		if (p1.score >= freeLife) {
 			freeLife += 25000;
 			++p1.lives;
 			DrawLives();
 		}
 	}
+}
+
+
+u8 EnqueueHitMonster(const rect *r) {
+	if (!hitQ[hqIndex].isValid) {
+		hitQ[hqIndex].isValid = 1;
+		hitQ[hqIndex].r = *r;
+		hqIndex = (hqIndex + 1)&3;
+		return 1;
+	}
+	return 0;
 }
 
 
@@ -879,12 +1047,8 @@ rect* DequeueHitMonster(void) {
 
 void UpdateAttackers(void) {
 	for (u8 i = 0; i < MONSTERS_PER_ROW; i++) {
-		if (ai.monsters[ai.attackers[i]].state != mAlive) {
-			if (ai.attackers[i] >= MONSTERS_PER_ROW)
-				ai.attackers[i] -= MONSTERS_PER_ROW;
-			else
-				ai.attackers[i] = ai.attackers[(i+1)&3];
-		}
+		while (ai.monstersRemaining && ai.monsters[ai.attackers[i]].state != mAlive && ai.attackers[i] >= MONSTERS_PER_ROW)
+			ai.attackers[i] -= MONSTERS_PER_ROW;
 	}
 }
 
@@ -912,6 +1076,22 @@ void SpaceInvadersMapSprite(u8 index, u8 wid, u8 hgt, const char *map, u8 sprite
 }
 
 
+u8 InvadersBreachedShelters(void) {
+	u8 index, frontLine = 0;
+
+	for (u8 i = 0; i < MONSTERS_PER_ROW; i++) {
+		index = ai.attackers[i]>>3;
+		
+		if (index > frontLine)
+			frontLine = index;
+	}
+	
+	if ((ai.tileLoc.y + (frontLine * MONSTER_SPACING_Y + 1)) >= INVADERS_MAX_LOC_Y)
+		return 1;
+	return 0;
+}
+
+
 int main(void) {
 	u16 btnPrev = 0;			// Previous buttons that were held
 	u16 btnHeld = 0;    		// Buttons that are held right now
@@ -927,6 +1107,8 @@ int main(void) {
 	SetTileTable(tileset);
 	SetSpritesTileTable(spriteset);
 	SetSpriteVisibility(true);
+	InitMusicPlayer(patches);
+	SetMasterVolume(0xc0);
 	ClearVram();
 	DrawMap2(0, 0, mapBackground);
 	flashStartTimer = 1;
@@ -940,7 +1122,7 @@ int main(void) {
         	btnReleased = btnPrev&(btnHeld^btnPrev);
 			btnPrev = btnHeld;
 
-			if (btnPressed&BTN_SELECT) {
+			if ((btnPressed&BTN_SELECT) && (gameState != title)) {
 				if (p1.score >= hiScore)
 					SaveHighScore();
 				FillRegion(PLAYING_FIELD_LOC_X, PLAYING_FIELD_LOC_Y, PLAYING_FIELD_WID, PLAYING_FIELD_HGT-1, CLEAR_TILE);
@@ -963,7 +1145,7 @@ int main(void) {
 					prng = MAX(prng,1);
 					break;
 				case playing:
-					prng = (prng>>1) | (((((prng^(prng>>2))^(prng>>3))^(prng>>4)))<<7);
+					prng = PRNG_NEXT();
 					
 					if (ai.monstersRemaining == 0)
 						InitRound(++round);
@@ -976,7 +1158,7 @@ int main(void) {
 					MoveProjectiles(2, projectiles);
 					ProcessCollisions();
 
-					if ((ai.tileLoc.y + INVADERS_HEIGHT) >= INVADERS_MAX_LOC_Y)
+					if (InvadersBreachedShelters())
 						SetPlayerState(dead);
 
 					if (p1.state == dead) {
@@ -996,6 +1178,7 @@ int main(void) {
 					DrawPlayer();
 					DrawMonsters();
 					UpdateAttackers();
+					UpdateUfo();
 					break;
 				case playerDead:
 					// Ignore pause game while dead
@@ -1007,7 +1190,7 @@ int main(void) {
 					if (p1.lives == 0) {
 						gameState = gameOver;
 						break;
-					} else if ((ai.tileLoc.y + INVADERS_HEIGHT) >= INVADERS_MAX_LOC_Y) {
+					} else if (InvadersBreachedShelters()) {
 						InitRound(++round);
 					} else {
 						SetPlayerState(alive);
