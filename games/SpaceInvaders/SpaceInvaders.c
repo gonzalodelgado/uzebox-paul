@@ -17,6 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// For the tutorial, see: http://uzebox.org/wiki/index.php?title=Hello_World
+
 /****************************************
  *			Library Dependencies		*
  ****************************************/
