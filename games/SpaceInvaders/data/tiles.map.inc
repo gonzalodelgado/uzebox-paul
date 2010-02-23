@@ -62,138 +62,138 @@ const char mapBackground[30 * 28 + 2] PROGMEM=
   233,233,236,237,233,233,236,237,233,238, 11
 };
 
-#define mapMonsterGreen0_Width   (1)
-#define mapMonsterGreen0_Height  (1)
+#define mapAlienGreen0_Width   (1)
+#define mapAlienGreen0_Height  (1)
 
-const char mapMonsterGreen0[1 * 1 + 2] PROGMEM=
-{mapMonsterGreen0_Width,mapMonsterGreen0_Height,
+const char mapAlienGreen0[1 * 1 + 2] PROGMEM=
+{mapAlienGreen0_Width,mapAlienGreen0_Height,
    88
 };
 
-#define mapMonsterGreen1_Width   (2)
-#define mapMonsterGreen1_Height  (1)
+#define mapAlienGreen1_Width   (2)
+#define mapAlienGreen1_Height  (1)
 
-const char mapMonsterGreen1[2 * 1 + 2] PROGMEM=
-{mapMonsterGreen1_Width,mapMonsterGreen1_Height,
+const char mapAlienGreen1[2 * 1 + 2] PROGMEM=
+{mapAlienGreen1_Width,mapAlienGreen1_Height,
    90, 91
 };
 
-#define mapMonsterGreen2_Width   (1)
-#define mapMonsterGreen2_Height  (2)
+#define mapAlienGreen2_Width   (1)
+#define mapAlienGreen2_Height  (2)
 
-const char mapMonsterGreen2[1 * 2 + 2] PROGMEM=
-{mapMonsterGreen2_Width,mapMonsterGreen2_Height,
+const char mapAlienGreen2[1 * 2 + 2] PROGMEM=
+{mapAlienGreen2_Width,mapAlienGreen2_Height,
    89,
    94
 };
 
-#define mapMonsterGreen3_Width   (2)
-#define mapMonsterGreen3_Height  (2)
+#define mapAlienGreen3_Width   (2)
+#define mapAlienGreen3_Height  (2)
 
-const char mapMonsterGreen3[2 * 2 + 2] PROGMEM=
-{mapMonsterGreen3_Width,mapMonsterGreen3_Height,
+const char mapAlienGreen3[2 * 2 + 2] PROGMEM=
+{mapAlienGreen3_Width,mapAlienGreen3_Height,
    92, 93,
    95, 96
 };
 
-#define mapMonsterPink0_Width   (1)
-#define mapMonsterPink0_Height  (1)
+#define mapAlienPink0_Width   (1)
+#define mapAlienPink0_Height  (1)
 
-const char mapMonsterPink0[1 * 1 + 2] PROGMEM=
-{mapMonsterPink0_Width,mapMonsterPink0_Height,
+const char mapAlienPink0[1 * 1 + 2] PROGMEM=
+{mapAlienPink0_Width,mapAlienPink0_Height,
    97
 };
 
-#define mapMonsterPink1_Width   (2)
-#define mapMonsterPink1_Height  (1)
+#define mapAlienPink1_Width   (2)
+#define mapAlienPink1_Height  (1)
 
-const char mapMonsterPink1[2 * 1 + 2] PROGMEM=
-{mapMonsterPink1_Width,mapMonsterPink1_Height,
+const char mapAlienPink1[2 * 1 + 2] PROGMEM=
+{mapAlienPink1_Width,mapAlienPink1_Height,
    99,100
 };
 
-#define mapMonsterPink2_Width   (1)
-#define mapMonsterPink2_Height  (2)
+#define mapAlienPink2_Width   (1)
+#define mapAlienPink2_Height  (2)
 
-const char mapMonsterPink2[1 * 2 + 2] PROGMEM=
-{mapMonsterPink2_Width,mapMonsterPink2_Height,
+const char mapAlienPink2[1 * 2 + 2] PROGMEM=
+{mapAlienPink2_Width,mapAlienPink2_Height,
    98,
   103
 };
 
-#define mapMonsterPink3_Width   (2)
-#define mapMonsterPink3_Height  (2)
+#define mapAlienPink3_Width   (2)
+#define mapAlienPink3_Height  (2)
 
-const char mapMonsterPink3[2 * 2 + 2] PROGMEM=
-{mapMonsterPink3_Width,mapMonsterPink3_Height,
+const char mapAlienPink3[2 * 2 + 2] PROGMEM=
+{mapAlienPink3_Width,mapAlienPink3_Height,
   101,102,
   104,105
 };
 
-#define mapMonsterYellow0_Width   (1)
-#define mapMonsterYellow0_Height  (1)
+#define mapAlienYellow0_Width   (1)
+#define mapAlienYellow0_Height  (1)
 
-const char mapMonsterYellow0[1 * 1 + 2] PROGMEM=
-{mapMonsterYellow0_Width,mapMonsterYellow0_Height,
+const char mapAlienYellow0[1 * 1 + 2] PROGMEM=
+{mapAlienYellow0_Width,mapAlienYellow0_Height,
   106
 };
 
-#define mapMonsterYellow1_Width   (2)
-#define mapMonsterYellow1_Height  (1)
+#define mapAlienYellow1_Width   (2)
+#define mapAlienYellow1_Height  (1)
 
-const char mapMonsterYellow1[2 * 1 + 2] PROGMEM=
-{mapMonsterYellow1_Width,mapMonsterYellow1_Height,
+const char mapAlienYellow1[2 * 1 + 2] PROGMEM=
+{mapAlienYellow1_Width,mapAlienYellow1_Height,
   108,109
 };
 
-#define mapMonsterYellow2_Width   (1)
-#define mapMonsterYellow2_Height  (2)
+#define mapAlienYellow2_Width   (1)
+#define mapAlienYellow2_Height  (2)
 
-const char mapMonsterYellow2[1 * 2 + 2] PROGMEM=
-{mapMonsterYellow2_Width,mapMonsterYellow2_Height,
+const char mapAlienYellow2[1 * 2 + 2] PROGMEM=
+{mapAlienYellow2_Width,mapAlienYellow2_Height,
   107,
   112
 };
 
-#define mapMonsterYellow3_Width   (2)
-#define mapMonsterYellow3_Height  (2)
+#define mapAlienYellow3_Width   (2)
+#define mapAlienYellow3_Height  (2)
 
-const char mapMonsterYellow3[2 * 2 + 2] PROGMEM=
-{mapMonsterYellow3_Width,mapMonsterYellow3_Height,
+const char mapAlienYellow3[2 * 2 + 2] PROGMEM=
+{mapAlienYellow3_Width,mapAlienYellow3_Height,
   110,111,
   113,114
 };
 
-#define mapMonsterDead0_Width   (1)
-#define mapMonsterDead0_Height  (1)
+#define mapAlienDead0_Width   (1)
+#define mapAlienDead0_Height  (1)
 
-const char mapMonsterDead0[1 * 1 + 2] PROGMEM=
-{mapMonsterDead0_Width,mapMonsterDead0_Height,
+const char mapAlienDead0[1 * 1 + 2] PROGMEM=
+{mapAlienDead0_Width,mapAlienDead0_Height,
   118
 };
 
-#define mapMonsterDead1_Width   (2)
-#define mapMonsterDead1_Height  (1)
+#define mapAlienDead1_Width   (2)
+#define mapAlienDead1_Height  (1)
 
-const char mapMonsterDead1[2 * 1 + 2] PROGMEM=
-{mapMonsterDead1_Width,mapMonsterDead1_Height,
+const char mapAlienDead1[2 * 1 + 2] PROGMEM=
+{mapAlienDead1_Width,mapAlienDead1_Height,
   120,121
 };
 
-#define mapMonsterDead2_Width   (1)
-#define mapMonsterDead2_Height  (2)
+#define mapAlienDead2_Width   (1)
+#define mapAlienDead2_Height  (2)
 
-const char mapMonsterDead2[1 * 2 + 2] PROGMEM=
-{mapMonsterDead2_Width,mapMonsterDead2_Height,
+const char mapAlienDead2[1 * 2 + 2] PROGMEM=
+{mapAlienDead2_Width,mapAlienDead2_Height,
   119,
   126
 };
 
-#define mapMonsterDead3_Width   (2)
-#define mapMonsterDead3_Height  (2)
+#define mapAlienDead3_Width   (2)
+#define mapAlienDead3_Height  (2)
 
-const char mapMonsterDead3[2 * 2 + 2] PROGMEM=
-{mapMonsterDead3_Width,mapMonsterDead3_Height,
+const char mapAlienDead3[2 * 2 + 2] PROGMEM=
+{mapAlienDead3_Width,mapAlienDead3_Height,
   122,123,
   127,128
 };
