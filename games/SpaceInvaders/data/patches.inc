@@ -109,7 +109,7 @@ const char monsterHit[] PROGMEM ={
 
 const char ufoHovering[] PROGMEM ={	
 0,PC_WAVE,0,
-0,PC_PITCH,40,
+0,PC_PITCH,60,
 0,PC_NOTE_UP,2,
 2,PC_NOTE_DOWN,2,
 2,PC_NOTE_UP,2,
