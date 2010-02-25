@@ -86,8 +86,9 @@
 #define UFO_START_LOC_X				(25 * TILE_WIDTH)
 #define UFO_START_LOC_Y				(6 * TILE_HEIGHT)
 #define UFO_SPD						1
-#define UFO_MIN_INTERVAL			(8 * HZ)
+#define UFO_MIN_INTERVAL			(2 * HZ)
 #define UFO_HIT_TIMER_DURATION		(HZ / 2) // Duration to display ufo hit image
+#define UFO_PER_ROUND				3 // Without, the player is rewarded for dragging the round out - not fun
 
 #define SHELTER_LOC_X				6
 #define SHELTER_LOC_Y				19
@@ -290,6 +291,7 @@ typedef struct {
 	char vel;					// X-Axis velocity in pixels
 	u8 hitTimer;				// Counts down after ufo is hit until explosion graphic is removed
 	u16 bonus;					// Random bonus between 1k-5k
+	u8 roundCount;				// Counts ufo's per round (for purposes of limiting their appearances)
 } ufoDetails;
 
 /****************************************
@@ -480,6 +482,7 @@ void InitRound(u8 round) {
 	p1.prj.sprite = SPRITE_PLAYER_PROJ;
 	p1.prj.animIndex = ANIM_INDEX_PLAYER_SHOOT;
 	SetProjectileState(&p1.prj, idle, 0, 0);
+	ufo.roundCount = 0;
 
 	// Clear playing field
 	DrawMap2(0, 0, mapBackground);
@@ -1124,8 +1127,12 @@ void UpdateUfo(void) {
 	switch (ufo.state) {
 		case ufoIdle:
 			if (--spawnTimer == 0) {
-				spawnTimer = UFO_MIN_INTERVAL + (PRNG_NEXT()<<1);	// Spawns a ufo roughly every 12 seconds, on average
-				SetUfoState(ufoActive);
+				spawnTimer = UFO_MIN_INTERVAL + (PRNG_NEXT()<<1);	// Spawns a ufo roughly every 6 seconds, on average
+
+				if (ufo.roundCount < UFO_PER_ROUND) {
+					++ufo.roundCount;
+					SetUfoState(ufoActive);
+				}
 			}
 			break;
 		case ufoActive:
