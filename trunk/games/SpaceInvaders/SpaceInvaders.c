@@ -86,7 +86,7 @@
 #define UFO_START_LOC_X				(25 * TILE_WIDTH)
 #define UFO_START_LOC_Y				(6 * TILE_HEIGHT)
 #define UFO_SPD						1
-#define UFO_ROLL_TIMER_INTERVAL		HZ	// 1 in 16 chance of being displayed each second
+#define UFO_MIN_INTERVAL			(8 * HZ)
 #define UFO_HIT_TIMER_DURATION		(HZ / 2) // Duration to display ufo hit image
 
 #define SHELTER_LOC_X				6
@@ -143,7 +143,7 @@
 #define SFX_ALIEN_HIT				4
 #define SFX_VOL_ALIEN_HIT			0x60
 #define SFX_UFO						5
-#define SFX_VOL_UFO					0xff
+#define SFX_VOL_UFO					0x50
 
 // Utility macros
 #define MIN(x,y) ((x)<(y) ? (x) : (y))
@@ -152,7 +152,7 @@
 #define GET_ALIEN_WID() ((ai.dispState == single || ai.dispState == dblVert) ? 1: 2)
 #define GET_ALIEN_HGT() ((ai.dispState == single || ai.dispState == dblHoriz) ? 1: 2)
 // 8-bit, 255 period LFSR (for generating pseudo-random numbers)
-#define PRNG_NEXT() ((u8)((prng>>1) | ((prng^(prng>>2)^(prng>>3)^(prng>>4))<<7)))
+#define PRNG_NEXT() (prng = ((u8)((prng>>1) | ((prng^(prng>>2)^(prng>>3)^(prng>>4))<<7))))
 
 /****************************************
  *			Type declarations			*
@@ -289,7 +289,6 @@ typedef struct {
 	u8 wid;						// Width changes if ufo is half-in/half-out of playing field
 	char vel;					// X-Axis velocity in pixels
 	u8 hitTimer;				// Counts down after ufo is hit until explosion graphic is removed
-	u8 rollTimer;				// 1 in 16 chance of being displayed each second
 	u16 bonus;					// Random bonus between 1k-5k
 } ufoDetails;
 
@@ -549,11 +548,13 @@ void MoveAliens(void) {
 	switch (ai.dispState) {
 		case single:
 		case dblVert:
-			TriggerFx(SFX_ALIEN_MOVE_A, SFX_VOL_ALIEN_MOVE_A, true);
+			TriggerNote(0,SFX_ALIEN_MOVE_A, 75, SFX_VOL_ALIEN_MOVE_A);
+			//TriggerFx(SFX_ALIEN_MOVE_A, SFX_VOL_ALIEN_MOVE_A, true);
 			break;
 		case dblHoriz:
 		case quad:
-			TriggerFx(SFX_ALIEN_MOVE_B, SFX_VOL_ALIEN_MOVE_B, true);
+			TriggerNote(0,SFX_ALIEN_MOVE_B, 75, SFX_VOL_ALIEN_MOVE_B);
+			//TriggerFx(SFX_ALIEN_MOVE_B, SFX_VOL_ALIEN_MOVE_B, true);
 			break;
 	}
 }
@@ -860,7 +861,8 @@ void PlayerAttack(u16 cmd) {
 		return;
 	if ((cmd & (BTN_A | BTN_B)) && p1.prj.state == idle) {
 		SetProjectileState(&p1.prj, active, -PLAYER_PROJECTILE_SPD, &(pt){p1.loc.x + TILE_WIDTH - 1, p1.loc.y - TILE_HEIGHT});
-		TriggerFx(SFX_PLAYER_SHOOT, SFX_VOL_PLAYER_SHOOT, true);
+		//TriggerFx(SFX_PLAYER_SHOOT, SFX_VOL_PLAYER_SHOOT, true);
+		TriggerNote(1,SFX_PLAYER_SHOOT, 70, SFX_VOL_PLAYER_SHOOT);
 	}
 }
 
@@ -871,7 +873,7 @@ void AliensAttack(void) {
 	if (ai.prj.state != idle)
 		return;
 	if (--ai.prjTimer == 0) {
-		u8 atkIndex = prng&7;
+		u8 atkIndex = PRNG_NEXT()&7;
 
 		while (ai.aliensRemaining && ai.aliens[ai.attackers[atkIndex]].state != alienAlive)
 			atkIndex = (atkIndex + ((prng&1) ? 1 : -1))&7;
@@ -982,7 +984,8 @@ void SetPlayerState(PlayerState state) {
 			memcpy_P(&p1.anim, animations + ANIM_INDEX_PLAYER_DEAD, sizeof(p1.anim));
 			--p1.lives;
 			DrawLives();
-			TriggerFx(SFX_PLAYER_HIT, SFX_VOL_PLAYER_HIT, true);
+			//TriggerFx(SFX_PLAYER_HIT, SFX_VOL_PLAYER_HIT, true);
+			TriggerNote(1,SFX_PLAYER_HIT, 40, SFX_VOL_PLAYER_HIT);
 			break;
 	}
 	p1.state = state;
@@ -1015,7 +1018,8 @@ void SetAlienState(u8 index, AlienState state) {
 			DrawMap2(r.left, r.top, (const char*)pgm_read_word(alienDeadMaps + ai.dispState));
 			--ai.aliensRemaining;
 			AdjustScore(100 + (yellow - a->type) * 100);
-			TriggerFx(SFX_ALIEN_HIT, SFX_VOL_ALIEN_HIT, true);
+			//TriggerFx(SFX_ALIEN_HIT, SFX_VOL_ALIEN_HIT, true);
+			TriggerNote(1,SFX_ALIEN_HIT, 50, SFX_VOL_ALIEN_HIT);
 			break;
 		}
 		case alienDead:
@@ -1061,7 +1065,6 @@ void SetProjectileState(projectile *p, ProjectileState state, char vel, const pt
 void SetUfoState(UfoState state) {
 	switch (state) {
 		case ufoIdle:
-			ufo.rollTimer = UFO_ROLL_TIMER_INTERVAL;
 			HideSprite(SPRITE_UFO, mapUfo_Width, mapUfo_Height);
 			break;
 		case ufoActive:
@@ -1069,8 +1072,9 @@ void SetUfoState(UfoState state) {
 			ufo.loc = (pt) { UFO_START_LOC_X, UFO_START_LOC_Y };
 			ufo.wid = mapUfo_Width>>1;
 			ufo.vel = -UFO_SPD;
-			ufo.bonus = (1 + (((u16)prng + 1)>>6)) * 1000;	// 1-5k (1 in 256 of 5k)
-			TriggerFx(SFX_UFO, SFX_VOL_UFO, true);
+			ufo.bonus = (1 + (((u16)PRNG_NEXT() + 1)>>6)) * 1000;	// 1-5k (1 in 256 of 5k)
+			//TriggerFx(SFX_UFO, SFX_VOL_UFO, true);
+			TriggerNote(2,SFX_UFO, 60, SFX_VOL_UFO);
 			break;
 		case ufoHit:
 		{
@@ -1095,7 +1099,8 @@ void SetUfoState(UfoState state) {
 			DrawMap2(r.left, r.top, deadMap);
 			AdjustScore(ufo.bonus);
 			ufo.hitTimer = UFO_HIT_TIMER_DURATION;
-			TriggerFx(SFX_ALIEN_HIT, SFX_VOL_ALIEN_HIT, true);
+			//TriggerFx(SFX_ALIEN_HIT, SFX_VOL_ALIEN_HIT, true);
+			TriggerNote(2,SFX_ALIEN_HIT, 50, SFX_VOL_ALIEN_HIT);
 			break;
 		}
 		case ufoDead:
@@ -1114,13 +1119,13 @@ void SetUfoState(UfoState state) {
 	Manages the ufo based on its state.
 */
 void UpdateUfo(void) {
+	static u16 spawnTimer = UFO_MIN_INTERVAL;
+
 	switch (ufo.state) {
 		case ufoIdle:
-			if (--ufo.rollTimer == 0) {
-				if ((prng&15) == 0	)
-					SetUfoState(ufoActive);
-				else
-					SetUfoState(ufoIdle);
+			if (--spawnTimer == 0) {
+				spawnTimer = UFO_MIN_INTERVAL + (PRNG_NEXT()<<1);	// Spawns a ufo roughly every 12 seconds, on average
+				SetUfoState(ufoActive);
 			}
 			break;
 		case ufoActive:
@@ -1147,7 +1152,7 @@ void MoveUfo(void) {
 
 	if (ufo.loc.x <= BOUNDARY_LEFT)
 		ufo.vel *= -1;
-	if (ufo.loc.x >= UFO_START_LOC_X && ufo.vel == UFO_SPD)
+	else if (ufo.loc.x >= UFO_START_LOC_X && ufo.vel == UFO_SPD)
 		SetUfoState(ufoIdle);
 }
 
@@ -1346,8 +1351,6 @@ int main(void) {
 					prng = MAX(prng,1);
 					break;
 				case playing:
-					prng = PRNG_NEXT();
-					
 					if (ai.aliensRemaining == 0)
 						InitRound(++round);
 
