@@ -35,10 +35,9 @@
 /****************************************
  *			  	 Defines				*
  ****************************************/
-#define GAMES_COUNT 20
-
+#define GAMES_COUNT 17
 #define EEPROM_BLOCK_COUNT 64
-#define STATE_COUNT 6
+#define STATE_COUNT 5 // Count of navStates
 #define MENU_OPTIONS_COUNT 6
 #define MAX_MENU_WID 10
 #define MAX_MENU_HGT (MENU_OPTIONS_COUNT+2)
@@ -76,11 +75,18 @@
 #define BLOCK_MENU_CELL_HGT 2
 #define GAME_ICON_HGT 2
 #define GAME_ICON_WID 3
+#define FRAME_SIZE 8 // Icon map element count
 
 #define PAGE_NO_LOC_X 15
 #define PAGE_NO_LOC_Y 24
 #define PAGE_NO_WID 10
 #define PAGE_NO_HGT 1
+
+#define KERNEL_BLOCK_X 6
+#define KERNEL_BLOCK_Y 2
+#define KERNEL_BLOCK_SPACING_X 18
+#define KERNEL_BLOCK_WID 30
+#define KERNEL_BLOCK_HGT 25
 
 
 // Utility macros
@@ -93,9 +99,10 @@
  *			Type declarations			*
  ****************************************/
 
-// Navigation states (determines how we interpret user input)
+// Navigation states (determines how we interpret user input).
+// Sync with STATE_COUNT def above if states added/removed.
 typedef enum { 
-	navBlock, navMenu, navMsgBox, navHexDump, navHexCell
+	navBlock, navMenu, navHexDump, navHexCell, navKernel
 } navStates;
 
 typedef struct {
@@ -115,16 +122,10 @@ typedef struct {
 } range;
 
 typedef struct {
-	u16 id;
-	const char *title;
-	const int *icon;
-} gameDetails;
-
-typedef struct {
 	navStates curr;
 	navStates *prev;
 	navStates history[STATE_COUNT+1];
-	u8 indexes[STATE_COUNT];
+	int indexes[STATE_COUNT];
 } EmuzeState;
 
 typedef struct {
@@ -140,9 +141,29 @@ struct tileMenu {
 	pt loc;
 	size s;
 	menuCursor cursor;
-	void (*menuActivate)(tileMenu*);
 	u8 *buffer;
 };
+
+typedef struct {
+	u8 frameCount;
+	u8 frameSequenceIndex;
+	u16 frameDurationsIndex;
+	const int *frames;
+} animation;
+
+typedef struct {
+	u8 frame;
+	u16 counter;
+	u16 duration;
+	animation anim;
+} menuAnimation;
+
+typedef struct {
+	u16 id;
+	const char *title;
+	u16 animIndex;
+} gameDetails;
+
 /****************************************
  *			File-level variables		*
  ****************************************/
@@ -156,6 +177,7 @@ struct EepromBlockStruct clipboard;
 int page;
 u16 pageIds[GAMES_PER_PAGE];
 u16 gameIds[GAMES_COUNT];
+menuAnimation menuAnim;
 
 const char freeBlockStr[] PROGMEM = "FREE BLOCK";
 const char pageStr[] PROGMEM = "PAGE";
@@ -179,6 +201,40 @@ const char *menuStrings[] PROGMEM = {
 	formatStr
 };
 
+// Kernel block strings
+const char kbTitle[] PROGMEM = "--- KERNEL SETTINGS ---";
+const char kbFeatures[] PROGMEM = "--- FEATURES ---";
+const char kbNes[] PROGMEM = "NES";
+const char kbSnes[] PROGMEM = "SNES";
+const char kbJoyStickOther[] PROGMEM = "OTHER";
+const char bitOff[] PROGMEM = "0";
+const char bitOn[] PROGMEM = "1";
+
+const char kbFeatures0[] PROGMEM = "JOYSTICK:";
+const char kbFeatures1[] PROGMEM = "SOFT POWER SW:";
+const char kbFeatures2[] PROGMEM = "STATUS LED:";
+const char kbFeatures3[] PROGMEM = "SD CARD:";
+const char kbFeatures4[] PROGMEM = "MIDI IN:";
+const char kbFeatures5[] PROGMEM = "MIDI OUT:";
+const char kbFeatures6[] PROGMEM = "EHTERNET:";
+const char kbFeatures7[] PROGMEM = "PS2 K/B:";
+const char kbFeatures8[] PROGMEM = "PS2 MOUSE:";
+const char kbFeatures9[] PROGMEM = "AD725 P/C:";
+
+const char kbSpecs[] PROGMEM = "--- SPECS ---";
+const char kbSpecs0[] PROGMEM = "SIGNATURE: $";
+const char kbSpecs1[] PROGMEM = "VERSION: $";
+const char kbSpecs2[] PROGMEM = "BLOCK SIZE: $";
+const char kbSpecs3[] PROGMEM = "HEADER SIZE: $";
+const char kbSpecs4[] PROGMEM = "H/W VER.: $";
+const char kbSpecs5[] PROGMEM = "H/W REV.: $";
+const char kbSpecs6[] PROGMEM = "EXT FEATURES: $";
+const char kbSpecs7[] PROGMEM = "MAC ADDR: $";
+const char kbSpecs8[] PROGMEM = "COLOR CORRECTION: $";
+const char kbSpecs9[] PROGMEM = "GAME CRC: $";
+const char kbSpecs10[] PROGMEM = "RESERVED: 10 BYTES";
+
+// Game title strings
 const char kernelGame[] PROGMEM = "RESERVED";
 const char megatrisGame[] PROGMEM = "MEGATRIS";
 const char whackAMoleGame[] PROGMEM = "WHACK-A-MOLE";
@@ -197,27 +253,70 @@ const char zombienatorGame[] PROGMEM = "ZOMBIENATOR";
 const char corridaNebososaGame[] PROGMEM = "CORRIDA NEBOSOSA";
 const char castlevaniaGame[] PROGMEM = "CASTLEVANIA: VENGEANCE";
 
+
+// (#) denotes index to be referenced in animations array below.
+u16 frameDurations[] PROGMEM = {
+	65535,				// All single-frame animations (0)
+	60, 5,				// Adventures of Lolo (1)
+	5, 5, 5, 5,			// Unknown, Pac-Man (3)
+	5, 5, 5, 5,	5,		// Pong (7)
+	10, 10, 10,			// Arkanoid, Space Invaders (12)
+	5, 5,				// Zombienator (15)
+	20, 20,				// Kernel (17)
+	3, 3, 3, 3			// B.C. Dash (19)
+};
+
+u8 frameSequences[] PROGMEM = {
+	0,					// All single-frame animations (0)
+	0,1,				// (1)
+	0,1,2,				// (3)
+	0,1,2,3,			// (6)
+	0,1,2,3,4,			// Pong (10)
+	0,1,2,3,4,5,		// (15)
+	0,1,0,2,			// Pac-Man (21)
+	0,1,2,1				// Unknown, B.C. Dash (25)
+};
+
+const animation animations[] PROGMEM = {
+	{ 4, 25, 3, mapUnknown0 },
+	{ 1, 0, 0, mapMegatris0 },
+	{ 1, 0, 0, mapWhackAMole0 },
+	{ 1, 0, 0, mapVoidFighter0 },
+
+	{ 5, 10, 7, mapPong0 },
+	{ 3, 3, 12, mapArkanoid0 },
+	{ 3, 3, 12, mapSpaceInvaders0 },
+	{ 4, 21, 3, mapPacman0 },
+
+	{ 4, 25, 19, mapBcDash0 },
+	{ 2, 1, 1, mapAdvOfLolo0 },
+	{ 2, 1, 15, mapZombienator0 },
+	{ 1, 0, 0, mapKernel0 }
+};
+
+// findGameIndex() expects these to be sorted by id if in binary search mode.
 gameDetails games[] PROGMEM = {
-	{ 0, kernelGame, mapKernelIcon },
-	{ 1, kernelGame, mapKernelIcon },
-	{ 2, megatrisGame, mapMegatrisIcon },
-	{ 3, whackAMoleGame, mapWhackAMoleIcon },
-	{ 4, voidFighterGame, mapVoidFighterIcon },
-	{ 5, pongGame, mapPongIcon },
-	{ 6, arkanoidGame, mapArkanoidIcon },
-	{ 7, drMarioGame, mapUnknownIcon },
-	{ 8, lodeRunnerGame, mapUnknownIcon },
-	{ 11, unkownGame, mapUnknownIcon },
-	{ 12, spaceInvadersGame, mapSpaceInvadersIcon },
-	{ 13, pacmanGame, mapPacmanIcon },
-	{ 14, bcdashGame, mapBcDashIcon },
-	{ 15, bcdashGame, mapBcDashIcon },
-	{ 61, sokobanWorldGame, mapUnknownIcon },
-	{ 62, sokobanWorldGame, mapUnknownIcon },
-	{ 63, advOfLoloGame, mapAdvOfLolo },
-	{ 89, zombienatorGame, mapZombienatorIcon },
-	{ 569, corridaNebososaGame, mapUnknownIcon },
-	{ 666, castlevaniaGame, mapUnknownIcon }
+	{ 2, megatrisGame, 1 },
+	{ 3, whackAMoleGame, 2 },
+	{ 4, voidFighterGame, 3 },
+	{ 5, pongGame, 4 },
+
+	{ 6, arkanoidGame, 5 },
+	{ 8, lodeRunnerGame, 0 },
+	{ 12, spaceInvadersGame, 6 },
+	{ 13, pacmanGame, 7 },
+
+	{ 14, bcdashGame, 8 },
+	{ 15, bcdashGame, 8 },
+	{ 61, sokobanWorldGame, 0 },
+	{ 62, sokobanWorldGame, 0 },
+
+	{ 63, advOfLoloGame, 9 },
+	{ 89, zombienatorGame, 10 },
+	{ 569, corridaNebososaGame, 0 },
+	{ 666, castlevaniaGame, 0 },
+
+	{ EEPROM_SIGNATURE, kernelGame, 11 } // 0x555A
 };
 
 /****************************************
@@ -228,24 +327,96 @@ void fillRegion(u8 x, u8 y, u8 width, u8 height, u16 tile);
 void drawLogo();
 void drawMenu(tileMenu *m);
 void closeMenu(tileMenu *m);
-void moveCursor(menuCursor *cursor, char dist);
+int moveCursor(menuCursor *cursor, char dist);
 void drawCursor(menuCursor *cursor);
 void hideCursor(menuCursor *cursor);
 void printPgmStrings(u8 x, u8 y, u8 count, PGM_P *strs);
-void setState(u8 newState);
+void setState(int newState);
+void activateItem(int index);
 void initMenus(void);
-void readBlock(void);
-void writeBlock(void);
+void readBlock(struct EepromBlockStruct *block, int index);
+void writeBlock(struct EepromBlockStruct *block, int index);
 void formatBlock(int index);
 void flipPage(char dir);
 void dumpHex(struct EepromBlockStruct *ebs);
 void loadGameIds(void);
 void printPageNumber(void);
-void clearPageNumber(void);
+void hidePageNumber(void);
+int findGameIndex(u16 id);
+void drawAnimationFrame(u8 x, u8 y, const int *frames, u8 frameIndex);
+void loadMenuAnimation(u16 gameId);
+void animateMenuSelection(void);
+void nibbleShuffle(u16 btnPressed, u16 btnHeld);
+void printKernelBlock(void);
+void hideKernelBlock(void);
+void cycleHexCell(u16 btnPressed, u16 btnHeld);
 
 /****************************************
  *			Function definitions		*
  ****************************************/
+
+void printKernelBlock(void) {
+	int x = KERNEL_BLOCK_X, y = KERNEL_BLOCK_Y;
+	readBlock(&ebs, 0);
+
+	struct EepromHeaderStruct *ehs = (struct EepromHeaderStruct*)&ebs;
+
+	Print(x+2, y, kbTitle);
+	y += 2;
+	Print(x + 5, y++, kbFeatures);
+	Print(x, y, kbFeatures0);
+	Print(x + strlen_P(kbFeatures0) + 1, y, ((ehs->features&7) == 0) ? kbSnes : ((ehs->features&7) == 1) ? kbNes : kbJoyStickOther );
+	Print(x + KERNEL_BLOCK_SPACING_X, y, kbFeatures5);
+	Print(x + KERNEL_BLOCK_SPACING_X + strlen_P(kbFeatures5) + 1, y++, (ehs->features&0x80) ? bitOn : bitOff);
+	Print(x, y, kbFeatures1);
+	Print(x + strlen_P(kbFeatures1) + 1, y, (ehs->features&8) ? bitOn : bitOff);
+	Print(x + KERNEL_BLOCK_SPACING_X, y, kbFeatures6);
+	Print(x + KERNEL_BLOCK_SPACING_X + strlen_P(kbFeatures6) + 1, y++, (ehs->features&0x100) ? bitOn : bitOff);
+	Print(x, y, kbFeatures2);
+	Print(x + strlen_P(kbFeatures2) + 1, y, (ehs->features&0x10) ? bitOn : bitOff);
+	Print(x + KERNEL_BLOCK_SPACING_X, y, kbFeatures7);
+	Print(x + KERNEL_BLOCK_SPACING_X + strlen_P(kbFeatures7) + 1, y++, (ehs->features&0x200) ? bitOn : bitOff);
+	Print(x, y, kbFeatures3);
+	Print(x + strlen_P(kbFeatures3) + 1, y, (ehs->features&0x20) ? bitOn : bitOff);
+	Print(x + KERNEL_BLOCK_SPACING_X, y, kbFeatures8);
+	Print(x + KERNEL_BLOCK_SPACING_X + strlen_P(kbFeatures8) + 1, y++, (ehs->features&0x400) ? bitOn : bitOff);
+	Print(x, y, kbFeatures4);
+	Print(x + strlen_P(kbFeatures4) + 1, y, (ehs->features&0x40) ? bitOn : bitOff);
+	Print(x + KERNEL_BLOCK_SPACING_X, y, kbFeatures9);
+	Print(x + KERNEL_BLOCK_SPACING_X + strlen_P(kbFeatures9) + 1, y++, (ehs->features&0x800) ? bitOn : bitOff);
+	++y;
+	Print(x + 6, y++, kbSpecs);
+	Print(x, y, kbSpecs0);
+	PrintHexInt(x + strlen_P(kbSpecs0), y++, ehs->signature);
+	Print(x, y, kbSpecs1);
+	PrintHexByte(x + strlen_P(kbSpecs1), y++, ehs->version);
+	Print(x, y, kbSpecs2);
+	PrintHexByte(x + strlen_P(kbSpecs2), y++, ehs->blockSize);
+	Print(x, y, kbSpecs3);
+	PrintHexByte(x + strlen_P(kbSpecs3), y++, ehs->headerSize);
+	Print(x, y, kbSpecs4);
+	PrintHexByte(x + strlen_P(kbSpecs4), y++, ehs->hardwareVersion);
+	Print(x, y, kbSpecs5);
+	PrintHexByte(x + strlen_P(kbSpecs5), y++, ehs->hardwareRevision);
+	Print(x, y, kbSpecs6);
+	PrintHexInt(x + strlen_P(kbSpecs6), y++, ehs->featuresExt);
+	Print(x, y, kbSpecs7);
+
+	for (u8 i = 0; i < 6; i++)
+		PrintHexByte(x + strlen_P(kbSpecs7) + (i<<1), y, ehs->macAdress[i]);
+	++y;
+	Print(x, y, kbSpecs8);
+	PrintHexByte(x + strlen_P(kbSpecs8), y++, ehs->colorCorrectionType);
+	Print(x, y, kbSpecs9);
+	PrintHexLong(x + strlen_P(kbSpecs9), y++, ehs->currentGameCrc32);
+	Print(x, y, kbSpecs10);
+}
+
+
+void hideKernelBlock(void) {
+	fillRegion(KERNEL_BLOCK_X, KERNEL_BLOCK_Y, KERNEL_BLOCK_WID, KERNEL_BLOCK_HGT, CLEAR_TILE);
+}
+
 
 void fillRegion(u8 x, u8 y, u8 width, u8 height, u16 tile) {
 	for (u8 i = y; i < (y + height); i++) {
@@ -266,19 +437,76 @@ void drawLogo(void) {
 			if (--logoTimer == 0) {
 				DrawMap((i&1)*2, i, mapEmuzeLogo);
 				logoTimer = 4;
-				i-=3;
+				i -= mapEmuzeLogo_Height;
 			}
 		}
 	}
 }
 
 
-u16 findGameIndex(u16 id) {
-	for (u16 i = 0; i < GAMES_COUNT; i++) {
+int findGameIndex(u16 id) {
+#if 1 // Binary search (sorted list required)
+	int lower = 0, upper = GAMES_COUNT+1, probe;
+	
+	while ((probe = (upper-lower)>>1)) {
+		probe += lower;
+
+		if (gameIds[probe] < id) {
+			lower = probe;
+		} else if (gameIds[probe] > id) {
+			upper = probe;
+		} else {
+			return probe;
+		}
+	}
+	if (gameIds[probe] == id)
+		return probe;
+	else
+		return -1;
+#else // Linear search (sorted list optional)
+	for (int i = 0; i < GAMES_COUNT; i++) {
 		if (gameIds[i] == id)
 			return i;
 	}
-	return 9; // Return unknown icon
+	return -1;
+#endif
+}
+
+
+void drawAnimationFrame(u8 x, u8 y, const int *frames, u8 frameIndex) {
+	DrawMap(x, y, frames + (frameIndex * FRAME_SIZE));
+}
+
+
+void loadMenuAnimation(u16 gameId) {
+	int index = findGameIndex(pageIds[state.indexes[state.curr] % GAMES_PER_PAGE]);
+
+	if (index == -1) {
+		memcpy_P(&menuAnim.anim, animations, sizeof(menuAnim.anim));
+		menuAnim.duration = pgm_read_word(frameDurations + menuAnim.anim.frameDurationsIndex);
+	} else {
+		gameDetails details;
+		memcpy_P(&details, games + index, sizeof(details));
+		memcpy_P(&menuAnim.anim, animations + details.animIndex, sizeof(menuAnim.anim));
+		menuAnim.duration = pgm_read_word(frameDurations + menuAnim.anim.frameDurationsIndex);
+	}
+	menuAnim.frame = 0;
+	menuAnim.counter = 0;
+	drawAnimationFrame(blockMenu.loc.x, blockMenu.loc.y + (state.indexes[navBlock] % GAMES_PER_PAGE) * (GAME_ICON_HGT+1), 
+			menuAnim.anim.frames, menuAnim.frame);
+}
+
+
+void animateMenuSelection(void) {
+	if (++menuAnim.counter >= menuAnim.duration) {
+		menuAnim.counter = 0;
+		
+		if (++menuAnim.frame >= menuAnim.anim.frameCount)
+			menuAnim.frame = 0;
+		menuAnim.duration = pgm_read_word(frameDurations + menuAnim.anim.frameDurationsIndex + menuAnim.frame);
+		drawAnimationFrame(blockMenu.loc.x, blockMenu.loc.y + (state.indexes[navBlock] % GAMES_PER_PAGE) * (GAME_ICON_HGT+1), 
+				menuAnim.anim.frames, pgm_read_byte(frameSequences + menuAnim.anim.frameSequenceIndex + menuAnim.frame));
+	}
 }
 
 
@@ -313,7 +541,7 @@ void drawMenu(tileMenu *m) {
 
 	if (m == &blockMenu) {
 		u8 x = m->loc.x, y = m->loc.y;
-		u16 index = 0;
+		int index = 0;
 		gameDetails details;
 
 		for (u8 i = 0; i < GAMES_PER_PAGE; i++, y += GAME_ICON_HGT+1) {
@@ -321,9 +549,24 @@ void drawMenu(tileMenu *m) {
 				break;
 			// Find game id that matches idList for this page
 			index = findGameIndex(pageIds[i]);
-			memcpy_P(&details, games+index, sizeof(gameDetails));
+
+			if (index != -1) {
+				memcpy_P(&details, games+index, sizeof(details));
+			} else {
+				details.title = unkownGame;
+				details.animIndex = 0;
+			}
 			// Draw map and print text for game that matches id
-			DrawMap(x, y, details.icon);
+			if ((page * GAMES_PER_PAGE + i) == state.indexes[navBlock]) {
+				// Don't force the animated selection to its initial frame
+				drawAnimationFrame(blockMenu.loc.x, blockMenu.loc.y + (state.indexes[navBlock] % GAMES_PER_PAGE) * (GAME_ICON_HGT+1), 
+						menuAnim.anim.frames, menuAnim.frame);
+			} else {
+				// Only want the frames from the animation list
+				const int *frames = (const int*)pgm_read_word(
+						(const char*)(animations + details.animIndex)+(sizeof(animation)-sizeof(int*)));
+				drawAnimationFrame(x, y, frames, 0);
+			}
 			PrintInt(x + GAME_ICON_WID + 6, y+1, pageIds[i], 1);
 
 			if (pageIds[i] == EEPROM_FREE_BLOCK)
@@ -355,7 +598,7 @@ void drawMenu(tileMenu *m) {
 		fillRegion(x+1, y, w-2, 1, MENU_HORIZ_BTM);
 		SetTile(x+w-1, y, MENU_BTM_RIGHT);
 	} else if (m == &hexMenu) {
-		readBlock();
+		readBlock(&ebs, state.indexes[navBlock]);
 		dumpHex(&ebs);
 	}
 }
@@ -388,8 +631,8 @@ void hideCursor(menuCursor *cursor) {
 }
 
 
-void moveCursor(menuCursor *cursor, char dist) {
-	int index = state.indexes[state.curr];
+int moveCursor(menuCursor *cursor, char dist) {
+	int index = state.indexes[state.curr], prevIndex = index;
 
 	hideCursor(cursor);
 
@@ -423,11 +666,13 @@ void moveCursor(menuCursor *cursor, char dist) {
 
 		if (index < 0)
 			index = cursor->r.max + index;
-		state.indexes[state.curr] = index;
+		state.indexes[navHexDump] = index;
+		state.indexes[navHexCell] = index;
 		cursor->loc.x = HEX_DUMP_X + index % cursor->r.mid;
 		cursor->loc.y = (HEX_DUMP_Y - 1) + 2 * (index / cursor->r.mid);
 	}
 	drawCursor(cursor);
+	return prevIndex;
 }
 
 
@@ -447,7 +692,7 @@ void printPgmStrings(u8 x, u8 y, u8 count, PGM_P *strs) {
 void printPageNumber(void) {
 	u8 x = (page > 8) ? 1 : 0;
 
-	clearPageNumber();
+	hidePageNumber();
 	PrintInt(PAGE_NO_LOC_X + 8 + x, PAGE_NO_LOC_Y, PAGE_COUNT, 0);
 	Print(PAGE_NO_LOC_X + 6 + x, PAGE_NO_LOC_Y, fwdSlashString);
 	PrintInt(PAGE_NO_LOC_X + 5 + x, PAGE_NO_LOC_Y, page+1, 0);
@@ -455,14 +700,14 @@ void printPageNumber(void) {
 }
 
 
-void clearPageNumber(void) {
+void hidePageNumber(void) {
 	fillRegion(PAGE_NO_LOC_X, PAGE_NO_LOC_Y, PAGE_NO_WID, PAGE_NO_HGT, CLEAR_TILE);
 }
 
-void setState(u8 newState) {
-	u8 oldState = state.curr;
+void setState(int newState) {
+	int oldState = state.curr;
 
-	if (newState < navBlock || newState > navHexCell)
+	if (newState < navBlock || newState > navKernel)
 		return;
 	if (newState > state.curr) {
 		*state.prev = state.curr;
@@ -484,7 +729,7 @@ void setState(u8 newState) {
 			drawCursor(&blockMenu.cursor);
 			break;
 		case navMenu:
-			clearPageNumber();
+			hidePageNumber();
 
 			if (oldState == navBlock) {
 				drawMenu(&menu);
@@ -496,13 +741,15 @@ void setState(u8 newState) {
 			menu.cursor.tile = CURSOR_VGREEN;
 			drawCursor(&menu.cursor);
 			break;
-		case navMsgBox:
-			break;
 		case navHexDump:
 			hexMenu.cursor.tile = CURSOR_HGREEN;
 			drawCursor(&hexMenu.cursor);
 			break;
 		case navHexCell:
+			break;
+		case navKernel:
+			hidePageNumber();
+			printKernelBlock();
 			break;
 	}
 }
@@ -522,12 +769,17 @@ void dumpHex(struct EepromBlockStruct *ebs) {
 }
 
 
-void activateItem(u8 index) {
+void activateItem(int index) {
 	switch (state.curr) {
 		case navBlock:
-			blockMenu.cursor.tile = CURSOR_VRED;
-			drawCursor(&blockMenu.cursor);
-			setState(navMenu);
+			if (pageIds[state.indexes[state.curr] % GAMES_PER_PAGE] == EEPROM_SIGNATURE) {
+				closeMenu(&blockMenu);
+				setState(navKernel);
+			} else {
+				blockMenu.cursor.tile = CURSOR_VRED;
+				drawCursor(&blockMenu.cursor);
+				setState(navMenu);
+			}
 			break;
 		case navMenu:
 			switch (index) {
@@ -549,11 +801,12 @@ void activateItem(u8 index) {
 					memcpy(&ebs, &clipboard, sizeof(ebs));
 					// Allow fall through
 				case OPTION_SAVE:
-					writeBlock();
+					writeBlock(&ebs, state.indexes[navBlock]);
 					setState(navBlock);
 					flipPage(0);
 					closeMenu(&blockMenu);
 					drawMenu(&blockMenu);
+					loadMenuAnimation(state.indexes[state.curr]);
 					activateItem(state.indexes[state.curr]);
 					break;
 				case OPTION_FORMAT:
@@ -562,11 +815,10 @@ void activateItem(u8 index) {
 					flipPage(0);
 					closeMenu(&blockMenu);
 					drawMenu(&blockMenu);
+					loadMenuAnimation(state.indexes[state.curr]);
 					activateItem(state.indexes[state.curr]);
 					break;
 			}
-			break;
-		case navMsgBox:
 			break;
 		case navHexDump:
 			hexMenu.cursor.tile = CURSOR_HRED;
@@ -575,27 +827,32 @@ void activateItem(u8 index) {
 			break;
 		case navHexCell:
 			break;
+		case navKernel:
+			hideKernelBlock();
+			setState(navBlock);
+			drawMenu(&blockMenu);
+			break;
 	}
 }
 
 
-void readBlock(void) {
+void readBlock(struct EepromBlockStruct *block, int index) {
 	u8 *destPtr;
 	u16 destAddr;
 
-	destPtr = (u8*)&ebs;
-	destAddr = state.indexes[navBlock] * EEPROM_BLOCK_SIZE;
+	destPtr = (u8*)block;
+	destAddr = index * EEPROM_BLOCK_SIZE;
 
 	for(u8 j = 0; j < EEPROM_BLOCK_SIZE; j++)
 		*destPtr++ = ReadEeprom(destAddr++);
 }
 
 
-void writeBlock(void) {
-	u8 *dptr = (u8*)&ebs;
+void writeBlock(struct EepromBlockStruct *block, int index) {
+	u8 *dptr = (u8*)block;
 
 	for (u8 i = 0; i < EEPROM_BLOCK_SIZE; i++)
-		WriteEeprom(state.indexes[navBlock]*EEPROM_BLOCK_SIZE+i, *dptr++);
+		WriteEeprom(index*EEPROM_BLOCK_SIZE+i, *dptr++);
 }
 
 
@@ -614,16 +871,32 @@ void PrintHexNibble(char x, char y, u8 byte) {
 }
 
 
-void cycleHexCell(char dir) {
-	u8 index = state.indexes[navHexDump]>>1;
-	u8 *dptr = (u8*)&ebs + index;
+void cycleHexCell(u16 btnPressed, u16 btnHeld) {
+	static u8 cycleTimer = 6;
+	
+	if ((btnPressed|btnHeld) & (BTN_UP|BTN_DOWN))  {
+		if ((btnPressed) & (BTN_UP|BTN_DOWN)) {
+			cycleTimer = 6;
+		} else if (btnHeld & (BTN_UP|BTN_DOWN)) {
+			if (cycleTimer) {
+				--cycleTimer;
+				return;
+			} else {
+				cycleTimer = 3;
+			}
+		}
+		char dir = (btnHeld & BTN_UP) ? 1 : -1;
 
-	if (state.indexes[navHexDump]&1) {
-		*dptr = ((*dptr)&0xf0) + (((*dptr)+dir)&0x0f);
-		PrintHexNibble(hexMenu.cursor.loc.x, hexMenu.cursor.loc.y+1, (*dptr)&0x0f);
-	} else {
-		*dptr = (((*dptr)+dir*0x10)&0xf0) + ((*dptr)&0x0f);
-		PrintHexNibble(hexMenu.cursor.loc.x, hexMenu.cursor.loc.y+1, (*dptr)>>4);
+		int index = state.indexes[navHexDump]>>1;
+		u8 *dptr = (u8*)&ebs + index;
+
+		if (state.indexes[navHexDump]&1) {
+			*dptr = ((*dptr)&0xf0) + (((*dptr)+dir)&0x0f);
+			PrintHexNibble(hexMenu.cursor.loc.x, hexMenu.cursor.loc.y+1, (*dptr)&0x0f);
+		} else {
+			*dptr = (((*dptr)+dir*0x10)&0xf0) + ((*dptr)&0x0f);
+			PrintHexNibble(hexMenu.cursor.loc.x, hexMenu.cursor.loc.y+1, (*dptr)>>4);
+		}
 	}
 }
 
@@ -658,8 +931,26 @@ void loadGameIds(void) {
 }
 
 
+void nibbleShuffle(u16 btnPressed, u16 btnHeld) {
+	static u8 shuffleTimer = 4;
+
+	if (btnPressed & (BTN_LEFT|BTN_RIGHT)) {
+		moveCursor(&hexMenu.cursor, (btnPressed&BTN_LEFT) ? -1 : 1);
+		drawCursor(&hexMenu.cursor);
+		shuffleTimer = 4;
+	} else if (btnHeld & (BTN_LEFT|BTN_RIGHT)) {
+		if (shuffleTimer) {
+			--shuffleTimer;
+		} else {
+			moveCursor(&hexMenu.cursor, (btnHeld&BTN_LEFT) ? -1 : 1);
+			drawCursor(&hexMenu.cursor);
+			shuffleTimer = 2;
+		}
+	}
+}
+
+
 int main(void) {
-	u8 hexDumpTimer = 4;
 	u8 menuActivationTimer = 0;
 	u16 btnPrev = 0;			// Previous buttons that were held
 	u16 btnHeld = 0;    		// Buttons that are held right now
@@ -678,7 +969,9 @@ int main(void) {
 	flipPage(1);
 	printPageNumber();
 	state.indexes[navBlock] = 0;
+	loadMenuAnimation(state.indexes[state.curr]);
 	drawMenu(&blockMenu);
+	
 
 	while(1) {
 		if (GetVsyncFlag()) {
@@ -689,13 +982,23 @@ int main(void) {
         	btnReleased = btnPrev&(btnHeld^btnPrev);
 			btnPrev = btnHeld;
 
+			if (state.curr != navKernel)
+				animateMenuSelection();
+
 			switch (state.curr) {
 				case navBlock:
 					if (btnPressed & BTN_A) {
 						activateItem(state.indexes[state.curr]);
-					} if (btnPressed & (BTN_UP|BTN_DOWN)) {
-						moveCursor(&blockMenu.cursor, (btnPressed&BTN_UP) ? -1 : 1);
+					} else if (btnPressed & (BTN_UP|BTN_DOWN)) {
+						int index = moveCursor(&blockMenu.cursor, (btnPressed&BTN_UP) ? -1 : 1);
 						drawCursor(&blockMenu.cursor);
+
+						// Don't re-load animations for pages with only one icon
+						if (index != state.indexes[state.curr]) {
+							drawAnimationFrame(blockMenu.loc.x, blockMenu.loc.y + (index % GAMES_PER_PAGE) * (GAME_ICON_HGT+1), 
+										menuAnim.anim.frames, 0);
+							loadMenuAnimation(state.indexes[state.curr]);
+						}
 					} else if (btnPressed & (BTN_LEFT|BTN_RIGHT)) {
 						hideCursor(&blockMenu.cursor);
 						flipPage((btnPressed&BTN_LEFT) ? -1 : 1);
@@ -703,6 +1006,7 @@ int main(void) {
 						closeMenu(&blockMenu);
 						drawMenu(&blockMenu);
 						drawCursor(&blockMenu.cursor);
+						loadMenuAnimation(state.indexes[state.curr]);
 					}
 					break;
 				case navMenu:
@@ -734,26 +1038,13 @@ int main(void) {
 						setState(navBlock);
 					}
 					break;
-				case navMsgBox:
-
-					break;
 				case navHexDump:
 					if (btnPressed & BTN_A) {
 						activateItem(state.indexes[state.curr]);
 					} else if (btnPressed & BTN_B) {
 						setState(navMenu);
-					} else if (btnPressed & (BTN_LEFT|BTN_RIGHT)) {
-						moveCursor(&hexMenu.cursor, (btnPressed&BTN_LEFT) ? -1 : 1);
-						drawCursor(&hexMenu.cursor);
-						hexDumpTimer = 4;
-					} else if (btnHeld & (BTN_LEFT|BTN_RIGHT)) {
-						if (hexDumpTimer) {
-							--hexDumpTimer;
-						} else {
-							moveCursor(&hexMenu.cursor, (btnHeld&BTN_LEFT) ? -1 : 1);
-							drawCursor(&hexMenu.cursor);
-							hexDumpTimer = 2;
-						}
+					} else if ((btnPressed | btnHeld) & (BTN_LEFT|BTN_RIGHT)) {
+						nibbleShuffle(btnPressed, btnHeld);
 					} else if (btnPressed & (BTN_UP|BTN_DOWN)) {
 						moveCursor(&hexMenu.cursor, (btnPressed&BTN_UP) ? -hexMenu.cursor.r.mid : hexMenu.cursor.r.mid);
 						drawCursor(&hexMenu.cursor);
@@ -762,9 +1053,15 @@ int main(void) {
 				case navHexCell:
 					if (btnPressed & BTN_B) {
 						setState(navHexDump);
-					} else if (btnPressed & (BTN_UP|BTN_DOWN)) {
-						cycleHexCell((btnPressed&BTN_UP) ? 1 : -1);
+					} else if ((btnPressed | btnHeld) & (BTN_UP|BTN_DOWN)) {
+						cycleHexCell(btnPressed, btnHeld);
+					} else if ((btnPressed | btnHeld) & (BTN_LEFT|BTN_RIGHT)) {
+						nibbleShuffle(btnPressed, btnHeld);
 					}
+					break;
+				case navKernel:
+					if (btnPressed & BTN_B)
+						activateItem(state.indexes[state.curr]);
 					break;
 			}
 		}		
