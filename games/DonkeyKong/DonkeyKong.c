@@ -232,13 +232,9 @@
 #define SFX_SPRING_BOUNCE_VOL 0xff
 #define SFX_SPRING_DROP 16
 #define SFX_SPRING_DROP_VOL 0xff
-#define SFX_DK_FLAIL 17
-#define SFX_DK_FLAIL_VOL 0xb0
-#define SFX_DK_FALL0 18
-#define SFX_DK_FALL0_VOL 0x80
-#define SFX_DK_FALL1 19
-#define SFX_DK_FALL1_VOL 0x30
-#define SFX_DK_ESCAPE 20
+#define SFX_DK_FALL 17
+#define SFX_DK_FALL_VOL 0xc0
+#define SFX_DK_ESCAPE 18
 #define SFX_DK_ESCAPE_VOL 0x80
 
 
@@ -2351,6 +2347,8 @@ void DKShowWinScene(void) {
 		u8 x = 13*TILE_WIDTH, y = 9*TILE_HEIGHT;
 		DKFill(&(rect){64,176,72,184},(gameState <= STATE_LADDER)?TILE_BLANK1:TILE_BLANK);
 		DKFill(&(rect){64,176,184,208},TILE_BEAM_BLUE);
+		DKSetBgAnimationFrames(2,23);
+		TriggerFx(SFX_DK_FALL,SFX_DK_FALL_VOL,1);
 
 		while (1) {
 			if (GetVsyncFlag()) {
@@ -2358,10 +2356,9 @@ void DKShowWinScene(void) {
 
 				if (++timer == (20*HZ+16)) {
 					break;
-				} else if (timer == 1) {
+				} else if (timer == 40) {
 					DKAddToScore(bonus);
 					DKSetBgAnimationFrames(2,34);
-					TriggerFx(SFX_DK_FLAIL,SFX_DK_FLAIL_VOL,1);
 				} else if (timer < 3*HZ) {
 					// Kong flailing arms
 					DKAnimateBgs(&animBgs.acs[2], 1);
@@ -2369,8 +2366,6 @@ void DKShowWinScene(void) {
 				} else if (timer == 3*HZ) {
 					DrawMap2(13,6,mapBlankKong);
 					DKMapSprite(6, mapDKFalling, 0);
-					TriggerFx(SFX_DK_FALL1,SFX_DK_FALL1_VOL,1);
-					TriggerFx(SFX_DK_FALL0,SFX_DK_FALL0_VOL,1);
 				} else if (timer < (4*HZ+30)) {
 					// Kong falling upside down
 					MoveSprite(6,x,y++,3,3);
