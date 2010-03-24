@@ -279,31 +279,75 @@ const char sfxSpringDrop[] PROGMEM ={
 0,PATCH_END
 };
 
-const char sfxDKFlail[] PROGMEM ={ 
-0,PC_WAVE,2,
-0,PC_PITCH,50,
-11,PC_PITCH,42,
-11,PC_PITCH,50,
-11,PC_PITCH,42,
-11,PC_PITCH,50,
-11,PC_PITCH,42,
-11,PC_PITCH,50,
-11,PC_PITCH,42,
-11,PC_PITCH,50,
-11,PC_PITCH,42,
-11,PC_PITCH,50,
-11,PC_PITCH,42,
-11,PC_PITCH,50,
-11,PC_PITCH,42,
-11,PC_PITCH,50,
-11,PC_PITCH,42,
-11,PC_NOTE_CUT,0,
-0,PATCH_END
-};
+const char sfxDKFall[] PROGMEM ={//patch 1 of 2
+//A bit of a "mega patch", not sure how you want to handle it all(or are currently). 
+//All wave numbers are based off the full default set. The first part is an inlined
+//version of the above patch. DK hitting his head part is also and inlined version 
+//of the existing stomp patch(not much wasted space), so you may wish to break this
+//into seperate patches and time it with code. Also, if you are using the 2 part patch
+//for DK falling you'll need to call it 183 frames after you start this +/- your timing
+//changes. I don't know a better way.
 
-const char sfxDKFall0[] PROGMEM ={//Part 1 of 2	
+////////////////start final rivet sound(is it even different? replace if not)
 0,PC_WAVE,4,
-//0,PC_ENV_SPEED,-3,
+
+0,PC_PITCH,45,
+1,PC_PITCH,50,
+1,PC_PITCH,55,
+1,PC_PITCH,60,
+1,PC_PITCH,65,
+1,PC_PITCH,69,
+1,PC_PITCH,74,
+
+1,PC_PITCH,45,
+1,PC_PITCH,50,
+1,PC_PITCH,55,
+1,PC_PITCH,60,
+1,PC_PITCH,65,
+1,PC_PITCH,69,
+1,PC_PITCH,74,
+0,PC_ENV_SPEED,-35,//kill off sound
+
+/////////////////^ end last rivet sound
+/////////////////v start flail sound
+
+30,PC_ENV_VOL,233,//reset envelope, adjust for frame delay between last rivet sound and DK flail
+0,PC_WAVE,3,//might want to try different things here
+0,PC_ENV_SPEED,-22,
+
+0,PC_PITCH,31,
+11,PC_ENV_VOL,233, 
+0,PC_PITCH,28,
+11,PC_ENV_VOL,233,
+
+0,PC_PITCH,31,
+11,PC_ENV_VOL,233, 
+0,PC_PITCH,28,
+11,PC_ENV_VOL,233, 
+
+0,PC_PITCH,31,
+11,PC_ENV_VOL,233, 
+0,PC_PITCH,28,
+11,PC_ENV_VOL,233, 
+
+0,PC_PITCH,31,
+11,PC_ENV_VOL,233, 
+0,PC_PITCH,28,
+11,PC_ENV_VOL,233,  
+
+0,PC_PITCH,31,
+11,PC_ENV_VOL,233, 
+0,PC_PITCH,28,
+11,PC_ENV_VOL,233,
+ 
+0,PC_PITCH,31,
+
+////////////////////^ end flail
+////////////////////v start falling
+
+//0,PC_WAVE,4,
+30,PC_ENV_VOL,233,//adjust for delay between flail and fall
+0,PC_ENV_SPEED,0,
 
 0,PC_PITCH,77,
 2,PC_PITCH,76,
@@ -342,51 +386,25 @@ const char sfxDKFall0[] PROGMEM ={//Part 1 of 2
 2,PC_PITCH,46,
 2,PC_PITCH,45,
 
-1,PC_NOTE_CUT,0,
-0,PATCH_END
-};
+0,PC_ENV_SPEED,-35,//smooth off end
 
+/////////////////^ end fall
+/////////////////v start DK clunk head
 
-const char sfxDKFall1[] PROGMEM ={//Part 2 of 2	
-0,PC_WAVE,3,
-//0,PC_ENV_SPEED,-3,
+30,PC_ENV_VOL,233,//adjust for delay between falling and clunk
+0,PC_ENV_SPEED,-1,
+0,PC_PITCH,32,
+1,PC_PITCH,31,
+1,PC_PITCH,30,
+1,PC_PITCH,29,
+1,PC_PITCH,28,
+1,PC_PITCH,27,
 
-0,PC_PITCH,77,
-2,PC_PITCH,76,
-2,PC_PITCH,75,
-2,PC_PITCH,74,
-2,PC_PITCH,73,
-2,PC_PITCH,72,
-1,PC_PITCH,71,
-
-2,PC_PITCH,70,
-2,PC_PITCH,69,
-2,PC_PITCH,68,
-2,PC_PITCH,67,
-2,PC_PITCH,66,
-2,PC_PITCH,65,
-2,PC_PITCH,64,
-2,PC_PITCH,63,
-1,PC_PITCH,62,
-
-2,PC_PITCH,61,
-2,PC_PITCH,60,
-2,PC_PITCH,59,
-2,PC_PITCH,58,
-2,PC_PITCH,57,
-2,PC_PITCH,56,
-2,PC_PITCH,55,
-2,PC_PITCH,54,
-1,PC_PITCH,53,
-
-2,PC_PITCH,52,
-2,PC_PITCH,51,
-2,PC_PITCH,50,
-2,PC_PITCH,49,
-2,PC_PITCH,48,
-2,PC_PITCH,47,
-2,PC_PITCH,46,
-2,PC_PITCH,45,
+1,PC_PITCH,25,
+1,PC_PITCH,24,
+1,PC_PITCH,23,
+1,PC_PITCH,22,
+1,PC_PITCH,21,
 
 1,PC_NOTE_CUT,0,
 0,PATCH_END
@@ -436,9 +454,7 @@ const struct PatchStruct patches[] PROGMEM = {
 {0,NULL,sfxKongStomp,0,0},
 {0,NULL,sfxSpringBounce,0,0},
 {0,NULL,sfxSpringDrop,0,0},
-{0,NULL,sfxDKFlail,0,0},
-{0,NULL,sfxDKFall0,0,0},
-{0,NULL,sfxDKFall1,0,0},
+{0,NULL,sfxDKFall,0,0},
 {0,NULL,sfxDKEscape,0,0},
 };
 
