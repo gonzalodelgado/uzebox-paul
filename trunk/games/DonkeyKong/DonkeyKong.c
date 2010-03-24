@@ -2221,7 +2221,16 @@ void DKDisplayLadderScene(u8 lvl) {
 	DrawMap2(HISCORE_LOC_X,HISCORE_LOC_Y,mapHiScore1);
 	DrawMap2(4,25,mapHowHigh);
 
-	for (u8 i = 0; i <= lvl; ++i) {
+	u8 limit;
+
+	if (dkRound == 1 && lvl == 3)
+		limit = 1;
+	else if (dkRound == 2 && lvl > 0)
+		limit = lvl-1;
+	else
+		limit = lvl;
+
+	for (u8 i = 0; i <= limit; ++i) {
 		DrawMap2(13,21-i*3,mapDKLadder);
 
 		switch (i) { // Allow fall throughs
