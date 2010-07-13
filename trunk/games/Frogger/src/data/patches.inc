@@ -1,4 +1,67 @@
 
+const char patch00[] PROGMEM ={
+  0,PC_WAVE,8,
+  0,PC_ENV_SPEED,-5,
+  0,PATCH_END
+};
+
+const char patch01[] PROGMEM ={ 
+  0,PC_WAVE,3,
+  0,PC_ENV_SPEED,-10,
+  0,PATCH_END
+};
+
+const char patch02[] PROGMEM ={	
+  0,PC_ENV_VOL,0,  
+  0,PC_NOTE_CUT,0, 
+  0,PATCH_END
+};
+
+const char patch03[] PROGMEM ={	
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+};
+
+const char patch04[] PROGMEM ={
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+}; 
+
+const char patch05[] PROGMEM ={ 
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+};
+
+const char patch06[] PROGMEM ={ 
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+};
+
+const char patch07[] PROGMEM ={	
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+};
+
+const char patch08[] PROGMEM ={	
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+};
+
+const char patch09[] PROGMEM ={
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+}; 
+
+const char patch10[] PROGMEM ={ 
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+};
+
+const char patch11[] PROGMEM ={ 
+  0,PC_NOTE_CUT,0,
+  0,PATCH_END
+};
+
 const char sfxHop0[] PROGMEM ={
 0,PC_ENV_SPEED,-10,
 0,PC_PITCH,55,
@@ -74,17 +137,19 @@ const char sfxLifeLoss2P[] PROGMEM ={
 0,PATCH_END
 };
 
-/*
-const char sfxTraffic[] PROGMEM ={
-0,PC_WAVE,5,
-0,PC_PITCH,45,
-120,PC_ENV_SPEED,-3,
-120,PC_NOTE_CUT,0,
-0,PATCH_END
-};
-*/
-
 const struct PatchStruct patches[] PROGMEM = {
+{0,NULL,patch00,0,0},
+{0,NULL,patch01,0,0},
+{0,NULL,patch02,0,0},
+{0,NULL,patch03,0,0},
+{0,NULL,patch04,0,0},
+{0,NULL,patch05,0,0},
+{0,NULL,patch06,0,0},
+{0,NULL,patch07,0,0},
+{0,NULL,patch08,0,0},
+{0,NULL,patch09,0,0},
+{0,NULL,patch10,0,0},
+{0,NULL,patch11,0,0},
 {0,NULL,sfxHop0,0,0},
 {0,NULL,sfxHop1,0,0},
 {0,NULL,sfxHop1,0,0},
@@ -94,5 +159,4 @@ const struct PatchStruct patches[] PROGMEM = {
 {0,NULL,sfxBonus,0,0},
 {0,NULL,sfxTimeBonus,0,0},
 {0,NULL,sfxLifeLoss2P,0,0},
-//{0,NULL,sfxTraffic,0,0},
 };
