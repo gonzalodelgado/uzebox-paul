@@ -1,6 +1,6 @@
 
 /*
- *  Frogger
+ *  Frogger for Uzebox
  *  Copyright (C) 2010 Paul McPhee
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -95,19 +95,18 @@
 #define STATE_OCCUPIED (STATE_OCCUPIED_P1|STATE_OCCUPIED_P2)
 
 // Sfx
+#define SFX_HOP 12
 #define SFX_HOP_VOL 0xc0
-#define SFX_BEEP 4
+#define SFX_BEEP 16
 #define SFX_BEEP_VOL 0xb0
-#define SFX_DEAD 5
+#define SFX_DEAD 17
 #define SFX_DEAD_VOL 0xa0
-#define SFX_BONUS 6
+#define SFX_BONUS 18
 #define SFX_BONUS_VOL 0xc0
-#define SFX_TIME_BONUS 7
+#define SFX_TIME_BONUS 19
 #define SFX_TIME_BONUS_VOL 0xa0
-#define SFX_LIFE_LOSS_2P 8
+#define SFX_LIFE_LOSS_2P 20
 #define SFX_LIFE_LOSS_2P_VOL 0xc0
-//#define SFX_TRAFFIC 9
-//#define SFX_TRAFFIC_VOL 0x50
 
 // Misc
 #define HZ 60
@@ -197,6 +196,9 @@ typedef struct {
 #include "data/tiles.inc"
 #include "data/sprites.inc"
 #include "data/patches.inc"
+#include "data/song.inc"
+#include "data/frogger_end.inc"
+#include "data/frogger_end2.inc"
 
 /****************************************
  *			File-level variables		*
@@ -218,6 +220,7 @@ u8 players;
 u8 gameState;
 u8 level = 0;
 u16 tempTimer;
+u8 beepTimer;
 bool gatorIsActive = false;
 
 const char strPlayer[] PROGMEM = "PLAYER";
@@ -350,6 +353,7 @@ void FRGPlayAmbientSfx(void);
 void FRGDrawGator(void);
 void FRGAnimateGator(void);
 void FRGGatorThink(void);
+void FRGTriggerSfx(u8 index);
 
 /****************************************
  *			Function definitions		*
@@ -773,17 +777,22 @@ inline u8 FRGPointInRect(int x, int y, const rect *r) {
 
 
 void FRGCalcFroggerBounds(rect *r, const actor *a) {
-	if (a->dir&1) {
+	if (a->dir&1) { // Right/Left
 		r->top = a->y-4;
 		r->btm = a->y+4;
 		r->left = a->x-5;
 		r->right = a->x+5;
-	} else {
+	} else { // Up/Down
 		r->top = a->y-5;
 		r->btm = a->y+5;
 		r->left = a->x-4;
 		r->right = a->x+4;
 	}
+
+	if (r->left > r->right)
+		r->left = 0;
+	if (r->top > r->btm)
+		r->top = 0;
 }
 
 
@@ -822,7 +831,7 @@ void FRGTestBounds(u8 index) {
 				if (homeStates[i]&(STATE_MATE|STATE_FLY)) {
 					FRGAddScore(200);
 					FRGDrawScore();
-					TriggerFx(SFX_BONUS,SFX_BONUS_VOL,true);
+					FRGTriggerSfx(SFX_BONUS);
 					FRGFlashBonus(frogger[index].x,frogger[index].y);
 				}
 				FRGSetHomeState(i,(index)?STATE_OCCUPIED_P2:STATE_OCCUPIED_P1);
@@ -881,6 +890,9 @@ void FRGTestBounds(u8 index) {
 				rOb.left = FRGClampToXAxis(rOb.left-regions[i].ss->scrollX);
 				rOb.right = FRGClampToXAxis(rOb.right-regions[i].ss->scrollX);
 
+				if (rOb.left > rOb.right)
+					rOb.left = 0;
+
 				if (FRGRectsIntersect(&rFrogger,&rOb))
 					squashed = true;
 			}
@@ -895,10 +907,10 @@ void FRGTestBounds(u8 index) {
 void FRGTestActorCollisions(actor *a) {
 	rect r;
 
-	r.left = snake.x-9;
-	r.right = snake.x+9;
-	r.top = snake.y-8;
-	r.btm = snake.y+8;
+	r.left = snake.x-6;
+	r.right = snake.x+6;
+	r.top = snake.y-6;
+	r.btm = snake.y+6;
 
 	if (r.left > r.right)
 		r.left = 0;
@@ -1013,13 +1025,13 @@ void FRGAnimateActor(actor *a) {
 						FRGSetActorState(STATE_IDLE,a);
 					break;
 				case STATE_DROWNING:
-					if (a->cur.frame == 0 && a->cur.counter == 0)
-						FRGResetFrogger((a==frogger)?0:1);
-					break;
 				case STATE_SQUASHED:
 				case STATE_STRANDED:
-					if (a->cur.frame == 0 && a->cur.counter == 0)
+					if (a->cur.frame == 0 && a->cur.counter == 0) {
+						FRGAddTime(MAX_TIME);
+						FRGDrawTime();
 						FRGResetFrogger((a==frogger)?0:1);
+					}
 					break;
 			}
 			break;
@@ -1077,7 +1089,7 @@ void FRGSetActorState(u8 state, actor *a) {
 	switch (a->type) {
 		case ACTOR_PLAYER:
 			if (state == STATE_JUMPING) {
-				TriggerFx(prng&3,SFX_HOP_VOL,false);
+				FRGTriggerSfx(SFX_HOP);
 
 				if (a->dir == DIR_UP)
 					FRGAddScore(10);
@@ -1086,9 +1098,14 @@ void FRGSetActorState(u8 state, actor *a) {
 			} else if (state&(STATE_DROWNING|STATE_SQUASHED|STATE_STRANDED)) {
 				FRGAddLives(a,-1);
 				FRGDrawLives(a);
-				FRGAddTime(MAX_TIME);
-				FRGDrawTime();
-				TriggerFx(SFX_DEAD,SFX_DEAD_VOL,false);
+				
+				if(a->lives == 0){
+					StopSong();
+					TriggerNote(0,2,80,1);
+					TriggerNote(1,2,80,1);
+					TriggerNote(2,2,80,1);					
+				}
+				FRGTriggerSfx(SFX_DEAD);
 			} else if (state&STATE_INACTIVE) {
 				MoveSprite(a->sprite,HIDE_X,a->y,a->wid,a->hgt);
 			} else if (state&STATE_HOME) {
@@ -1160,6 +1177,7 @@ void FRGDrawTitleScreen(void) {
 void FRGSetGameState(u8 state) {
 	switch (state) {
 		case STATE_TITLE:
+			StopSong();
 			level = 0;
 			FRGSaveHiScore();
 			FRGSetActorState(STATE_INACTIVE,frogger);
@@ -1215,7 +1233,7 @@ void FRGSetGameState(u8 state) {
 					FRGDrawLives(frogger);
 				}
 				tempTimer = 3*HZ;
-				TriggerFx(SFX_LIFE_LOSS_2P,SFX_LIFE_LOSS_2P_VOL,true);
+				FRGTriggerSfx(SFX_LIFE_LOSS_2P);
 			}
 			break;
 		case STATE_GAME_OVER:
@@ -1224,8 +1242,9 @@ void FRGSetGameState(u8 state) {
 				MoveSprite(SPRITE_P1,HIDE_X,0,frogger[0].wid,frogger[0].hgt);
 				FRGPrint(7,14,strGame);
 				FRGPrint(12,14,strOver);
-				tempTimer = 3*HZ;
+				tempTimer = 4*HZ;
 				FRGAddLives(frogger,-frogger[0].lives);
+				StartSong(song_end2);
 			} else {
 				FRGSetActorState(STATE_INACTIVE,&snake);
 				MoveSprite(SPRITE_P1,HIDE_X,0,frogger[0].wid,frogger[0].hgt);
@@ -1240,8 +1259,10 @@ void FRGSetGameState(u8 state) {
 				}
 				FRGAddLives(frogger,-frogger[0].lives);
 				FRGAddLives(frogger+1,-frogger[1].lives);
-				tempTimer = 3*HZ;
+				tempTimer = 4*HZ;
+				StartSong(song_end);
 			}
+			beepTimer = 0;
 			break;
 		case STATE_PAUSED:
 		default:
@@ -1271,14 +1292,30 @@ void FRGCheckGameState(void) {
 
 
 void FRGPlayAmbientSfx(void) {
-	static u8 beepTimer = 240;
+	static u8 ambientTimer = 240;
 
-	if (--beepTimer == 0)
-		beepTimer = 240;
+	if (--ambientTimer == 0)
+		ambientTimer = 240;
 
-	if ((beepTimer == 16 || beepTimer == 32) && ((frogger[0].y > 120 && frogger[0].y < 184) || 
-			(players == 2 && frogger[1].y > 120 && frogger[1].y < 184)))
-		TriggerFx(SFX_BEEP,SFX_BEEP_VOL,true);
+	if ((ambientTimer == 16 || ambientTimer == 32) && ((frogger[0].y > 120 && frogger[0].y < 184) || 
+			(players == 2 && frogger[1].y > 120 && frogger[1].y < 184))) {
+		beepTimer = 10;
+		FRGTriggerSfx(SFX_BEEP);
+	}
+}
+
+
+void FRGTriggerSfx(u8 index) {
+	switch (index) {
+		case SFX_HOP: 
+			if (!beepTimer)
+				TriggerNote(2,12+(prng&3),80,SFX_HOP_VOL); break;
+		case SFX_BEEP: TriggerNote(2,SFX_BEEP,80,SFX_BEEP_VOL); break;
+		case SFX_DEAD: TriggerNote(2,SFX_DEAD,80,SFX_DEAD_VOL); break;
+		case SFX_BONUS: TriggerNote(2,SFX_BONUS,80,SFX_BONUS_VOL); break;
+		case SFX_TIME_BONUS: TriggerNote(2,SFX_TIME_BONUS,80,SFX_TIME_BONUS_VOL); break;
+		case SFX_LIFE_LOSS_2P: TriggerNote(2,SFX_LIFE_LOSS_2P,80,SFX_LIFE_LOSS_2P_VOL); break;
+	}
 }
 
 
@@ -1360,8 +1397,10 @@ int main(void) {
 					if ((btnPressed[0]|btnPressed[1])&(BTN_START|BTN_A|BTN_B)) {
 						players = (menuPos)?2:1;
 						FRGSetGameState(STATE_PLAYING);
+						StartSong(song);
 					} else if ((btnPressed[0]|btnPressed[1])&(BTN_UP|BTN_DOWN)) {
 						menuPos = (menuPos)?0:1;
+						FRGTriggerSfx(SFX_HOP);
 						FRGPrintCursor(menuPos);
 					}
 					PRNG_NEXT();
@@ -1385,7 +1424,7 @@ int main(void) {
 							FRGAddTime(-1);
 							FRGDrawTime();
 							FRGAddScore(1);
-							TriggerFx(SFX_TIME_BONUS,SFX_TIME_BONUS_VOL,true);
+							FRGTriggerSfx(SFX_TIME_BONUS);
 							tempTimer = HZ;
 						} else if (--tempTimer == 0) {
 							FRGCheckGameState();
@@ -1461,10 +1500,14 @@ int main(void) {
 				MoveSprite(SPRITE_BONUS,HIDE_X,0,2,1);
 
 			FRGCheckGameState();
+
+			if (beepTimer)
+				--beepTimer;
 			FRGPlayAmbientSfx();
 		}
 	}
 }
+
 
 
 
