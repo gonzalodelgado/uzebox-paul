@@ -103,7 +103,7 @@ const char sfxBeep[] PROGMEM ={
 const char sfxDead[] PROGMEM ={
 0,PC_WAVE,1,
 0,PC_ENV_SPEED,-5,
-0,PC_PITCH,50,
+0,PC_PITCH,55,
 2,PC_NOTE_DOWN,6,  
 2,PC_NOTE_DOWN,6, 
 2,PC_NOTE_DOWN,6,  
