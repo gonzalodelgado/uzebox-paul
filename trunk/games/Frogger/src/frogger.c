@@ -96,17 +96,17 @@
 
 // Sfx
 #define SFX_HOP 12
-#define SFX_HOP_VOL 0xc0
+#define SFX_HOP_VOL 0xff
 #define SFX_BEEP 16
-#define SFX_BEEP_VOL 0xb0
+#define SFX_BEEP_VOL 0xff
 #define SFX_DEAD 17
-#define SFX_DEAD_VOL 0xa0
+#define SFX_DEAD_VOL 0xff
 #define SFX_BONUS 18
-#define SFX_BONUS_VOL 0xc0
+#define SFX_BONUS_VOL 0xff
 #define SFX_TIME_BONUS 19
-#define SFX_TIME_BONUS_VOL 0xa0
+#define SFX_TIME_BONUS_VOL 0xd0
 #define SFX_LIFE_LOSS_2P 20
-#define SFX_LIFE_LOSS_2P_VOL 0xc0
+#define SFX_LIFE_LOSS_2P_VOL 0xff
 
 // Misc
 #define HZ 60
@@ -618,6 +618,11 @@ void FRGDrawLevel(void) {
 
 		if (regions[i].vx.counterMax == 0 || regions[i].vx.counterMax > 6) // Clamp underflow (6 is slowest possible)
 			regions[i].vx.counterMax = 1;
+		// Prevent sports car speeding up too soon or it gets too difficult
+		if (i == 6 && level < 6 && regions[i].vx.counterMax == 1) {
+			regions[i].vx.counterMax = 2;
+			regions[i].vx.vel = 3;
+		}
 	}
 
 	for (u8 i = 0; i < 5; ++i)
@@ -905,16 +910,17 @@ void FRGTestBounds(u8 index) {
 
 
 void FRGTestActorCollisions(actor *a) {
-	rect r;
+	rect rSnake,rFrogger;
 
-	r.left = snake.x-6;
-	r.right = snake.x+6;
-	r.top = snake.y-6;
-	r.btm = snake.y+6;
+	rSnake.left = snake.x-6;
+	rSnake.right = snake.x+6;
+	rSnake.top = snake.y-6;
+	rSnake.btm = snake.y+6;
+	FRGCalcFroggerBounds(&rFrogger,a);
 
-	if (r.left > r.right)
-		r.left = 0;
-	if (FRGPointInRect(a->x,a->y,&r))
+	if (rSnake.left > rSnake.right)
+		rSnake.left = 0;
+	if (FRGRectsIntersect(&rFrogger,&rSnake))
 		FRGSetActorState(STATE_SQUASHED,a);
 }
 
@@ -1307,9 +1313,7 @@ void FRGPlayAmbientSfx(void) {
 
 void FRGTriggerSfx(u8 index) {
 	switch (index) {
-		case SFX_HOP: 
-			if (!beepTimer)
-				TriggerNote(2,12+(prng&3),80,SFX_HOP_VOL); break;
+		case SFX_HOP: if (!beepTimer) TriggerNote(2,12+(prng&3),80,SFX_HOP_VOL); break;
 		case SFX_BEEP: TriggerNote(2,SFX_BEEP,80,SFX_BEEP_VOL); break;
 		case SFX_DEAD: TriggerNote(2,SFX_DEAD,80,SFX_DEAD_VOL); break;
 		case SFX_BONUS: TriggerNote(2,SFX_BONUS,80,SFX_BONUS_VOL); break;
@@ -1327,7 +1331,7 @@ int main(void) {
 	// General
 	FRGLoadHiScore();
 	InitMusicPlayer(patches);
-	SetMasterVolume(0xb0);
+	SetMasterVolume(127);
 	SetTileTable(tileset);
 	SetSpritesTileTable(spriteset);
 	SetSpritesOptions(SPR_OVERFLOW_ROTATE);
