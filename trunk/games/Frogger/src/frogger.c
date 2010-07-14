@@ -1332,6 +1332,10 @@ int main(void) {
 	FRGLoadHiScore();
 	InitMusicPlayer(patches);
 	SetMasterVolume(127);
+	tracks[0].trackVol=104;
+	tracks[1].trackVol=104;
+	tracks[2].trackVol=191;
+
 	SetTileTable(tileset);
 	SetSpritesTileTable(spriteset);
 	SetSpritesOptions(SPR_OVERFLOW_ROTATE);
