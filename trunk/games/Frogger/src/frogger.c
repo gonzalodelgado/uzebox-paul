@@ -410,9 +410,10 @@ void FRGSaveHiScore(void) {
 
 	s = (long*)ebs.data;
 
-	if (score > *s)
+	if (score > *s) {
 		*s = score;
-	EepromWriteBlock(&ebs);
+		EepromWriteBlock(&ebs);
+	}
 }
 
 
